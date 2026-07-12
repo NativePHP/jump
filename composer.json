@@ -40,7 +40,7 @@
         },
         "discovery": {
             "type": "path",
-            "url": "../Plugins/nativephp/discovery",
+            "url": "plugins/nativephp/discovery",
             "options": {
                 "symlink": true
             }

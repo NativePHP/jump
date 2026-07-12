@@ -8,6 +8,7 @@ use App\Support\DocsIndex;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Fluent;
 use Illuminate\View\View;
+use Native\Mobile\Edge\Layouts\Builders\NavAction;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Facades\Dialog;
 use NativePHP\Clipboard\Facades\Clipboard;
@@ -42,9 +43,10 @@ class Docs extends NativeComponent
     public bool $failed = false;
 
     /**
-     * Live state for the docs' interactive demos (bottom-sheet / modal). Keyed
-     * by the snippet's own var name (unique per example), seeded from its
-     * `@php` block and flipped by its `@press` handlers via {@see setDemo()}.
+     * Live state for the docs' interactive demos (overlays, model bindings,
+     * virtual-list windows). Keyed by the snippet's own var name (unique per
+     * example), seeded from its `@php` block and mutated by its handlers via
+     * {@see setDemo()} / {@see __syncProperty()} / {@see setVirtualWindow()}.
      *
      * @var array<string,mixed>
      */
@@ -82,6 +84,10 @@ class Docs extends NativeComponent
             if ($this->page && ! in_array($section, $this->expanded, true)) {
                 $this->expanded[] = $section;
             }
+        } elseif ($this->sections !== []) {
+            // Plain TOC — open the first section so the landing view isn't a
+            // wall of collapsed headers.
+            $this->expanded = [$this->sections[0]['slug']];
         }
     }
 
@@ -115,6 +121,51 @@ class Docs extends NativeComponent
     }
 
     /**
+     * Footer prev/next — REPLACE-navigate to the page's deep-link route so the
+     * reader remounts scrolled to the top. A plain open() reuses the same
+     * scroll container, which keeps the previous page's scroll offset (you'd
+     * land at the bottom of the next page). Replace, not push: flipping
+     * through pages must not stack screens behind the back gesture. Same
+     * route the tab-bar search results use.
+     */
+    public function goTo(string $id): void
+    {
+        $this->replace('/docs/'.$id);
+    }
+
+    /**
+     * Pull-to-refresh (both the TOC and the page reader) — refetch the docs
+     * corpus from the source (DocsIndex is network-first) and, when a page is
+     * open, re-resolve it against the fresh content so edits show up without
+     * leaving the page. Keeps the current view when the source is unreachable
+     * (sections() falls back to the cached copy, or [] with no cache).
+     */
+    public function refresh(): void
+    {
+        try {
+            $fresh = DocsIndex::sections();
+        } catch (\Throwable) {
+            return; // unreachable — keep what's on screen
+        }
+        if ($fresh === []) {
+            return;
+        }
+
+        $this->sections = $fresh;
+        $this->failed = false;
+
+        if ($this->page) {
+            $id = $this->page['id'];
+            $this->page = null;
+            $this->open($id); // resets demoState when found
+            if (! $this->page) {
+                // Page vanished upstream (renamed/removed) — back to the TOC.
+                $this->demoState = [];
+            }
+        }
+    }
+
+    /**
      * Set a demo var and re-render — the target of the rewritten inline
      * handlers (`@press="$showSheet = true"` → `setDemo('showSheet', true)`).
      * See prepareDemo(). Value defaults to true so a bare toggle also works.
@@ -122,6 +173,46 @@ class Docs extends NativeComponent
     public function setDemo(string $key, mixed $value = true): void
     {
         $this->demoState[$key] = $value;
+    }
+
+    /**
+     * Model-binding writes (`native:model="x"` compiles to
+     * `_change="__syncProperty('x')"`) land here on user input. Docs' own view
+     * declares zero model bindings, so EVERY sync reaching this component is a
+     * docs demo — route it into $demoState unconditionally. That both captures
+     * the value (the parent implementation silently drops unknown props) and
+     * sandboxes Docs' real public props from same-named demo vars. The next
+     * frame re-binds it via demoBindings(), so `:value` and `{{ $x }}` echoes
+     * pick up the new value.
+     */
+    public function __syncProperty(string $property, mixed $value): void
+    {
+        $this->demoState[$property] = $value;
+    }
+
+    /**
+     * Feedback stub for the docs' method-style handlers (`@press="save"` →
+     * `@press="demoCall('save')"`, see prepareDemo). Toasts the method name —
+     * the teaching point — instead of silently no-op'ing (or worse, hitting a
+     * real Docs method). `$value` absorbs the event payload dispatch() appends
+     * for change/submit-type events.
+     */
+    public function demoCall(string $method, mixed $value = null): void
+    {
+        Dialog::toast($method.'()'.($value === null ? ' called' : ' called with '.var_export($value, true)));
+    }
+
+    /**
+     * Window-change target for the virtual-list live example
+     * (`on-window-change="setVirtualWindow"` rides through prepareDemo
+     * untouched). Stashing the window in $demoState — rather than using
+     * HasVirtualListWindow's props — lets demoBindings() feed the snippet's
+     * `:from="$virtualWindowFrom"` / `:to="$virtualWindowTo"` next frame.
+     */
+    public function setVirtualWindow(int $from, int $to): void
+    {
+        $this->demoState['virtualWindowFrom'] = $from;
+        $this->demoState['virtualWindowTo'] = $to;
     }
 
     /**
@@ -155,10 +246,40 @@ class Docs extends NativeComponent
     {
         return view('native.docs', [
             'blocks' => $this->page ? $this->toBlocks($this->page['content']) : [],
+            'adjacent' => $this->adjacentPages(),
             // A closure the view calls from a @php block to splice a snippet's
             // live native elements into the page tree at that position.
             'renderLive' => fn (string $snippet) => $this->renderLive($snippet),
         ]);
+    }
+
+    /**
+     * Prev/next pages for the reader's footer — the corpus flattened in nav
+     * order, with neighbors crossing section boundaries. Mirrors the website's
+     * footer links (ShowDocumentationController's flattenNavigationPages walk).
+     *
+     * @return array{prev: ?array{id:string,title:string,section:string}, next: ?array{id:string,title:string,section:string}}
+     */
+    private function adjacentPages(): array
+    {
+        if (! $this->page) {
+            return ['prev' => null, 'next' => null];
+        }
+
+        $flat = [];
+        foreach ($this->sections as $section) {
+            foreach ($section['pages'] as $p) {
+                $flat[] = ['id' => $p['id'], 'title' => $p['title'], 'section' => $section['name']];
+            }
+        }
+
+        foreach ($flat as $i => $p) {
+            if ($p['id'] === $this->page['id']) {
+                return ['prev' => $flat[$i - 1] ?? null, 'next' => $flat[$i + 1] ?? null];
+            }
+        }
+
+        return ['prev' => null, 'next' => null];
     }
 
     /**
@@ -189,13 +310,22 @@ class Docs extends NativeComponent
 
     /**
      * Transform a doc snippet for the inline preview and return its seed vars.
-     * Two rewrites, so an example's self-contained inline state works without
-     * component methods (the native runtime only dispatches method calls, not
-     * `$var = …` assignments):
+     * The rewrites let an example's idiomatic handlers work against Docs (the
+     * native runtime only dispatches method calls, and only methods that exist
+     * on THIS component):
      *   1. `@php $x = <literal>; @endphp` → seed defaults, then STRIP (leaving
      *      it in would reset the var to its default on every re-render).
      *   2. `@press/@dismiss/@change="$x = <literal>"` → `="setDemo('x', <lit>)"`
      *      so a tap persists into $demoState (survives re-render).
+     *   3. Remaining method-style handlers (`@press="save"`) → demoCall()
+     *      toasts. Mandatory, not cosmetic: dispatch() silently drops unknown
+     *      methods (no feedback), and DOES run a docs handler that happens to
+     *      collide with a real Docs method (`toggle`, `open(...)`) against the
+     *      reader's own screen.
+     *   4. `@navigate` → a demoCall() toast — it would otherwise fire a real
+     *      navigation intent into a nonexistent Jump route.
+     *   5. List gesture callbacks (on-refresh / on-end-reached /
+     *      on-swipe-delete) → demoCall(), so the gesture toasts its method.
      * Also injects `flex-1` on virtualized lists so they fill their tall card.
      *
      * @return array{0:string,1:array<string,mixed>}
@@ -223,7 +353,32 @@ class Docs extends NativeComponent
             $raw
         ) ?? $raw;
 
-        // 3) Virtualized lists fill their tall card (see $isTall). `(?![\w-])`
+        // 3) Remaining method-style handlers → demoCall('<method>') toasts.
+        // Interpolated args ({{ $item->id }}) are dropped — the toast names
+        // the method, which is the teaching point.
+        $raw = preg_replace_callback(
+            '/@(press|longPress|doubleTap|submit|dismiss|change)="\s*(?!setDemo\()(\w+)[^"]*"/',
+            fn ($m) => '@'.$m[1].'="demoCall(\''.$m[2].'\')"',
+            $raw
+        ) ?? $raw;
+
+        // 4) `@navigate` (any modifiers/value) → a demoCall toast. AFTER 3),
+        // or the produced @press="demoCall(…)" would itself get rewritten.
+        $raw = preg_replace(
+            '/@navigate(?:\.[\w.]+)?(?:="[^"]*")?/',
+            '@press="demoCall(\'navigate\')"',
+            $raw
+        ) ?? $raw;
+
+        // 5) List gesture callbacks → demoCall, so pull-to-refresh /
+        // infinite-scroll / swipe-delete demos toast at the gesture moment.
+        $raw = preg_replace_callback(
+            '/\bon-(refresh|end-reached|swipe-delete|leading-change|trailing-change)="\s*(\w+)[^"]*"/',
+            fn ($m) => 'on-'.$m[1].'="demoCall(\''.$m[2].'\')"',
+            $raw
+        ) ?? $raw;
+
+        // 6) Virtualized lists fill their tall card (see $isTall). `(?![\w-])`
         // so it doesn't match inside `<native:list-item>`.
         $raw = preg_replace(
             '/<native:((?:virtual-)?list)(?![\w-])([^>]*\bclass=")/',
@@ -286,7 +441,7 @@ class Docs extends NativeComponent
             'agreed' => false,
             'enabled' => true,
             'score' => 87,
-            'total' => 42,
+            'total' => 200,
             'darkMode' => false,
             'processing' => false,
             'showDetails' => false,
@@ -295,27 +450,72 @@ class Docs extends NativeComponent
             'title' => 'Sample title',
             'name' => 'Jump',
             'index' => 0,
-            'previewUrl' => '',
+            'previewUrl' => 'https://picsum.photos/seed/nativephp/600/400',
             'cadence' => 'weekly',
             'shippingMethod' => 'standard',
             'countries' => ['United States', 'Canada', 'United Kingdom'],
             'virtualWindowFrom' => 0,
             'virtualWindowTo' => 20,
 
-            // Collections (shapes mirror what the docs access on each item)
+            // Menus (menus.md) — NavAction arrays can't ride the @php seed
+            // convention (scalar literals only), so the docs' `$menu` /
+            // `$rowMenu` bind here. Shapes mirror the page's own php fence;
+            // press handlers stay idiomatic and toast via demoCall().
+            'menu' => [
+                NavAction::make('export_pdf')->icon('doc')->label('Export as PDF')->press('exportPdf'),
+                NavAction::make('export_csv')->icon('tablecells')->label('Export as CSV')->press('exportCsv'),
+                NavAction::divider(),
+                NavAction::make('delete')->icon('trash')->label('Delete')->press('delete')->destructive(),
+            ],
+            'rowMenu' => [
+                NavAction::make('pin')->icon('pin')->label('Pin')->press('pin'),
+                NavAction::make('mute')->icon('bell.slash')->label('Mute')->press('mute'),
+                NavAction::divider(),
+                NavAction::make('archive')->icon('archivebox')->label('Archive')->press('archive'),
+            ],
+
+            // Collections (shapes mirror what the docs access on each item).
+            // Row counts are deliberately generous so scroll / pull-to-refresh /
+            // infinite-scroll demos have something to actually scroll.
             'items' => $f([
                 ['id' => 1, 'name' => 'Design review', 'description' => 'Look over the new palette', 'subtitle' => 'Today'],
                 ['id' => 2, 'name' => 'Ship build 42', 'description' => 'Upload to TestFlight', 'subtitle' => 'Tomorrow'],
                 ['id' => 3, 'name' => 'Write changelog', 'description' => 'v1.4 release notes', 'subtitle' => 'Friday'],
+                ['id' => 4, 'name' => 'Fix dark mode', 'description' => 'Theme tokens on the settings screen', 'subtitle' => 'Friday'],
+                ['id' => 5, 'name' => 'Record demo video', 'description' => 'Two minutes, straight to the point', 'subtitle' => 'Saturday'],
+                ['id' => 6, 'name' => 'Update screenshots', 'description' => 'App Store + Play Store sets', 'subtitle' => 'Sunday'],
+                ['id' => 7, 'name' => 'Triage issues', 'description' => 'Close the stale ones', 'subtitle' => 'Monday'],
+                ['id' => 8, 'name' => 'Plan v1.5', 'description' => 'Rough milestones only', 'subtitle' => 'Monday'],
+                ['id' => 9, 'name' => 'Refactor onboarding', 'description' => 'Three screens down to one', 'subtitle' => 'Tuesday'],
+                ['id' => 10, 'name' => 'Push notifications', 'description' => 'Wire up the new plugin', 'subtitle' => 'Wednesday'],
+                ['id' => 11, 'name' => 'Beta feedback pass', 'description' => 'Reply to TestFlight reviews', 'subtitle' => 'Thursday'],
+                ['id' => 12, 'name' => 'Tag the release', 'description' => 'And breathe', 'subtitle' => 'Next Friday'],
             ]),
             'posts' => $f([
                 ['id' => 1, 'title' => 'Hello, NativePHP', 'excerpt' => 'Build native apps with the Laravel you know.'],
                 ['id' => 2, 'title' => 'Going Edge', 'excerpt' => 'Server-driven native UI, rendered on device.'],
                 ['id' => 3, 'title' => 'Jump In', 'excerpt' => 'Scan a QR code, run your app on your phone.'],
+                ['id' => 4, 'title' => 'Blade, Natively', 'excerpt' => 'Your views compile to SwiftUI and Compose.'],
+                ['id' => 5, 'title' => 'Hot Reload', 'excerpt' => 'Save a file, watch the simulator catch up.'],
+                ['id' => 6, 'title' => 'Ship It', 'excerpt' => 'One codebase, both app stores.'],
+                ['id' => 7, 'title' => 'Deep Links', 'excerpt' => 'From a URL straight to a screen.'],
+                ['id' => 8, 'title' => 'Offline First', 'excerpt' => 'SQLite is right there in your app.'],
+                ['id' => 9, 'title' => 'Secrets Kept', 'excerpt' => 'Keychain and Keystore behind one facade.'],
+                ['id' => 10, 'title' => 'Native Feel', 'excerpt' => 'Real platform components, not lookalikes.'],
             ]),
             'contacts' => $f([
-                ['id' => 1, 'name' => 'Ada Lovelace', 'email' => 'ada@example.com', 'avatar' => '', 'initials' => 'AL'],
-                ['id' => 2, 'name' => 'Grace Hopper', 'email' => 'grace@example.com', 'avatar' => '', 'initials' => 'GH'],
+                ['id' => 1, 'name' => 'Ada Lovelace', 'email' => 'ada@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=5', 'initials' => 'AL'],
+                ['id' => 2, 'name' => 'Grace Hopper', 'email' => 'grace@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=47', 'initials' => 'GH'],
+                ['id' => 3, 'name' => 'Alan Turing', 'email' => 'alan@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=12', 'initials' => 'AT'],
+                ['id' => 4, 'name' => 'Katherine Johnson', 'email' => 'katherine@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=44', 'initials' => 'KJ'],
+                ['id' => 5, 'name' => 'Edsger Dijkstra', 'email' => 'edsger@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=13', 'initials' => 'ED'],
+                ['id' => 6, 'name' => 'Margaret Hamilton', 'email' => 'margaret@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=32', 'initials' => 'MH'],
+                ['id' => 7, 'name' => 'Donald Knuth', 'email' => 'donald@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=53', 'initials' => 'DK'],
+                ['id' => 8, 'name' => 'Radia Perlman', 'email' => 'radia@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=26', 'initials' => 'RP'],
+                ['id' => 9, 'name' => 'Barbara Liskov', 'email' => 'barbara@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=49', 'initials' => 'BL'],
+                ['id' => 10, 'name' => 'Dennis Ritchie', 'email' => 'dennis@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=59', 'initials' => 'DR'],
+                ['id' => 11, 'name' => 'Frances Allen', 'email' => 'frances@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=38', 'initials' => 'FA'],
+                ['id' => 12, 'name' => 'Tim Berners-Lee', 'email' => 'tim@example.com', 'avatar' => 'https://i.pravatar.cc/150?img=61', 'initials' => 'TB'],
             ]),
             'features' => $f([
                 ['color' => '#4F46E5', 'title' => 'Native UI', 'subtitle' => 'SwiftUI & Compose renderers'],
@@ -324,10 +524,18 @@ class Docs extends NativeComponent
             'tasks' => $f([
                 ['id' => 1, 'title' => 'Book flights', 'due' => 'Fri', 'done' => true],
                 ['id' => 2, 'title' => 'Reserve hotel', 'due' => 'Sat', 'done' => false],
+                ['id' => 3, 'title' => 'Pack chargers', 'due' => 'Sun', 'done' => false],
+                ['id' => 4, 'title' => 'Print boarding passes', 'due' => 'Mon', 'done' => false],
+                ['id' => 5, 'title' => 'Arrange cat sitter', 'due' => 'Tue', 'done' => true],
+                ['id' => 6, 'title' => 'Set out-of-office', 'due' => 'Wed', 'done' => false],
             ]),
             'conversations' => $f([
                 ['id' => 1, 'name' => 'Simon', 'preview' => 'The new build looks great!'],
                 ['id' => 2, 'name' => 'Shane', 'preview' => 'Shipping the docs update now.'],
+                ['id' => 3, 'name' => 'Ana', 'preview' => 'Can you review my PR?'],
+                ['id' => 4, 'name' => 'Dev Team', 'preview' => 'Standup moved to 10:30.'],
+                ['id' => 5, 'name' => 'Caleb', 'preview' => 'The demo went really well.'],
+                ['id' => 6, 'name' => 'Marco', 'preview' => 'Lunch on Thursday?'],
             ]),
             'categories' => $f([
                 ['name' => 'Getting Started'],
@@ -337,10 +545,22 @@ class Docs extends NativeComponent
             'messages' => $f([
                 ['id' => 1, 'body' => 'Hey! How is the release going?'],
                 ['id' => 2, 'body' => 'Almost there — docs left.'],
+                ['id' => 3, 'body' => 'Nice — previews working yet?'],
+                ['id' => 4, 'body' => 'Live examples render inline now.'],
+                ['id' => 5, 'body' => "That's huge. Android too?"],
+                ['id' => 6, 'body' => 'Yep, Compose side is done.'],
+                ['id' => 7, 'body' => 'Ship it before the weekend?'],
+                ['id' => 8, 'body' => "That's the plan."],
             ]),
             'emails' => $f([
                 ['id' => 1, 'subject' => 'Your build finished'],
                 ['id' => 2, 'subject' => 'Welcome to Bifrost'],
+                ['id' => 3, 'subject' => 'Weekly digest: 5 new components'],
+                ['id' => 4, 'subject' => 'Your QR code expires soon'],
+                ['id' => 5, 'subject' => 'v4 docs are live'],
+                ['id' => 6, 'subject' => 'Simulator tips and tricks'],
+                ['id' => 7, 'subject' => 'Receipt for your subscription'],
+                ['id' => 8, 'subject' => 'Security alert: new sign-in'],
             ]),
         ];
     }
@@ -550,9 +770,14 @@ class Docs extends NativeComponent
                         && $this->canRenderLive($raw);
                     // Virtualized lists (List/LazyColumn) collapse to ~10pt when
                     // measured unbounded — give them a fixed-height card and let
-                    // renderLive() make the list fill it (flex-1). Everything
-                    // else previews at its natural content height.
-                    $isTall = $isLive && (bool) preg_match('/<native:(virtual-)?list(?![\w-])/', $raw);
+                    // renderLive() make the list fill it (flex-1). Root
+                    // scroll-view snippets get the same bounded card: unbounded,
+                    // the preview just grows to content height and nothing
+                    // scrolls. Everything else previews at its natural height.
+                    $isTall = $isLive && (bool) preg_match(
+                        '/<native:(virtual-)?list(?![\w-])|^\s*<native:scroll-view(?![\w-])/',
+                        $raw
+                    );
                     $blocks[] = $isLive
                         ? ['type' => 'live', 'snippet' => $raw, 'raw' => $raw, 'tall' => $isTall, 'lines' => $this->highlight($raw)]
                         : ['type' => 'code', 'raw' => $raw, 'lines' => $this->highlight($raw)];

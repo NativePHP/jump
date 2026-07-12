@@ -21,11 +21,12 @@
             </row>
         </pressable>
 
-        <scroll-view class="w-full flex-1">
+        <refreshable @refresh="refresh" class="w-full flex-1">
             <column class="w-full px-5 pb-32 gap-4">
-                <column class="w-full items-start gap-2 pt-1">
-                    <row class="items-center gap-1 px-2 py-1 bg-theme-surface-variant rounded-full">
-                        <text class="text-xs font-bold text-theme-primary tracking-widest">{{ strtoupper($page['section']) }}</text>
+                <column class="w-full items-start gap-3 pt-1">
+                    {{-- Section banner — full-width, centered small-caps eyebrow. --}}
+                    <row class="w-full justify-center px-4 py-2 bg-theme-surface-variant rounded-full">
+                        <text class="text-sm font-bold text-theme-primary tracking-widest text-center">{{ strtoupper($page['section']) }}</text>
                     </row>
                     <text class="text-3xl font-black text-theme-on-surface">{{ $page['title'] }}</text>
                     @if ($page['description'])
@@ -139,13 +140,46 @@
                         @endif
                     @endforeach
                 </column>
+
+                {{-- Prev / next — nav-order neighbors (crossing sections),
+                     like the website's footer links. --}}
+                @if ($adjacent['prev'] || $adjacent['next'])
+                    <row class="w-full gap-3 pt-4">
+                        @if ($adjacent['prev'])
+                            <pressable @press="goTo('{{ $adjacent['prev']['id'] }}')" class="flex-1">
+                                <column class="w-full gap-1 p-4 rounded-xl border border-theme-outline items-start">
+                                    <row class="items-center gap-1">
+                                        <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft" :size="10" color="#475569" dark-color="#94A3B8"/>
+                                        <text class="text-xs text-theme-on-surface-variant">Previous</text>
+                                    </row>
+                                    <text class="text-sm font-semibold text-theme-primary">{{ $adjacent['prev']['title'] }}</text>
+                                </column>
+                            </pressable>
+                        @else
+                            <column class="flex-1"></column>
+                        @endif
+                        @if ($adjacent['next'])
+                            <pressable @press="goTo('{{ $adjacent['next']['id'] }}')" class="flex-1">
+                                <column class="w-full gap-1 p-4 rounded-xl border border-theme-outline items-end">
+                                    <row class="items-center gap-1">
+                                        <text class="text-xs text-theme-on-surface-variant">Next</text>
+                                        <native:icon :ios="App\Icons\Ios::ChevronRight" :android="App\Icons\Android::ChevronRight" :size="10" color="#475569" dark-color="#94A3B8"/>
+                                    </row>
+                                    <text class="text-sm font-semibold text-theme-primary">{{ $adjacent['next']['title'] }}</text>
+                                </column>
+                            </pressable>
+                        @else
+                            <column class="flex-1"></column>
+                        @endif
+                    </row>
+                @endif
             </column>
-        </scroll-view>
+        </refreshable>
     </column>
 
 @else
     {{-- ── Table of contents ── --}}
-    <scroll-view class="w-full h-full bg-theme-background">
+    <refreshable @refresh="refresh" class="w-full h-full bg-theme-background">
         <column class="w-full px-5 pt-3 pb-32">
             @foreach ($sections as $section)
                 <pressable @press="toggle('{{ $section['slug'] }}')">
@@ -167,5 +201,5 @@
                 @endif
             @endforeach
         </column>
-    </scroll-view>
+    </refreshable>
 @endif

@@ -1,0 +1,53 @@
+{
+    "namespace": "Discovery",
+    "bridge_functions": [
+        {
+            "name": "Discovery.Start",
+            "android": "com.nativephp.discovery.DiscoveryFunctions.Start",
+            "ios": "DiscoveryFunctions.Start",
+            "description": "Start browsing the LAN for _jump._tcp dev servers"
+        },
+        {
+            "name": "Discovery.Stop",
+            "android": "com.nativephp.discovery.DiscoveryFunctions.Stop",
+            "ios": "DiscoveryFunctions.Stop",
+            "description": "Stop browsing for dev servers"
+        },
+        {
+            "name": "Discovery.Connect",
+            "android": "com.nativephp.discovery.DiscoveryFunctions.Connect",
+            "ios": "DiscoveryFunctions.Connect",
+            "description": "Connect to a discovered dev server by host + port (reuses the host app's connect path)"
+        }
+    ],
+    "android": {
+        "min_version": 26,
+        "permissions": [
+            "android.permission.INTERNET",
+            "android.permission.ACCESS_WIFI_STATE",
+            "android.permission.ACCESS_NETWORK_STATE",
+            "android.permission.CHANGE_WIFI_MULTICAST_STATE"
+        ],
+        "dependencies": {
+            "implementation": [
+                "com.squareup.okhttp3:okhttp:4.12.0"
+            ]
+        }
+    },
+    "ios": {
+        "min_version": "18.2",
+        "info_plist": {
+            "NSLocalNetworkUsageDescription": "Jump discovers development servers running on your Wi-Fi network so you can connect without scanning a QR code.",
+            "NSBonjourServices": [
+                "_jump._tcp"
+            ]
+        }
+    },
+    "events": [
+        "NativePHP\\Discovery\\Events\\ServerFound",
+        "NativePHP\\Discovery\\Events\\ServerLost"
+    ],
+    "hooks": {
+        "pre_compile": "native:discovery:patch-shell"
+    }
+}
