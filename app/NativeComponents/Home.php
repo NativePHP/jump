@@ -27,6 +27,8 @@ class Home extends NativeComponent
     use InteractsWithDiscovery;
     use SearchesDocs;
 
+    protected bool $hidesNavBar = true;
+
     public bool $showHow = false;
 
     public function navTitle(): string

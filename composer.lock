@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "053eef7559ca5ab621ef885f983c7a75",
+    "content-hash": "0ca0d180feca5124ad9b382cb852cd23",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2362,7 +2362,7 @@
             "dist": {
                 "type": "path",
                 "url": "../mobile-air",
-                "reference": "b9e8d2fb271ff35add8a8066414191da914ba885"
+                "reference": "be4164ff47b7e6746ab746d57f158db7c487f400"
             },
             "require": {
                 "endroid/qr-code": "^6.0.9",
@@ -2618,7 +2618,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Plugins/nativephp/clipboard",
-                "reference": "f54dc03f42b8bc8f92823ef05581370516e58c23"
+                "reference": "828959cf9e0b08fc0545865beaf5edf55a504452"
             },
             "require": {
                 "nativephp/mobile": "*",
@@ -2674,7 +2674,7 @@
             "version": "dev-main",
             "dist": {
                 "type": "path",
-                "url": "../Plugins/nativephp/discovery",
+                "url": "plugins/nativephp/discovery",
                 "reference": "754bd8b9b8d1ba791ef401a0ab78230bc1ce33dd"
             },
             "require": {
@@ -3175,7 +3175,7 @@
             "dist": {
                 "type": "path",
                 "url": "../Plugins/nativephp/native-ui",
-                "reference": "64944c73d1b20b60c2c7cfc89fafef700727237b"
+                "reference": "d2e30bfe7fbaf25a85e2269871b728b3fbb8a74e"
             },
             "require": {
                 "nativephp/mobile": "*",

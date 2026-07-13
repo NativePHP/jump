@@ -6,30 +6,69 @@
 --}}
 <column class="w-full h-full bg-theme-background">
 <scroll-view class="w-full flex-1 bg-theme-background">
-    <column class="w-full px-5 pb-32">
+    <column class="w-full px-5 pb-32 safe-area">
 
         {{-- Discovered-servers pill is now app-wide (JumpTabsLayout::floatingOverlay). --}}
 
         {{-- Hero --}}
-        <column class="w-full items-center pt-4 select-text">
-            <text class="text-4xl italic font-bold text-slate-800 dark:text-slate-200">Instant</text>
-            <text font="RockSalt-Regular" class="text-[65] text-theme-primary leading-none">Laravel</text>
-            <text class="text-4xl italic font-bold text-slate-800 dark:text-slate-200">Runtime.</text>
-            <text class="text-base text-theme-on-surface-variant pt-3 leading-none">A mobile programming environment
-                for Laravel
-                and NativePHP. Scan a Jump QR code to run a Laravel project on your device.
+        <column class="w-full items-center pt-6 select-text">
+            {{-- Kicker pill --}}
+            <row class="items-center gap-2 px-4 py-2 bg-theme-surface-variant rounded-full border border-theme-outline">
+                <native:icon :ios="App\Icons\Ios::BoltFill" :android="App\Icons\Android::ElectricBolt" :size="12"
+                             color="#4F46E5" dark-color="#A78BFA"/>
+                <text class="text-xs font-bold text-theme-primary tracking-widest">POWERED BY NATIVEPHP</text>
+            </row>
+
+            {{-- JUMP wordmark — static mid-leap pose (padding), with a slow
+                 per-letter float (translate-y yoyo). animate-delay staggers
+                 each letter's phase so a soft wave travels through the word.
+                 Speed lines stay still. --}}
+            <row class="items-end pt-[48]">
+                <column class="items-end gap-2 pb-[24] pr-3">
+                    <column class="w-[34] h-[5] rounded-full bg-theme-primary opacity-[0.6]"/>
+                    <column class="w-[22] h-[5] rounded-full bg-theme-primary opacity-[0.35]"/>
+                    <column class="w-[12] h-[5] rounded-full bg-theme-primary opacity-[0.18]"/>
+                </column>
+                <text font="Audiowide-Regular" rotate="4" translate-y="-8"
+                      animate-duration="1600" animate-delay="0" animate-easing="ease-in-out" animate-loop="true"
+                      class="text-[72] leading-none italic text-theme-primary">J</text>
+                <text font="Audiowide-Regular" translate-y="-8"
+                      animate-duration="1600" animate-delay="200" animate-easing="ease-in-out" animate-loop="true"
+                      class="text-[72] leading-none italic text-theme-primary pb-[16]">U</text>
+                <text font="Audiowide-Regular" translate-y="-8"
+                      animate-duration="1600" animate-delay="400" animate-easing="ease-in-out" animate-loop="true"
+                      class="text-[72] leading-none italic text-theme-primary pb-[28]">M</text>
+                <text font="Audiowide-Regular" rotate="-6" translate-y="-8"
+                      animate-duration="1600" animate-delay="600" animate-easing="ease-in-out" animate-loop="true"
+                      class="text-[72] leading-none italic text-theme-primary pb-[10]">P</text>
+            </row>
+
+            {{-- ground line the letters leap from --}}
+            <column class="w-[230] h-[4] rounded-full bg-theme-outline opacity-[0.5] mt-2"/>
+
+            {{-- Tagline --}}
+            <row class="items-end gap-2 pt-4">
+                <text font="Audiowide-Regular" class="text-xl leading-none italic font-bold text-slate-800 dark:text-slate-200">Instant</text>
+                <text font="Audiowide-Regular" class="text-xl leading-none text-slate-600">Laravel</text>
+                <text font="Audiowide-Regular" class="text-xl leading-none italic font-bold text-slate-800 dark:text-slate-200">Runtime.</text>
+            </row>
+
+            <text class="text-base text-theme-on-surface-variant pt-3 leading-relaxed text-center">
+                Jump turns your phone into a live Laravel machine. Scan a Jump QR code and your
+                project runs right here — natively.
             </text>
 
             <row class="gap-3 pt-6">
                 <pressable @press="scan">
-                    <row class="items-center gap-2 px-6 py-4 bg-theme-primary rounded-2xl">
+                    <row class="items-center gap-2 px-6 py-4 bg-theme-primary rounded-2xl shadow-lg">
                         <native:icon :ios="App\Icons\Ios::QrcodeViewfinder"
                                      :android="App\Icons\Android::QrCodeScanner" :size="18" color="#FFFFFF"/>
-                        <text class="text-base font-bold text-theme-on-primary">Scan</text>
+                        <text font="Audiowide-Regular" class="text-base font-bold text-theme-on-primary">JUMP</text>
                     </row>
                 </pressable>
                 <pressable @press="openHow">
                     <text
+                        font="Audiowide-Regular"
                         class="px-6 py-4 bg-theme-surface-variant rounded-2xl border border-theme-outline text-base font-semibold text-theme-on-surface">
                         How it works
                     </text>
@@ -45,7 +84,7 @@
                                  color="#4F46E5"/>
                 </column>
                 <column class="flex-1 gap-1">
-                    <text class="text-lg font-bold text-theme-on-surface">NativePHP Playground</text>
+                    <text font="Audiowide-Regular" class="text-lg font-bold text-theme-on-surface">NativePHP Playground</text>
                     <text class="text-sm text-theme-on-surface-variant">A bundled Laravel app that demonstrates 15
                         native APIs — camera, share, scanner, secure storage, and more.
                     </text>
@@ -61,7 +100,7 @@
                 <column
                     class="w-full h-[190] p-5 bg-theme-surface rounded-3xl border border-theme-outline justify-between">
                     <column class="gap-2">
-                        <text class="text-lg font-bold text-theme-on-surface">Official Docs</text>
+                        <text font="Audiowide-Regular" class="text-lg font-bold text-theme-on-surface">Official Docs</text>
                         <text class="text-sm text-theme-on-surface-variant">Learn the Jump runtime and NativePHP
                             APIs.
                         </text>
@@ -78,7 +117,7 @@
                 <column
                     class="w-full h-[190] p-5 bg-theme-surface rounded-3xl border border-theme-outline justify-between">
                     <column class="gap-2">
-                        <text class="text-lg font-bold text-theme-on-surface">Video Guides</text>
+                        <text font="Audiowide-Regular" class="text-lg font-bold text-theme-on-surface">Video Guides</text>
                         <text class="text-sm text-theme-on-surface-variant">Tutorials for building with Laravel on
                             mobile.
                         </text>
@@ -98,7 +137,7 @@
             <row class="items-center gap-2">
                 <native:icon :ios="App\Icons\Ios::Building2Fill" :android="App\Icons\Android::Groups" :size="16"
                              color="#4F46E5" dark-color="#A78BFA"/>
-                <text class="text-xs font-bold text-theme-primary tracking-widest">AGENCY PARTNERS</text>
+                <text font="Audiowide-Regular" class="text-xs font-bold text-theme-primary tracking-widest">AGENCY PARTNERS</text>
             </row>
             <text class="text-base text-theme-on-surface-variant pt-1">Vetted agencies with deep NativePHP
                 experience who can help bring your project to life.
@@ -120,11 +159,12 @@
                             <column
                                 class="w-[44] h-[44] rounded-xl bg-theme-surface-variant items-center justify-center">
                                 <text
+                                    font="Audiowide-Regular"
                                     class="text-lg font-black text-theme-primary">{{ Str::substr($partner['name'], 0, 1) }}</text>
                             </column>
                         @endif
                         <column class="flex-1 gap-1">
-                            <text class="text-base font-bold text-theme-on-surface">{{ $partner['name'] }}</text>
+                            <text  class="text-base font-bold text-theme-on-surface">{{ $partner['name'] }}</text>
                             <text class="text-sm text-theme-on-surface-variant">{{ $partner['tagline'] }}</text>
                         </column>
                         <native:icon :ios="App\Icons\Ios::ArrowUpRight" :android="App\Icons\Android::ArrowOutward"

@@ -22,6 +22,8 @@ class Docs extends NativeComponent
     use InteractsWithDiscovery;
     use SearchesDocs;
 
+    protected bool $hidesFloatingOverlay = true;
+
     /**
      * Navigation chrome — renders at the screen edges (tab / nav / side bars),
      * not as inline content, so its snippets show as code only. Overlays

@@ -111,6 +111,6 @@ class JumpTabsLayout extends NativeLayout
                 'servers' => $store->all(),
                 'serverCount' => $store->count(),
             ])
-        )->offset(60);
+        )->offset(88);
     }
 }
