@@ -5,6 +5,7 @@ import android.os.Looper
 import android.util.Log
 import com.nativephp.mobile.bridge.BridgeFunctionRegistry
 import com.nativephp.mobile.ui.nativerender.EventType
+import com.nativephp.mobile.ui.nativerender.NativeElementBridge
 import com.nativephp.mobile.ui.nativerender.NativeUIBridge
 import okhttp3.Call
 import okhttp3.Callback
@@ -111,6 +112,36 @@ object JumpBridgeRelay {
         client?.dispatcher?.executorService?.shutdown()
         client = null
         isConnected = false
+    }
+
+    /**
+     * Escape hatch — tear down the live remote session and return to the
+     * local Jump home. Fired by [EscapeHatchGesture]'s 3-finger swipe-right;
+     * mirrors iOS `JumpBridgeRelay.exitToJump()`. No-op when nothing is
+     * connected.
+     */
+    fun exitToJump() {
+        val elementLive = JumpElementRuntime.isActive
+        if (!elementLive && !isConnected) return
+
+        Log.i(TAG, "Escape hatch — exiting remote app back to Jump")
+
+        if (elementLive) {
+            JumpElementRuntime.endSession() // clears NativeUIBridge tree + isActive
+        }
+        disconnect()
+
+        // The LOCAL Jump home runloop is still parked in wait_event — during the
+        // session its events were forked to the remote, so it never woke. Wake it
+        // with a benign native event: the runloop re-renders Home and its publish
+        // restores the tree (the iOS "3-finger swipe → white screen" fix).
+        //
+        // Queued on the main handler AFTER endSession()'s own main-post, so
+        // isActive is already false when the event hits the shell's writeEvent
+        // fork and it routes to the LOCAL JNI channel, not the dead remote.
+        mainHandler.post {
+            NativeElementBridge.sendNativeEvent("__jumpResume", "{}")
+        }
     }
 
     private fun fetchWsPortAndConnect() {

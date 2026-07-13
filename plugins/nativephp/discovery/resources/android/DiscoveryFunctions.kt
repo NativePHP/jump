@@ -31,6 +31,7 @@ object DiscoveryFunctions {
         override fun execute(parameters: Map<String, Any>): Map<String, Any> {
             Log.i(TAG, "🛰️ Discovery.Start")
             Handler(Looper.getMainLooper()).post {
+                EscapeHatchGesture.install(activity)
                 ensure(activity).start()
             }
             return emptyMap()
@@ -68,6 +69,7 @@ object DiscoveryFunctions {
             }
             Log.i(TAG, "🔌 Discovery.Connect → $host:$port")
             Handler(Looper.getMainLooper()).post {
+                EscapeHatchGesture.install(activity)
                 JumpBridgeRelay.connect(host, port)
             }
             return emptyMap()
