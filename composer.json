@@ -46,12 +46,12 @@
             }
         },
         "mobile": {
-            "type": "path",
-            "url": "../mobile-air"
+            "type": "vcs",
+            "url": "https://github.com/nativephp/mobile-air"
         },
         "ui": {
-            "type": "path",
-            "url": "../Plugins/nativephp/native-ui"
+            "type": "vcs",
+            "url": "https://github.com/nativephp/native-ui"
         },
         "plugins": {
             "type": "composer",
