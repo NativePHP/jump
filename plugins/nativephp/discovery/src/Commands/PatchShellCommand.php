@@ -14,6 +14,10 @@ use Native\Mobile\Plugins\Commands\NativePluginHookCommand;
  * shell's own NativeElementBridge — a file `native:install` regenerates and
  * would otherwise clobber. Running this as a `pre_compile` hook re-inserts the
  * fork before each compile, idempotently, so it survives regeneration.
+ *
+ * On Android this hook also enables cleartext traffic for RELEASE builds
+ * (see allowAndroidCleartext()) — without it, store builds cannot reach
+ * plain-HTTP LAN dev servers at all.
  */
 class PatchShellCommand extends NativePluginHookCommand
 {
@@ -31,10 +35,57 @@ class PatchShellCommand extends NativePluginHookCommand
         }
 
         if ($this->isAndroid()) {
+            $this->allowAndroidCleartext();
+
             return $this->patchAndroid();
         }
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Permit cleartext (plain http/ws) traffic in RELEASE builds.
+     *
+     * Jump sessions ARE plain HTTP to LAN dev servers (the /jump/info
+     * handshake, the ws:// bridge socket, the runloop-drive GET), and Android
+     * blocks cleartext in release builds via the shell's
+     * network_security_config.xml (`cleartextTrafficPermitted="false"`; only
+     * debug builds get the permissive src/debug overlay). Android offers no
+     * IP-range scoping for cleartext, so the base-config flag is the only
+     * lever. The whole 9-line resource is rewritten each build — idempotent,
+     * and immune to the anchor-drift problems of string-patching. The
+     * AndroidManifest is untouched (it already points at this file).
+     */
+    private function allowAndroidCleartext(): void
+    {
+        $file = $this->buildPath().'/app/src/main/res/xml/network_security_config.xml';
+        if (! is_file($file)) {
+            $this->warn("discovery: network_security_config.xml not found at {$file} — cleartext NOT enabled; release builds cannot reach LAN dev servers.");
+
+            return;
+        }
+
+        if (str_contains(file_get_contents($file), '[discovery] cleartext')) {
+            $this->info('discovery: release cleartext already enabled.');
+
+            return;
+        }
+
+        file_put_contents($file, <<<'XML'
+        <?xml version="1.0" encoding="utf-8"?>
+        <network-security-config>
+            <!-- [discovery] cleartext enabled: Jump connects to plain-HTTP LAN dev
+                 servers, which release builds block by default. Rewritten on every
+                 build by native:discovery:patch-shell (pre_compile hook). -->
+            <base-config cleartextTrafficPermitted="true">
+                <trust-anchors>
+                    <certificates src="system" />
+                </trust-anchors>
+            </base-config>
+        </network-security-config>
+        XML);
+
+        $this->info('discovery: enabled release cleartext in network_security_config.xml.');
     }
 
     private function patchIos(): int
