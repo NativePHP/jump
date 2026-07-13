@@ -32,7 +32,10 @@
             "implementation": [
                 "com.squareup.okhttp3:okhttp:4.12.0"
             ]
-        }
+        },
+        "proguard_rules": [
+            "-dontwarn org.slf4j.impl.StaticLoggerBinder"
+        ]
     },
     "ios": {
         "min_version": "18.2",
