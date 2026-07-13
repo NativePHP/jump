@@ -2362,12 +2362,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-air.git",
-                "reference": "be4164ff47b7e6746ab746d57f158db7c487f400"
+                "reference": "0b392d1e1e69273362824198b4b1eb292fcfa9dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/be4164ff47b7e6746ab746d57f158db7c487f400",
-                "reference": "be4164ff47b7e6746ab746d57f158db7c487f400",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/0b392d1e1e69273362824198b4b1eb292fcfa9dc",
+                "reference": "0b392d1e1e69273362824198b4b1eb292fcfa9dc",
                 "shasum": ""
             },
             "require": {
@@ -2472,7 +2472,7 @@
                 "source": "https://github.com/NativePHP/mobile-air/tree/element",
                 "issues": "https://github.com/NativePHP/mobile-air/issues"
             },
-            "time": "2026-07-12T23:32:18+00:00"
+            "time": "2026-07-13T11:23:00+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
