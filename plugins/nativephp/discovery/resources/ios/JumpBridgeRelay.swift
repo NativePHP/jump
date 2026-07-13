@@ -66,15 +66,28 @@ class JumpBridgeRelay: NSObject, ObservableObject {
         // Stop forwarding / streaming and drop the WS.
         JumpWebViewSession.shared.stop()
         if elementLive {
-            JumpElementRuntime.shared.endSession()
+            JumpElementRuntime.shared.endSession() // clears currentTree + isActive
         }
         disconnect()
 
-        // Restore the local native-ui home. For a WebView session the home tree
-        // is still in currentTree (its local publishes were only suppressed while
-        // forwarding), so flipping isActive shows it immediately and interactive.
         DispatchQueue.main.async {
-            NativeUIBridge.shared.isActive = true
+            if elementLive {
+                // Native-ui remote exit: endSession() cleared currentTree, and the
+                // LOCAL Jump home runloop is still parked in wait_event — all
+                // session its discovery events were forked to the remote, so it
+                // never woke. Wake it with a benign native event: the runloop
+                // re-renders Home and its publish restores currentTree + isActive.
+                // (endSession's isActive=false was queued on main before this
+                // block, so the event routes to the LOCAL runloop, not the dead
+                // remote.) Without this the shell falls through to the blank
+                // WebView — the "3-finger swipe → white screen" bug.
+                NativeElementBridge.sendNativeEvent(eventName: "__jumpResume", payloadJson: "{}")
+            } else {
+                // WebView exit: the local home tree is still in currentTree (its
+                // local publishes were only suppressed while forwarding), so
+                // flipping isActive shows it immediately and interactive.
+                NativeUIBridge.shared.isActive = true
+            }
         }
     }
     deinit { disconnect() }
