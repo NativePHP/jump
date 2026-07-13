@@ -33,7 +33,7 @@
     "repositories": {
         "clipboard": {
             "type": "path",
-            "url": "../Plugins/nativephp/clipboard",
+            "url": "plugins/nativephp/clipboard",
             "options": {
                 "symlink": true
             }
