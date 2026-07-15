@@ -116,23 +116,31 @@ class Docs extends NativeComponent
         }
     }
 
-    public function closePage(): void
-    {
-        $this->page = null;
-        $this->demoState = [];
-    }
-
     /**
-     * Footer prev/next — REPLACE-navigate to the page's deep-link route so the
-     * reader remounts scrolled to the top. A plain open() reuses the same
-     * scroll container, which keeps the previous page's scroll offset (you'd
-     * land at the bottom of the next page). Replace, not push: flipping
-     * through pages must not stack screens behind the back gesture. Same
-     * route the tab-bar search results use.
+     * Footer prev/next — flip the page IN PLACE, no navigation. This used to
+     * replace() to the page's deep-link route (to remount scrolled to the
+     * top), but a replace() to a child URI of the tab root is misread by the
+     * native per-tab coordinator as a PUSH: PHP's stack stays depth-1 while
+     * the NavigationStack gains a level with a system back chevron. Tapping
+     * that chevron pops natively, PHP's root-screen guard ignores the back
+     * event, and the two sides desync — the screen shows a stale cached tree
+     * whose callbacks are dead (next/prev stop working). Scroll-to-top now
+     * comes from `:native:key="$page['id']"` on the reader's scroll container
+     * (fresh native identity per page), and expanding the section keeps the
+     * TOC in sync for when the reader closes.
      */
     public function goTo(string $id): void
     {
-        $this->replace('/docs/'.$id);
+        $this->open($id);
+
+        if ($this->page) {
+            foreach ($this->sections as $section) {
+                if ($section['name'] === $this->page['section']
+                    && ! in_array($section['slug'], $this->expanded, true)) {
+                    $this->expanded[] = $section['slug'];
+                }
+            }
+        }
     }
 
     /**

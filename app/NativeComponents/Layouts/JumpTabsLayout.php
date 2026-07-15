@@ -5,6 +5,7 @@ namespace App\NativeComponents\Layouts;
 use App\Icons\Android;
 use App\Icons\Ios;
 use App\NativeComponents\Builds;
+use App\NativeComponents\Docs;
 use App\NativeComponents\Home;
 use App\NativeComponents\Settings;
 use App\Support\DiscoveredServers;
@@ -41,8 +42,20 @@ class JumpTabsLayout extends NativeLayout
         // glyph + wordmark, both in the indigo brand color (#4F46E5). Ports
         // the old app's nav logo verbatim (its `.principal` ToolbarItem was
         // an SF Symbol + Text lockup, not a raster asset).
+        // The docs page reader is a pushed level (TOC taps / search results /
+        // deep links navigate to /docs/{...}), so it needs `back(true)` for
+        // Android's TopAppBar arrow; iOS pushed levels get the automatic
+        // NavigationStack chevron either way (manual back only renders at
+        // root). $page is only set on reader instances, never on the TOC.
+        $isDocsReader = $screen instanceof Docs && $screen->page !== null;
+
+        // The string title isn't drawn (the titleView lockup owns the
+        // principal slot) but it labels this level in the back-chevron
+        // long-press history menu and for accessibility — without it those
+        // entries render as empty glass pills.
         $bar = NavBar::make()
-            ->back(false)
+            ->back($isDocsReader)
+            ->title($screen->navTitle())
             ->titleView(
                 Row::make()->center()->gap(6)
                     ->addChild(

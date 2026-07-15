@@ -11,17 +11,14 @@
 
 @elseif ($page)
     {{-- ── Page reader ── --}}
+    {{-- The reader is reached by a real navigation (TOC tap / search result /
+         deep link all push the /docs/{...} route), so the native back chevron
+         returns to the TOC — no in-content back bar needed. --}}
     <column class="w-full h-full bg-theme-background">
-        {{-- Pinned back bar — OUTSIDE the scroll-view, so it stays put while
-             the content scrolls (return to the TOC without scrolling up). --}}
-        <pressable @press="closePage">
-            <row class="w-full items-center gap-1 px-5 py-3">
-                <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ArrowBack" :size="16" color="#4F46E5"/>
-                <text class="text-base font-medium text-theme-primary">Docs</text>
-            </row>
-        </pressable>
-
-        <refreshable @refresh="refresh" class="w-full flex-1">
+        {{-- Keyed by page id: prev/next flips the page in place (no
+             navigation), so the scroll container needs a fresh native
+             identity per page to reset the scroll offset to the top. --}}
+        <refreshable @refresh="refresh" :native:key="$page['id']" class="w-full flex-1">
             <column class="w-full px-5 pb-32 gap-4">
                 <column class="w-full items-start gap-3 pt-1">
                     {{-- Section banner — full-width, centered small-caps eyebrow. --}}
@@ -194,7 +191,12 @@
 
                 @if (in_array($section['slug'], $expanded, true))
                     @foreach ($section['pages'] as $p)
-                        <pressable @press="open('{{ $p['id'] }}')">
+                        {{-- Real navigation to the page's deep-link route (not
+                             open()-in-place): PHP's stack genuinely grows, so
+                             the reader gets a native back chevron that pops in
+                             sync. Same route search results and universal
+                             links use. --}}
+                        <pressable @press="navigate('/docs/{{ $p['id'] }}')">
                             <text class="w-full text-base text-theme-on-surface-variant px-3 py-2">{{ $p['title'] }}</text>
                         </pressable>
                     @endforeach

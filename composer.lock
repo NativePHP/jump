@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "230c8aa8195970285fa88e15b225c73c",
+    "content-hash": "277360d506145d59a4d511cef90dd6bb",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -866,16 +866,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.14.1",
+            "version": "7.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "6b1d2429a2c312474c523aa9017fba0c07b5f4a0"
+                "reference": "fa88c57803501ad0770f5cddb1e60525d49da9a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/6b1d2429a2c312474c523aa9017fba0c07b5f4a0",
-                "reference": "6b1d2429a2c312474c523aa9017fba0c07b5f4a0",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/fa88c57803501ad0770f5cddb1e60525d49da9a1",
+                "reference": "fa88c57803501ad0770f5cddb1e60525d49da9a1",
                 "shasum": ""
             },
             "require": {
@@ -974,7 +974,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.14.1"
+                "source": "https://github.com/guzzle/guzzle/tree/7.14.2"
             },
             "funding": [
                 {
@@ -990,7 +990,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-13T01:32:54+00:00"
+            "time": "2026-07-14T18:15:01+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -1283,16 +1283,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v13.19.0",
+            "version": "v13.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "514502b38e11bd676ecf83b271c9452cc7500f16"
+                "reference": "b9d1bccad5fbc32578dca22566bb11e7c0e545d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/514502b38e11bd676ecf83b271c9452cc7500f16",
-                "reference": "514502b38e11bd676ecf83b271c9452cc7500f16",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/b9d1bccad5fbc32578dca22566bb11e7c0e545d7",
+                "reference": "b9d1bccad5fbc32578dca22566bb11e7c0e545d7",
                 "shasum": ""
             },
             "require": {
@@ -1371,6 +1371,7 @@
                 "illuminate/filesystem": "self.version",
                 "illuminate/hashing": "self.version",
                 "illuminate/http": "self.version",
+                "illuminate/image": "self.version",
                 "illuminate/json-schema": "self.version",
                 "illuminate/log": "self.version",
                 "illuminate/macroable": "self.version",
@@ -1397,6 +1398,7 @@
                 "ext-gmp": "*",
                 "fakerphp/faker": "^1.24",
                 "guzzlehttp/psr7": "^2.9",
+                "intervention/image": "^4.0",
                 "laravel/pint": "^1.18",
                 "league/flysystem-aws-s3-v3": "^3.25.1",
                 "league/flysystem-ftp": "^3.25.1",
@@ -1433,6 +1435,7 @@
                 "ext-redis": "Required to use the Redis cache and queue drivers (^4.0 || ^5.0 || ^6.0).",
                 "fakerphp/faker": "Required to generate fake data using the fake() helper (^1.23).",
                 "filp/whoops": "Required for friendly error pages in development (^2.14.3).",
+                "intervention/image": "Required to use the image processing features (^4.0).",
                 "laravel/tinker": "Required to use the tinker console command (^2.0).",
                 "league/flysystem-aws-s3-v3": "Required to use the Flysystem S3 driver (^3.25.1).",
                 "league/flysystem-ftp": "Required to use the Flysystem FTP driver (^3.25.1).",
@@ -1503,7 +1506,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-07-07T14:13:33+00:00"
+            "time": "2026-07-14T14:22:22+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -2362,12 +2365,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-air.git",
-                "reference": "89a6e7e18ce94ffb473a58ac21acd33448216566"
+                "reference": "c959c20f27c4430ad6d74e586c6b1bd0b5bbb59d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/89a6e7e18ce94ffb473a58ac21acd33448216566",
-                "reference": "89a6e7e18ce94ffb473a58ac21acd33448216566",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/c959c20f27c4430ad6d74e586c6b1bd0b5bbb59d",
+                "reference": "c959c20f27c4430ad6d74e586c6b1bd0b5bbb59d",
                 "shasum": ""
             },
             "require": {
@@ -2472,7 +2475,7 @@
                 "source": "https://github.com/NativePHP/mobile-air/tree/element",
                 "issues": "https://github.com/NativePHP/mobile-air/issues"
             },
-            "time": "2026-07-13T17:33:04+00:00"
+            "time": "2026-07-15T14:21:13+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
@@ -2736,16 +2739,19 @@
         },
         {
             "name": "nativephp/mobile-geolocation",
-            "version": "1.0.3",
+            "version": "dev-streaming",
             "dist": {
-                "type": "zip",
-                "url": "https://plugins.nativephp.com/dist/nativephp/mobile-geolocation/nativephp-mobile-geolocation-3fe651d9a84eff9b6df15a3b3e9ee0fcd48a82b5-zip-29e3cd.zip",
-                "reference": "3fe651d9a84eff9b6df15a3b3e9ee0fcd48a82b5",
-                "shasum": "0fd3af8fb37d5fee178d82dd69c2f00799347abd"
+                "type": "path",
+                "url": "../Plugins/nativephp/geolocation",
+                "reference": "cce5b26a6fef53052d0b4f8bf26182036aa836d3"
             },
             "require": {
-                "nativephp/mobile": "^3.0",
-                "php": "^8.2"
+                "nativephp/mobile": "*",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^2.7|^3.0|^4.0"
             },
             "type": "nativephp-plugin",
             "extra": {
@@ -2760,8 +2766,19 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Native\\Mobile\\Providers\\": "src/"
+                    "Native\\Mobile\\Providers\\": "src/",
+                    "NativePHP\\Geolocation\\": "src/"
                 }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
             },
             "license": [
                 "proprietary"
@@ -2773,7 +2790,10 @@
                 }
             ],
             "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
-            "time": "2026-05-06T10:26:06+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "nativephp/mobile-local-notifications",
@@ -3182,12 +3202,12 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/NativePHP/native-ui.git",
+                "url": "https://github.com/NativePHP/mobile-ui.git",
                 "reference": "d2e30bfe7fbaf25a85e2269871b728b3fbb8a74e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/native-ui/zipball/d2e30bfe7fbaf25a85e2269871b728b3fbb8a74e",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ui/zipball/d2e30bfe7fbaf25a85e2269871b728b3fbb8a74e",
                 "reference": "d2e30bfe7fbaf25a85e2269871b728b3fbb8a74e",
                 "shasum": ""
             },
@@ -3231,8 +3251,8 @@
             ],
             "description": "A NativePHP Mobile plugin",
             "support": {
-                "source": "https://github.com/NativePHP/native-ui/tree/main",
-                "issues": "https://github.com/NativePHP/native-ui/issues"
+                "source": "https://github.com/NativePHP/mobile-ui/tree/main",
+                "issues": "https://github.com/NativePHP/mobile-ui/issues"
             },
             "time": "2026-07-12T23:32:41+00:00"
         },

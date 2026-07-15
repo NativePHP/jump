@@ -4,12 +4,13 @@ namespace App\NativeComponents;
 
 use App\NativeComponents\Concerns\InteractsWithDiscovery;
 use App\NativeComponents\Concerns\SearchesDocs;
+use App\NativeComponents\Layouts\JumpTabsLayout;
+use App\Support\DiscoveredServers;
 use Illuminate\View\View;
 use Native\Mobile\Attributes\On;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Events\Scanner\CodeScanned;
 use Native\Mobile\Facades\Browser;
-use Native\Mobile\Facades\Dialog;
 use Native\Mobile\Facades\Scanner;
 use NativePHP\Discovery\Facades\Discovery;
 
@@ -18,8 +19,8 @@ use NativePHP\Discovery\Facades\Discovery;
  *
  * Marketing hero + Playground card + quick-access cards. LAN dev-server
  * discovery is now app-wide: the "N servers nearby" pill floats over every tab
- * from {@see \App\NativeComponents\Layouts\JumpTabsLayout} and its state lives
- * in {@see \App\Support\DiscoveredServers} (fed via {@see InteractsWithDiscovery}).
+ * from {@see JumpTabsLayout} and its state lives
+ * in {@see DiscoveredServers} (fed via {@see InteractsWithDiscovery}).
  * Scanning a jump:// QR still connects from here.
  */
 class Home extends NativeComponent
@@ -75,7 +76,7 @@ class Home extends NativeComponent
 
     public function playground(): void
     {
-        Dialog::toast('The bundled Playground is coming soon.');
+        $this->navigate('/playground');
     }
 
     public function goDocs(): void
@@ -109,22 +110,22 @@ class Home extends NativeComponent
     {
         return [
             [
-                'name'    => 'Nexcalia',
+                'name' => 'Nexcalia',
                 'tagline' => 'Smart tools for scheduling & visitor management.',
-                'url'     => 'https://www.nexcalia.com/?ref=nativephp',
-                'logo'    => null,
+                'url' => 'https://www.nexcalia.com/?ref=nativephp',
+                'logo' => null,
             ],
             [
-                'name'    => 'Web Mavens',
+                'name' => 'Web Mavens',
                 'tagline' => 'Laravel Partners crafting secure, SOC 2-ready apps.',
-                'url'     => 'https://www.webmavens.com/?ref=nativephp',
-                'logo'    => null,
+                'url' => 'https://www.webmavens.com/?ref=nativephp',
+                'logo' => null,
             ],
             [
-                'name'    => 'Synergi Tech',
+                'name' => 'Synergi Tech',
                 'tagline' => 'Bespoke software for complex infrastructure.',
-                'url'     => 'https://synergitech.co.uk/partners/nativephp/',
-                'logo'    => 'https://synergitech.co.uk/logo.png',
+                'url' => 'https://synergitech.co.uk/partners/nativephp/',
+                'logo' => 'https://synergitech.co.uk/logo.png',
             ],
         ];
     }

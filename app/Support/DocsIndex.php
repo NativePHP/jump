@@ -134,6 +134,11 @@ class DocsIndex
             ];
         }
 
+        // Section order is the API's key order — since 2026-07-14 the site's
+        // getNavigation() emits sections in sidebar order (front-matter
+        // `order`, nested subsections after their parent), so the TOC and
+        // prev/next flattening match the website without a hardcoded list
+        // here that would rot when sections change.
         return $sections;
     }
 }
