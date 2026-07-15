@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "277360d506145d59a4d511cef90dd6bb",
+    "content-hash": "ebb930a0cd68f6475ba8ea7a715fe22a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2361,16 +2361,16 @@
         },
         {
             "name": "nativephp/mobile",
-            "version": "dev-element",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-air.git",
-                "reference": "c959c20f27c4430ad6d74e586c6b1bd0b5bbb59d"
+                "reference": "f34a6a646ff89eb61a3aef7d784ac8b5beb10d73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/c959c20f27c4430ad6d74e586c6b1bd0b5bbb59d",
-                "reference": "c959c20f27c4430ad6d74e586c6b1bd0b5bbb59d",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/f34a6a646ff89eb61a3aef7d784ac8b5beb10d73",
+                "reference": "f34a6a646ff89eb61a3aef7d784ac8b5beb10d73",
                 "shasum": ""
             },
             "require": {
@@ -2414,40 +2414,14 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Native\\Mobile\\": "src/"
-                },
                 "files": [
                     "src/helpers.php"
-                ]
-            },
-            "autoload-dev": {
+                ],
                 "psr-4": {
-                    "Tests\\": "tests/"
+                    "Native\\Mobile\\": "src/"
                 }
             },
-            "scripts": {
-                "qa": [
-                    "@composer format",
-                    "@composer analyse",
-                    "@composer test"
-                ],
-                "post-autoload-dump": [
-                    "@php ./vendor/bin/testbench package:discover --ansi"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test": [
-                    "vendor/bin/pest"
-                ],
-                "test-coverage": [
-                    "vendor/bin/pest --coverage"
-                ],
-                "format": [
-                    "vendor/bin/pint"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2472,10 +2446,10 @@
                 "nativephp"
             ],
             "support": {
-                "source": "https://github.com/NativePHP/mobile-air/tree/element",
-                "issues": "https://github.com/NativePHP/mobile-air/issues"
+                "issues": "https://github.com/NativePHP/mobile-air/issues",
+                "source": "https://github.com/NativePHP/mobile-air/tree/main"
             },
-            "time": "2026-07-15T14:21:13+00:00"
+            "time": "2026-07-15T15:51:17+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
@@ -11181,8 +11155,8 @@
     "aliases": [
         {
             "package": "nativephp/mobile",
-            "version": "dev-element",
-            "alias": "3.99.0",
+            "version": "dev-main",
+            "alias": "3.99",
             "alias_normalized": "3.99.0.0"
         }
     ],
