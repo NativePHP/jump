@@ -41,7 +41,6 @@ class NativeServiceProvider extends ServiceProvider
             \Native\Mobile\Providers\ShareServiceProvider::class,
             \Native\Mobile\Providers\ScannerServiceProvider::class,
             \Native\Mobile\Providers\CameraServiceProvider::class,
-            \Native\Mobile\Providers\GeolocationServiceProvider::class,
             \Native\Mobile\Providers\NetworkServiceProvider::class,
             \Native\Mobile\Providers\SecureStorageServiceProvider::class,
             \Native\Mobile\Providers\MicrophoneServiceProvider::class,

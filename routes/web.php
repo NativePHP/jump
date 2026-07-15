@@ -45,7 +45,6 @@ Route::nativeGroup(PlaygroundTabsLayout::class, function () {
     Route::native('/playground/media/scanner', Playground\ScannerDemo::class);
 
     Route::native('/playground/system/biometrics', Playground\BiometricsDemo::class);
-    Route::native('/playground/system/geolocation', Playground\GeolocationDemo::class);
     Route::native('/playground/system/device', Playground\DeviceDemo::class);
     Route::native('/playground/system/network', Playground\NetworkDemo::class);
     Route::native('/playground/system/haptics', Playground\HapticsDemo::class);

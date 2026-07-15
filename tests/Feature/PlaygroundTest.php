@@ -21,7 +21,6 @@ test('every playground screen mounts', function (string $uri, string $component)
     ['/playground/media/microphone', Playground\MicrophoneDemo::class],
     ['/playground/media/scanner', Playground\ScannerDemo::class],
     ['/playground/system/biometrics', Playground\BiometricsDemo::class],
-    ['/playground/system/geolocation', Playground\GeolocationDemo::class],
     ['/playground/system/device', Playground\DeviceDemo::class],
     ['/playground/system/network', Playground\NetworkDemo::class],
     ['/playground/system/haptics', Playground\HapticsDemo::class],

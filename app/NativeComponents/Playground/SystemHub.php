@@ -26,7 +26,6 @@ class SystemHub extends NativeComponent
             [
                 'title' => 'Device & Sensors',
                 'demos' => [
-                    ['id' => 'geolocation', 'title' => 'Geolocation', 'subtitle' => 'Position, permissions and accuracy', 'icon' => 'location.fill', 'color' => '#10B981', 'url' => '/playground/system/geolocation'],
                     ['id' => 'device', 'title' => 'Device Info', 'subtitle' => 'Identifiers, hardware and battery', 'icon' => 'iphone', 'color' => '#0EA5E9', 'url' => '/playground/system/device'],
                     ['id' => 'flashlight', 'title' => 'Flashlight', 'subtitle' => 'Toggle the torch', 'icon' => 'flashlight.on.fill', 'color' => '#F59E0B', 'url' => '/playground/system/flashlight'],
                     ['id' => 'network', 'title' => 'Network', 'subtitle' => 'Connection status and type', 'icon' => 'wifi', 'color' => '#14B8A6', 'url' => '/playground/system/network'],

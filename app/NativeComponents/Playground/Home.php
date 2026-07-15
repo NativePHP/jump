@@ -46,7 +46,6 @@ class Home extends NativeComponent
             ['id' => 'camera', 'title' => 'Camera', 'subtitle' => 'Native capture', 'ios' => 'camera.fill', 'android' => 'photo_camera', 'color' => '#7C3AED', 'url' => '/playground/media/camera'],
             ['id' => 'scanner', 'title' => 'Scanner', 'subtitle' => 'QR & barcodes', 'ios' => 'qrcode.viewfinder', 'android' => 'qr_code_scanner', 'color' => '#0EA5E9', 'url' => '/playground/media/scanner'],
             ['id' => 'biometrics', 'title' => 'Biometrics', 'subtitle' => 'Face & touch', 'ios' => 'faceid', 'android' => 'fingerprint', 'color' => '#10B981', 'url' => '/playground/system/biometrics'],
-            ['id' => 'location', 'title' => 'Location', 'subtitle' => 'GPS & permissions', 'ios' => 'location.fill', 'android' => 'my_location', 'color' => '#F59E0B', 'url' => '/playground/system/geolocation'],
             ['id' => 'notifications', 'title' => 'Notifications', 'subtitle' => 'Local reminders', 'ios' => 'bell.badge.fill', 'android' => 'notifications', 'color' => '#EC4899', 'url' => '/playground/notify/local'],
             ['id' => 'microphone', 'title' => 'Microphone', 'subtitle' => 'Record audio', 'ios' => 'mic.fill', 'android' => 'mic', 'color' => '#14B8A6', 'url' => '/playground/media/microphone'],
         ];

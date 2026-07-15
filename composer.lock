@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ebb930a0cd68f6475ba8ea7a715fe22a",
+    "content-hash": "c5876899b414f26f5710867cf8f89765",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2706,64 +2706,6 @@
                 }
             ],
             "description": "LAN dev-server discovery (mDNS / Bonjour / NSD) for NativePHP Mobile - browses _jump._tcp services so a device can find and connect to running native:jump servers",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
-            "name": "nativephp/mobile-geolocation",
-            "version": "dev-streaming",
-            "dist": {
-                "type": "path",
-                "url": "../Plugins/nativephp/geolocation",
-                "reference": "cce5b26a6fef53052d0b4f8bf26182036aa836d3"
-            },
-            "require": {
-                "nativephp/mobile": "*",
-                "php": "^8.3"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^10.0",
-                "pestphp/pest": "^2.7|^3.0|^4.0"
-            },
-            "type": "nativephp-plugin",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Native\\Mobile\\Providers\\GeolocationServiceProvider"
-                    ]
-                },
-                "nativephp": {
-                    "manifest": "nativephp.json"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Native\\Mobile\\Providers\\": "src/",
-                    "NativePHP\\Geolocation\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "pest"
-                ]
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "NativePHP",
-                    "email": "support@nativephp.com"
-                }
-            ],
-            "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
             "transport-options": {
                 "symlink": true,
                 "relative": true
