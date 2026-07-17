@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7370c1436677c3ec36fa1790ed653328",
+    "content-hash": "14bc96a6b5e45f523d10ede3c1f7bb0f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4808,6 +4808,67 @@
                 }
             ],
             "time": "2025-08-19T18:57:03+00:00"
+        },
+        {
+            "name": "s2br/nativephp-mobile-splashscreen",
+            "version": "dev-allow-mobile-v4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shanerbaner82/nativephp-mobile-splashscreen.git",
+                "reference": "cdb4c413744e18a187f615da797dc2e841784d10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shanerbaner82/nativephp-mobile-splashscreen/zipball/cdb4c413744e18a187f615da797dc2e841784d10",
+                "reference": "cdb4c413744e18a187f615da797dc2e841784d10",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zip": "*",
+                "nativephp/mobile": "^3.0|^4.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "nativephp-plugin",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "S2BR\\MobileSplashscreen\\MobileSplashscreenServiceProvider"
+                    ],
+                    "aliases": {
+                        "MobileSplashscreen": "S2BR\\MobileSplashscreen\\Facades\\MobileSplashscreen"
+                    }
+                },
+                "nativephp": {
+                    "manifest": "nativephp.json"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "S2BR\\MobileSplashscreen\\": "src/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Israel Pereira",
+                    "email": "ipereira.eu@gmail.com"
+                }
+            ],
+            "description": "A feature-rich NativePHP plugin for animated mobile splash screens with gradients, events, and flexible configuration.",
+            "support": {
+                "source": "https://github.com/shanerbaner82/nativephp-mobile-splashscreen/tree/allow-mobile-v4"
+            },
+            "time": "2026-07-17T01:32:40+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
@@ -11139,7 +11200,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "nativephp/mobile": 20,
-        "nativephp/native-ui": 20
+        "nativephp/native-ui": 20,
+        "s2br/nativephp-mobile-splashscreen": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
