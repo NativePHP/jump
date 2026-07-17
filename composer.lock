@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14bc96a6b5e45f523d10ede3c1f7bb0f",
+    "content-hash": "41c3d9e989475494aca3094321fb093a",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2732,16 +2732,20 @@
         },
         {
             "name": "nativephp/mobile-geolocation",
-            "version": "1.0.1",
+            "version": "2.0.0",
             "dist": {
                 "type": "zip",
-                "url": "https://plugins.nativephp.com/dist/nativephp/mobile-geolocation/nativephp-mobile-geolocation-4ef5624c7af9139a67339d1b01c3bc1df2cbf9f5-zip-9ee207.zip",
-                "reference": "4ef5624c7af9139a67339d1b01c3bc1df2cbf9f5",
-                "shasum": "a57e1f1c737cd39a5a08fc0b65fcd8f12135b2bd"
+                "url": "https://plugins.nativephp.com/dist/nativephp/mobile-geolocation/nativephp-mobile-geolocation-156606aff2263e6bd1220bc78d32058ab5193c2e-zip-36debd.zip",
+                "reference": "156606aff2263e6bd1220bc78d32058ab5193c2e",
+                "shasum": "7e2842216f1b737e40c595ae43b2b51ec010f893"
             },
             "require": {
-                "nativephp/mobile": "*",
-                "php": "^8.2"
+                "nativephp/mobile": "^4.0",
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^2.7|^3.0|^4.0"
             },
             "type": "nativephp-plugin",
             "extra": {
@@ -2756,8 +2760,19 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Native\\Mobile\\Providers\\": "src/"
+                    "Native\\Mobile\\Providers\\": "src/",
+                    "NativePHP\\Geolocation\\": "src/"
                 }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "pest"
+                ]
             },
             "license": [
                 "proprietary"
@@ -2769,7 +2784,7 @@
                 }
             ],
             "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
-            "time": "2026-01-19T23:52:47+00:00"
+            "time": "2026-07-17T19:35:42+00:00"
         },
         {
             "name": "nativephp/mobile-local-notifications",
