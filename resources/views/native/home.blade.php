@@ -4,7 +4,7 @@
     layout space when hidden). Making the scroll-view a sibling of the sheet
     without this wrapper collapses its height and cuts off the bottom.
 --}}
-<column class="w-full h-full bg-theme-background">
+<column class="w-full h-full ">
     <scroll-view class="w-full flex-1 bg-theme-background">
         <column class="w-full px-5 pb-32 safe-area">
 
@@ -30,7 +30,7 @@
                         <column class="w-[22] h-[5] rounded-full bg-theme-primary opacity-[0.35]"/>
                         <column class="w-[12] h-[5] rounded-full bg-theme-primary opacity-[0.18]"/>
                     </column>
-                    <text font="accent" class="text-[72] leading-none italic text-theme-primary">JUMP</text>
+                    <text font="accent" class="text-[72] leading-none italic text-theme-primary uppercase">jump</text>
                 </row>
 
                 {{-- ground line the letters leap from --}}

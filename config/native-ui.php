@@ -38,63 +38,60 @@ return [
         // white / gray-900 with an indigo interactive accent; the signature
         // snow-flurry lime (#A2FD00) is reserved for the `accent` brand pop.
         'light' => [
-            'primary'       => '#4F46E5', // indigo-600 (text-indigo-600 on the site)
-            'on-primary'    => '#FFFFFF',
+            'primary' => 'indigo-600',  // indigo-600 (text-indigo-600 on the site)
+            'on-primary' => '#FFFFFF',
 
-            'secondary'     => '#7C3AED', // violet-600
-            'on-secondary'  => '#FFFFFF',
+            'secondary' => '#7C3AED', // violet-600
+            'on-secondary' => '#FFFFFF',
 
-            'surface'       => '#FFFFFF',
-            'on-surface'    => '#111827', // gray-900
-            'background'    => '#F9FAFB', // gray-50
+            'surface' => '#FFFFFF',
+            'on-surface' => '#111827', // gray-900
+            'background' => 'gray-50', // gray-50
             'on-background' => '#111827',
 
-            'surface-variant'    => '#F3F4F6', // gray-100
+            'surface-variant' => '#F3F4F6', // gray-100
             'on-surface-variant' => '#4B5563', // gray-600
 
-            'outline'       => '#E5E7EB', // gray-200
+            'outline' => '#E5E7EB', // gray-200
 
-            'destructive'    => '#DC2626',
+            'destructive' => '#DC2626',
             'on-destructive' => '#FFFFFF',
 
-            'accent'        => '#A2FD00', // snow-flurry lime — brand highlight
-            'on-accent'     => '#16182C', // haiti (dark text on lime)
+            'accent' => '#A2FD00', // snow-flurry lime — brand highlight
+            'on-accent' => '#16182C', // haiti (dark text on lime)
         ],
 
         // Dark mode — the site's warm navy-purple, NOT cold slate. haiti is the
         // page, cloud the card surface, torchlight the code/muted layer, with a
         // violet-400 interactive accent and the same snow-flurry brand pop.
         'dark' => [
-            'someword' => [
+            'primary' => '#A78BFA', // violet-400 (text-violet-400 on the site)
+            'on-primary' => '#1E1B4B', // indigo-950 (dark text on light violet)
 
-            ],
-            'primary'       => '#A78BFA', // violet-400 (text-violet-400 on the site)
-            'on-primary'    => '#1E1B4B', // indigo-950 (dark text on light violet)
+            'secondary' => '#8B5CF6', // violet-500
+            'on-secondary' => '#FFFFFF',
 
-            'secondary'     => '#8B5CF6', // violet-500
-            'on-secondary'  => '#FFFFFF',
-
-            'surface'       => '#2B2E53', // cloud
-            'on-surface'    => '#F3F4F6',
-            'background'    => '#16182C', // haiti
+            'surface' => '#2B2E53', // cloud
+            'on-surface' => '#F3F4F6',
+            'background' => 'indigo-950', // haiti
             'on-background' => '#F3F4F6',
 
-            'surface-variant'    => '#292D3E', // torchlight-surface (code layer)
+            'surface-variant' => '#292D3E', // torchlight-surface (code layer)
             'on-surface-variant' => '#A6ACCD', // torchlight-text (muted lavender-gray)
 
-            'outline'       => '#383B61', // subtle navy border on haiti/cloud
+            'outline' => '#383B61', // subtle navy border on haiti/cloud
 
-            'destructive'    => '#EF4444',
+            'destructive' => '#EF4444',
             'on-destructive' => '#FFFFFF',
 
-            'accent'        => '#A2FD00', // snow-flurry lime
-            'on-accent'     => '#16182C',
+            'accent' => '#A2FD00', // snow-flurry lime
+            'on-accent' => '#16182C',
         ],
 
         // Corner radii (points / dp).
-        'radius-sm'   => 4,
-        'radius-md'   => 8,
-        'radius-lg'   => 16,
+        'radius-sm' => 4,
+        'radius-md' => 8,
+        'radius-lg' => 16,
         'radius-full' => 9999,
 
         // Font size scale (points / sp).
@@ -107,7 +104,7 @@ return [
         // Use a specific family name to load a custom font.
         'fonts' => [
             'default' => 'Inter-Regular',
-            'accent' => 'DynaPuff-Regular'
+            'accent' => 'DynaPuff-Regular',
         ],
     ],
 

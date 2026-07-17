@@ -3,6 +3,22 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Native\Mobile\Providers\BiometricsServiceProvider;
+use Native\Mobile\Providers\BrowserServiceProvider;
+use Native\Mobile\Providers\CameraServiceProvider;
+use Native\Mobile\Providers\GeolocationServiceProvider;
+use Native\Mobile\Providers\MicrophoneServiceProvider;
+use Native\Mobile\Providers\NetworkServiceProvider;
+use Native\Mobile\Providers\ScannerServiceProvider;
+use Native\Mobile\Providers\SecureStorageServiceProvider;
+use Native\Mobile\Providers\ShareServiceProvider;
+use NativePHP\Clipboard\ClipboardServiceProvider;
+use NativePHP\Discovery\DiscoveryServiceProvider;
+use NativePHP\LocalNotifications\LocalNotificationsServiceProvider;
+use NativePHP\MediaPlayer\MediaPlayerServiceProvider;
+use Nativephp\NativeUi\NativeUIServiceProvider;
+use NativePHP\Vibe\VibeServiceProvider;
+use S2BR\MobileSplashscreen\MobileSplashscreenServiceProvider;
 
 class NativeServiceProvider extends ServiceProvider
 {
@@ -29,27 +45,27 @@ class NativeServiceProvider extends ServiceProvider
      * This is a security measure to prevent transitive dependencies from
      * automatically registering plugins without your explicit consent.
      *
-     * @return array<int, class-string<\Illuminate\Support\ServiceProvider>>
+     * @return array<int, class-string<ServiceProvider>>
      */
     public function plugins(): array
     {
         return [
-            \Nativephp\NativeUi\NativeUIServiceProvider::class,
-            \NativePHP\Discovery\DiscoveryServiceProvider::class,
-            \NativePHP\Clipboard\ClipboardServiceProvider::class,
-            \Native\Mobile\Providers\BrowserServiceProvider::class,
-            \Native\Mobile\Providers\ShareServiceProvider::class,
-            \Native\Mobile\Providers\ScannerServiceProvider::class,
-            \Native\Mobile\Providers\CameraServiceProvider::class,
-            \Native\Mobile\Providers\NetworkServiceProvider::class,
-            \Native\Mobile\Providers\SecureStorageServiceProvider::class,
-            \Native\Mobile\Providers\MicrophoneServiceProvider::class,
-            \Native\Mobile\Providers\BiometricsServiceProvider::class,
-            \NativePHP\MediaPlayer\MediaPlayerServiceProvider::class,
-            \NativePHP\LocalNotifications\LocalNotificationsServiceProvider::class,
-            \NativePHP\Vibe\VibeServiceProvider::class,
-            \S2BR\MobileSplashscreen\MobileSplashscreenServiceProvider::class,
-        
+            NativeUIServiceProvider::class,
+            DiscoveryServiceProvider::class,
+            ClipboardServiceProvider::class,
+            BrowserServiceProvider::class,
+            ShareServiceProvider::class,
+            ScannerServiceProvider::class,
+            CameraServiceProvider::class,
+            NetworkServiceProvider::class,
+            SecureStorageServiceProvider::class,
+            MicrophoneServiceProvider::class,
+            BiometricsServiceProvider::class,
+            GeolocationServiceProvider::class,
+            MediaPlayerServiceProvider::class,
+            LocalNotificationsServiceProvider::class,
+            VibeServiceProvider::class,
+            MobileSplashscreenServiceProvider::class,
         ];
     }
 }

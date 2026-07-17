@@ -5,6 +5,7 @@ namespace App\NativeComponents\Layouts;
 use App\Icons\Android;
 use App\Icons\Ios;
 use App\NativeComponents\Builds;
+use App\NativeComponents\Concerns\InteractsWithDiscovery;
 use App\NativeComponents\Docs;
 use App\NativeComponents\Home;
 use App\NativeComponents\Settings;
@@ -55,7 +56,6 @@ class JumpTabsLayout extends NativeLayout
         // entries render as empty glass pills.
         $bar = NavBar::make()
             ->back($isDocsReader)
-            ->title($screen->navTitle())
             ->titleView(
                 Row::make()->center()->gap(6)
                     ->addChild(
@@ -74,13 +74,13 @@ class JumpTabsLayout extends NativeLayout
 
         // Top-bar gear → Settings, on the Scanner + Builds tabs (matches the
         // native app). A `url()` action navigates natively to the route.
-        if (!$screen instanceof Settings) {
-//            $bar->action(
-//                NavAction::make('settings')
-//                    ->icon(ios: Ios::GearshapeFill, android: Android::Settings)
-//                    ->url('/settings')
-//                    ->a11yLabel('Settings')
-//            );
+        if (! $screen instanceof Settings) {
+            //            $bar->action(
+            //                NavAction::make('settings')
+            //                    ->icon(ios: Ios::GearshapeFill, android: Android::Settings)
+            //                    ->url('/settings')
+            //                    ->a11yLabel('Settings')
+            //            );
         }
 
         return $bar;
@@ -106,7 +106,7 @@ class JumpTabsLayout extends NativeLayout
     /**
      * The "N servers nearby" pill, floating above the tab bar on every tab.
      * Reads the app-wide store (fed by whichever tab is active via
-     * {@see \App\NativeComponents\Concerns\InteractsWithDiscovery}); renders
+     * {@see InteractsWithDiscovery}); renders
      * nothing when no servers are around. Tapping it opens the server-list
      * sheet — its `@press`/`$showServers` bindings resolve against the active
      * screen, which is why every tab uses the discovery trait.
