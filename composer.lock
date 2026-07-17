@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "41c3d9e989475494aca3094321fb093a",
+    "content-hash": "6db472bc2e3528cb1c96135f51351df0",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2732,12 +2732,11 @@
         },
         {
             "name": "nativephp/mobile-geolocation",
-            "version": "2.0.0",
+            "version": "dev-main",
             "dist": {
-                "type": "zip",
-                "url": "https://plugins.nativephp.com/dist/nativephp/mobile-geolocation/nativephp-mobile-geolocation-156606aff2263e6bd1220bc78d32058ab5193c2e-zip-36debd.zip",
-                "reference": "156606aff2263e6bd1220bc78d32058ab5193c2e",
-                "shasum": "7e2842216f1b737e40c595ae43b2b51ec010f893"
+                "type": "path",
+                "url": "plugins/nativephp/geolocation",
+                "reference": "9ec598ea75592e05988dcba9b0b5b2a0788f165b"
             },
             "require": {
                 "nativephp/mobile": "^4.0",
@@ -2784,7 +2783,10 @@
                 }
             ],
             "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
-            "time": "2026-07-17T19:35:42+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "nativephp/mobile-local-notifications",
@@ -2888,61 +2890,6 @@
                 "source": "https://github.com/NativePHP/mobile-media-player/tree/v0.0.1"
             },
             "time": "2026-07-02T22:07:49+00:00"
-        },
-        {
-            "name": "nativephp/mobile-microphone",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/NativePHP/mobile-microphone.git",
-                "reference": "0c58856d746c2e8e4469a9016d25712a281d5be9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-microphone/zipball/0c58856d746c2e8e4469a9016d25712a281d5be9",
-                "reference": "0c58856d746c2e8e4469a9016d25712a281d5be9",
-                "shasum": ""
-            },
-            "require": {
-                "nativephp/mobile": "^3.0 || ^4.0",
-                "php": "^8.2"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^10.0",
-                "pestphp/pest": "^2.7|^3.0|^4.0"
-            },
-            "type": "nativephp-plugin",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Native\\Mobile\\Providers\\MicrophoneServiceProvider"
-                    ]
-                },
-                "nativephp": {
-                    "manifest": "nativephp.json"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Native\\Mobile\\Providers\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "NativePHP",
-                    "email": "support@nativephp.com"
-                }
-            ],
-            "description": "Microphone recording plugin for NativePHP Mobile - audio recording with pause/resume support",
-            "support": {
-                "issues": "https://github.com/NativePHP/mobile-microphone/issues",
-                "source": "https://github.com/NativePHP/mobile-microphone/tree/1.0.2"
-            },
-            "time": "2026-07-15T18:46:26+00:00"
         },
         {
             "name": "nativephp/mobile-network",

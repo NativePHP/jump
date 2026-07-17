@@ -1,0 +1,76 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pest:
+    name: Plugin tests (Pest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+
+      # Unlike the leaf plugins, this suite exercises nativephp/mobile at
+      # runtime (the Edge element collector, elements, facades), so CI must
+      # actually install it. Until v4 is published as a stable release we
+      # build against the mobile-air `main` branch (composer constraint
+      # `dev-main`) — the same v4 line the consuming apps track; after
+      # release, replace the require below with a normal `^4.0` pin and drop
+      # the VCS repository + stability tweaks.
+      #
+      # NativePHP/mobile-air is private, so cloning is authenticated with
+      # the MOBILE_AIR_TOKEN repo secret (a PAT / fine-grained token with
+      # read access to NativePHP/mobile-air). If the secret is absent the
+      # step is skipped so public forks still get a clear failure.
+      - name: Configure private repo auth
+        env:
+          TOKEN: ${{ secrets.MOBILE_AIR_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            composer config --global github-oauth.github.com "$TOKEN"
+          else
+            echo "MOBILE_AIR_TOKEN not set — assuming public access to nativephp/mobile"
+          fi
+
+      - name: Install dependencies (mobile-air @ dev-main)
+        run: |
+          composer config minimum-stability dev
+          composer config prefer-stable true
+          composer config repositories.mobile-air vcs https://github.com/NativePHP/mobile-air.git
+          composer require "nativephp/mobile:dev-main" --no-interaction --with-all-dependencies
+
+      - name: Run tests
+        run: ./vendor/bin/pest --colors=always
+
+      - name: Lint PHP sources
+        run: find src -name '*.php' -print0 | xargs -0 -n1 php -l
+
+  swift-parse:
+    name: Swift syntax check
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Full compilation needs the NativePHP Xcode project (BridgeFunction,
+      # NativeUINode etc. live in the app target), so CI runs a parse-only
+      # pass: it catches syntax errors — the realistic failure mode for a
+      # plugin PR — without resolving types. Kotlin has no parse-only mode
+      # (kotlinc always typechecks), so Android syntax is covered by the
+      # consuming app build instead.
+      - name: Parse Swift sources
+        run: |
+          set -e
+          for f in resources/ios/*.swift; do
+            echo "parsing $f"
+            xcrun swiftc -parse "$f"
+          done

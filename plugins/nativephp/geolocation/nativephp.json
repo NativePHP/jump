@@ -1,0 +1,119 @@
+{
+    "namespace": "Geolocation",
+    "components": [
+        {
+            "type": "map",
+            "element": "NativePHP\\Geolocation\\Elements\\Map",
+            "blade": "NativePHP\\Geolocation\\Components\\Map",
+            "android_renderer": "com.nativephp.geolocation.GeolocationMapRenderer",
+            "ios_renderer": "GeolocationMapRenderer",
+            "self_closing": false
+        },
+        {
+            "type": "map_marker",
+            "element": "NativePHP\\Geolocation\\Elements\\MapMarker",
+            "blade": "NativePHP\\Geolocation\\Components\\MapMarker",
+            "android_renderer": "com.nativephp.geolocation.GeolocationEmptyRenderer",
+            "ios_renderer": "GeolocationEmptyRenderer",
+            "self_closing": true
+        }
+    ],
+    "bridge_functions": [
+        {
+            "name": "Geolocation.GetCurrentPosition",
+            "android": "com.nativephp.geolocation.GeolocationFunctions.GetCurrentPosition",
+            "ios": "GeolocationFunctions.GetCurrentPosition",
+            "description": "Get the current GPS location of the device"
+        },
+        {
+            "name": "Geolocation.WatchPosition",
+            "android": "com.nativephp.geolocation.GeolocationFunctions.WatchPosition",
+            "ios": "GeolocationFunctions.WatchPosition",
+            "description": "Start streaming continuous location updates (watchPosition)"
+        },
+        {
+            "name": "Geolocation.ClearWatch",
+            "android": "com.nativephp.geolocation.GeolocationFunctions.ClearWatch",
+            "ios": "GeolocationFunctions.ClearWatch",
+            "description": "Stop a location watch started with WatchPosition"
+        },
+        {
+            "name": "Geolocation.CheckPermissions",
+            "android": "com.nativephp.geolocation.GeolocationFunctions.CheckPermissions",
+            "ios": "GeolocationFunctions.CheckPermissions",
+            "description": "Check current location permission status"
+        },
+        {
+            "name": "Geolocation.RequestPermissions",
+            "android": "com.nativephp.geolocation.GeolocationFunctions.RequestPermissions",
+            "ios": "GeolocationFunctions.RequestPermissions",
+            "description": "Request location permissions from the user"
+        },
+        {
+            "name": "Geolocation.StartBackgroundWatch",
+            "android": "com.nativephp.geolocation.BackgroundWatchFunctions.Start",
+            "ios": "BackgroundWatchFunctions.Start",
+            "description": "Start a location watch that keeps streaming while the app is backgrounded, buffering fixes natively. Optional shareUrl/shareToken/shareIntervalMs/shareExpiresAt/stopWatchOnExpiry params turn on the live-location beacon (see SHARE_README.md)"
+        },
+        {
+            "name": "Geolocation.StopBackgroundWatch",
+            "android": "com.nativephp.geolocation.BackgroundWatchFunctions.Stop",
+            "ios": "BackgroundWatchFunctions.Stop",
+            "description": "Stop a background location watch and clear its persisted config"
+        },
+        {
+            "name": "Geolocation.DrainWatchBuffer",
+            "android": "com.nativephp.geolocation.BackgroundWatchFunctions.Drain",
+            "ios": "BackgroundWatchFunctions.Drain",
+            "description": "Read buffered fixes for a watch from a byte cursor; returns fixes plus the next cursor"
+        },
+        {
+            "name": "Geolocation.TrimWatchBuffer",
+            "android": "com.nativephp.geolocation.BackgroundWatchFunctions.Trim",
+            "ios": "BackgroundWatchFunctions.Trim",
+            "description": "Discard buffered fixes before a byte offset after they have been persisted/uploaded; offsets rebase to 0"
+        },
+        {
+            "name": "Geolocation.BackgroundWatchStatus",
+            "android": "com.nativephp.geolocation.BackgroundWatchFunctions.Status",
+            "ios": "BackgroundWatchFunctions.Status",
+            "description": "Report the persisted background watch (id, config, buffer size, share state), if any"
+        }
+    ],
+    "android": {
+        "min_version": 26,
+        "permissions": [
+            "android.permission.INTERNET",
+            "android.permission.ACCESS_FINE_LOCATION",
+            "android.permission.ACCESS_COARSE_LOCATION"
+        ],
+        "dependencies": {
+            "implementation": [
+                "com.google.android.gms:play-services-location:21.0.1",
+                "org.maplibre.gl:android-sdk:11.11.0"
+            ]
+        }
+    },
+    "ios": {
+        "min_version": "18.2",
+        "init_function": "geolocationPluginInit",
+        "background_modes": [],
+        "info_plist": {
+            "NSLocationWhenInUseUsageDescription": "This app needs access to your location"
+        },
+        "dependencies": {
+            "swift_packages": [],
+            "pods": []
+        }
+    },
+    "hooks": {
+        "post_compile": "nativephp:geolocation:configure-manifest"
+    },
+    "events": [
+        "Native\\Mobile\\Events\\Geolocation\\LocationReceived",
+        "Native\\Mobile\\Events\\Geolocation\\LocationUpdated",
+        "Native\\Mobile\\Events\\Geolocation\\PermissionStatusReceived",
+        "Native\\Mobile\\Events\\Geolocation\\PermissionRequestResult",
+        "NativePHP\\Geolocation\\Events\\AppEnteredForeground"
+    ]
+}

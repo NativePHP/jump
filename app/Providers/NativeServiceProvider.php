@@ -7,7 +7,6 @@ use Native\Mobile\Providers\BiometricsServiceProvider;
 use Native\Mobile\Providers\BrowserServiceProvider;
 use Native\Mobile\Providers\CameraServiceProvider;
 use Native\Mobile\Providers\GeolocationServiceProvider;
-use Native\Mobile\Providers\MicrophoneServiceProvider;
 use Native\Mobile\Providers\NetworkServiceProvider;
 use Native\Mobile\Providers\ScannerServiceProvider;
 use Native\Mobile\Providers\SecureStorageServiceProvider;
@@ -59,8 +58,7 @@ class NativeServiceProvider extends ServiceProvider
             CameraServiceProvider::class,
             NetworkServiceProvider::class,
             SecureStorageServiceProvider::class,
-            MicrophoneServiceProvider::class,
-            BiometricsServiceProvider::class,
+BiometricsServiceProvider::class,
             GeolocationServiceProvider::class,
             MediaPlayerServiceProvider::class,
             LocalNotificationsServiceProvider::class,

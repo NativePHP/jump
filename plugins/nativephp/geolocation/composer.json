@@ -1,0 +1,49 @@
+{
+    "name": "nativephp/mobile-geolocation",
+    "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
+    "type": "nativephp-plugin",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "NativePHP",
+            "email": "support@nativephp.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "nativephp/mobile": "^4.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^2.7|^3.0|^4.0"
+    },
+    "scripts": {
+        "test": "pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Native\\Mobile\\Providers\\": "src/",
+            "NativePHP\\Geolocation\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Native\\Mobile\\Providers\\GeolocationServiceProvider"
+            ]
+        },
+        "nativephp": {
+            "manifest": "nativephp.json"
+        }
+    }
+}

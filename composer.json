@@ -18,10 +18,9 @@
         "nativephp/mobile-camera": "^1.0",
         "nativephp/mobile-clipboard": "*",
         "nativephp/mobile-discovery": "*",
-        "nativephp/mobile-geolocation": "^2.0",
+        "nativephp/mobile-geolocation": "*",
         "nativephp/mobile-local-notifications": "^0.0.1",
         "nativephp/mobile-media-player": "^0.0.1",
-        "nativephp/mobile-microphone": "^1.0",
         "nativephp/mobile-network": "^1.0",
         "nativephp/mobile-scanner": "^1.0",
         "nativephp/mobile-secure-storage": "^1.0",
@@ -45,6 +44,13 @@
         "discovery": {
             "type": "path",
             "url": "plugins/nativephp/discovery",
+            "options": {
+                "symlink": true
+            }
+        },
+        "geolocation": {
+            "type": "path",
+            "url": "plugins/nativephp/geolocation",
             "options": {
                 "symlink": true
             }

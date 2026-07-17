@@ -221,9 +221,10 @@ class Home extends NativeComponent
         Geolocation::checkPermissions()->permissionStatusReceived(function ($event) {
             match ($event->location) {
                 'granted' => $this->fetchPosition(),
-                // notDetermined comes back as 'denied' from the plugin — that's
-                // the only state iOS/Android will actually show a dialog for.
-                'denied' => $this->askLocationPermission(),
+                // 'not_determined' (iOS, never asked) / 'denied' (Android,
+                // not-yet-granted): the OS can still show the dialog, so
+                // request it.
+                'not_determined', 'denied' => $this->askLocationPermission(),
                 // 'permanently_denied' (and anything else): the OS won't prompt
                 // again, so send the user to Settings.
                 default => $this->blockLocation(),
