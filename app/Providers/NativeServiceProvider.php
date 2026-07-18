@@ -58,7 +58,7 @@ class NativeServiceProvider extends ServiceProvider
             CameraServiceProvider::class,
             NetworkServiceProvider::class,
             SecureStorageServiceProvider::class,
-BiometricsServiceProvider::class,
+            BiometricsServiceProvider::class,
             GeolocationServiceProvider::class,
             MediaPlayerServiceProvider::class,
             LocalNotificationsServiceProvider::class,

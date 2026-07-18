@@ -2,6 +2,7 @@
 
 namespace App\NativeComponents\Concerns;
 
+use App\NativeComponents\Layouts\JumpTabsLayout;
 use App\Support\DiscoveredServers;
 use Native\Mobile\Attributes\On;
 use NativePHP\Discovery\Events\ServerFound;
@@ -14,7 +15,7 @@ use NativePHP\Discovery\Facades\Discovery;
  *
  * Native discovery events are delivered only to the mounted component, so every
  * tab (`use`s this trait) listens and writes into the shared store; the
- * floating pill — rendered app-wide from {@see \App\NativeComponents\Layouts\JumpTabsLayout}
+ * floating pill — rendered app-wide from {@see JumpTabsLayout}
  * — then reads the store on any tab. `$showServers` is per-screen (only one tab
  * is active at a time) and drives the server-list bottom sheet.
  */

@@ -10,6 +10,7 @@ use Illuminate\Support\Fluent;
 use Illuminate\View\View;
 use Native\Mobile\Edge\Layouts\Builders\NavAction;
 use Native\Mobile\Edge\NativeComponent;
+use Native\Mobile\Edge\NativeElementCollector;
 use Native\Mobile\Facades\Dialog;
 use NativePHP\Clipboard\Facades\Clipboard;
 
@@ -53,7 +54,6 @@ class Docs extends NativeComponent
      * @var array<string,mixed>
      */
     public array $demoState = [];
-
 
     public function navTitle(): string
     {
@@ -650,7 +650,7 @@ class Docs extends NativeComponent
      */
     private function collectorState(?array $restore = null): array
     {
-        $rc = new \ReflectionClass(\Native\Mobile\Edge\NativeElementCollector::class);
+        $rc = new \ReflectionClass(NativeElementCollector::class);
         $out = [];
         foreach (['stack', 'roots', 'textFrames', 'pollIntervals'] as $name) {
             $prop = $rc->getProperty($name);

@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\NativeComponents\Concerns\SearchesDocs;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
  * Shared docs corpus — the NativePHP mobile docs fetched from the public MCP
  * navigation API (full page content inline), cached 24h. Feeds both the Docs
  * tab's TOC and the tab-bar search on every tab (via
- * {@see \App\NativeComponents\Concerns\SearchesDocs}).
+ * {@see SearchesDocs}).
  */
 class DocsIndex
 {

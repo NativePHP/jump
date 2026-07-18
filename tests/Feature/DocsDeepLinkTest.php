@@ -9,7 +9,6 @@ use Native\Mobile\Testing\Native;
  * /docs/mobile/{v}/{section}/{page} must resolve and open the linked page.
  * The docs corpus comes from fakeDocsApi() (tests/Pest.php).
  */
-
 test('a docs universal link opens the linked page', function () {
     fakeDocsApi();
 

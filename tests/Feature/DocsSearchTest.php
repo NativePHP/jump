@@ -1,5 +1,8 @@
 <?php
 
+use App\Support\DocsIndex;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 use Native\Mobile\Testing\Native;
 
 /**
@@ -7,7 +10,6 @@ use Native\Mobile\Testing\Native;
  * shared docs corpus (SearchesDocs → DocsIndex), and result rows navigate via
  * the docs deep-link route.
  */
-
 test('searching from the docs tab returns matching pages with deep-link urls', function () {
     fakeDocsApi();
 
@@ -51,13 +53,13 @@ test('a blank query returns nothing', function () {
 test('search filters the cached corpus and survives an unreachable source', function () {
     // Warm the cache from a reachable source (as opening the Docs tab would).
     fakeDocsApi();
-    App\Support\DocsIndex::sections();
+    DocsIndex::sections();
 
     // Now the docs source is unreachable — the exact Android-emulator case
     // where a nativephp.test URL can't resolve. Per-keystroke search must NOT
     // re-fetch and fail; it filters the last good corpus from the cache.
-    Illuminate\Support\Facades\Http::fake([
-        config('jump.docs_url') => fn () => throw new Illuminate\Http\Client\ConnectionException('unreachable'),
+    Http::fake([
+        config('jump.docs_url') => fn () => throw new ConnectionException('unreachable'),
     ]);
 
     $results = Native::visit('/')->search('deep')->searchResults();

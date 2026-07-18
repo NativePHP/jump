@@ -14,7 +14,6 @@ use Native\Mobile\Testing\Native;
  * strands the reader on a dead cached tree. Scroll-to-top comes from keying
  * the reader's scroll container by page id instead.
  */
-
 test('the first page shows only a Next link and it opens the next page in place', function () {
     fakeDocsApi();
 

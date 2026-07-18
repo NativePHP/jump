@@ -8,8 +8,9 @@
  */
 
 use Illuminate\Support\Facades\File;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class);
+uses(TestCase::class);
 
 function makeAndroidProject(): string
 {

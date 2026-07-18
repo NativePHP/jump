@@ -2,14 +2,17 @@
 
 namespace NativePHP\Discovery;
 
+use NativePHP\Discovery\Events\ServerFound;
+use NativePHP\Discovery\Events\ServerLost;
+
 /**
  * LAN dev-server discovery.
  *
  * Drives the native mDNS/Bonjour (iOS) / NSD (Android) browser that looks for
  * `_jump._tcp` services advertised by `php artisan native:jump`. As servers
  * appear and disappear the native side dispatches
- * {@see \NativePHP\Discovery\Events\ServerFound} /
- * {@see \NativePHP\Discovery\Events\ServerLost} events into the app, which a
+ * {@see ServerFound} /
+ * {@see ServerLost} events into the app, which a
  * NativeComponent can listen for with `#[OnNative(...)]`.
  *
  * The PHP surface is intentionally thin — the browser lifecycle and the

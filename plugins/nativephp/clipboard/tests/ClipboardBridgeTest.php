@@ -8,8 +8,9 @@
 
 use Native\Mobile\Testing\Native;
 use NativePHP\Clipboard\Clipboard;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class);
+uses(TestCase::class);
 
 beforeEach(function () {
     $this->bridge = Native::fakeBridge();

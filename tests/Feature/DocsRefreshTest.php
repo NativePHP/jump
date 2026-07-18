@@ -2,6 +2,7 @@
 
 use App\NativeComponents\Docs;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Native\Mobile\Testing\Native;
 
@@ -68,7 +69,7 @@ test('refresh keeps the current view when the source is unreachable', function (
     // Simulate going offline with an empty cache: the fetch throws and
     // sections() has nothing to fall back to — refresh must be a no-op,
     // not blank the screen.
-    Illuminate\Support\Facades\Cache::forget('jump.docs');
+    Cache::forget('jump.docs');
     Http::fake([
         config('jump.docs_url') => fn () => throw new ConnectionException('unreachable'),
         '*' => Http::response('', 404),

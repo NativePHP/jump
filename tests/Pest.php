@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /*
@@ -57,8 +58,8 @@ function something()
  */
 function fakeDocsApi(): void
 {
-    Illuminate\Support\Facades\Http::fake([
-        config('jump.docs_url') => Illuminate\Support\Facades\Http::response([
+    Http::fake([
+        config('jump.docs_url') => Http::response([
             'navigation' => [
                 'getting-started' => [
                     ['id' => 'mobile/4/getting-started/introduction', 'title' => 'Introduction', 'description' => 'Welcome to NativePHP.', 'content' => 'Welcome.', 'order' => 1],
@@ -70,6 +71,6 @@ function fakeDocsApi(): void
         ]),
         // Block everything else (e.g. the Videos tab's RSS fetch) — screens
         // degrade gracefully and tests must not depend on the live network.
-        '*' => Illuminate\Support\Facades\Http::response('', 404),
+        '*' => Http::response('', 404),
     ]);
 }
