@@ -113,6 +113,12 @@ return [
         // 'NSCameraUsageDescription' => 'Used to take a profile photo.',
         // 'NSMicrophoneUsageDescription' => 'Used to record audio with your videos.',
         // 'NSPhotoLibraryUsageDescription' => 'Used to select photos for your post.',
+
+        // Required by App Store static analysis (ITMS-90683): the geolocation
+        // plugin's binary references background-location APIs even though Jump
+        // never requests Always authorization.
+        'NSLocationWhenInUseUsageDescription' => 'Jump uses your location while the app is open to demo geolocation features.',
+        'NSLocationAlwaysAndWhenInUseUsageDescription' => 'Jump only uses your location while the app is open, to demo geolocation features. It does not track your location in the background.',
     ],
 
     /*
