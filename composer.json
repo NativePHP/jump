@@ -34,34 +34,12 @@
             "type": "vcs",
             "url": "https://github.com/shanerbaner82/nativephp-mobile-splashscreen"
         },
-        "clipboard": {
-            "type": "path",
-            "url": "plugins/nativephp/clipboard",
-            "options": {
-                "symlink": true
-            }
-        },
         "discovery": {
             "type": "path",
             "url": "plugins/nativephp/discovery",
             "options": {
                 "symlink": true
             }
-        },
-        "geolocation": {
-            "type": "path",
-            "url": "plugins/nativephp/geolocation",
-            "options": {
-                "symlink": true
-            }
-        },
-        "ui": {
-            "type": "vcs",
-            "url": "https://github.com/nativephp/native-ui"
-        },
-        "mobile": {
-            "type": "vcs",
-            "url": "../mobile"
         },
         "plugins": {
             "type": "composer",

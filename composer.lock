@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ecd1a64976d2f494c721f986491ec1f",
+    "content-hash": "cb6204d29011a9e40008730f50ebb23d",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2364,8 +2364,14 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "../mobile",
-                "reference": "385938d9954f0c7267da2739f4e4fa9196cb51f7"
+                "url": "https://github.com/NativePHP/mobile-air.git",
+                "reference": "90b189dd4fd7c496e89fadebf5018f46b256ea71"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/90b189dd4fd7c496e89fadebf5018f46b256ea71",
+                "reference": "90b189dd4fd7c496e89fadebf5018f46b256ea71",
+                "shasum": ""
             },
             "require": {
                 "endroid/qr-code": "^6.0.9",
@@ -2399,7 +2405,6 @@
                 "phpstan/phpstan-phpunit": "^1.0",
                 "spatie/laravel-ray": "^1.26"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "laravel": {
@@ -2409,40 +2414,14 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Native\\Mobile\\": "src/"
-                },
                 "files": [
                     "src/helpers.php"
-                ]
-            },
-            "autoload-dev": {
+                ],
                 "psr-4": {
-                    "Tests\\": "tests/"
+                    "Native\\Mobile\\": "src/"
                 }
             },
-            "scripts": {
-                "qa": [
-                    "@composer format",
-                    "@composer analyse",
-                    "@composer test"
-                ],
-                "post-autoload-dump": [
-                    "@php ./vendor/bin/testbench package:discover --ansi"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test": [
-                    "vendor/bin/pest"
-                ],
-                "test-coverage": [
-                    "vendor/bin/pest --coverage"
-                ],
-                "format": [
-                    "vendor/bin/pint"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2466,7 +2445,11 @@
                 "laravel",
                 "nativephp"
             ],
-            "time": "2026-07-17T18:59:04+00:00"
+            "support": {
+                "issues": "https://github.com/NativePHP/mobile-air/issues",
+                "source": "https://github.com/NativePHP/mobile-air/tree/main"
+            },
+            "time": "2026-07-19T03:09:59+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
@@ -2635,14 +2618,20 @@
         },
         {
             "name": "nativephp/mobile-clipboard",
-            "version": "dev-main",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NativePHP/mobile-clipboard.git",
+                "reference": "42915220750b02ff555ca20b11e656f31d015536"
+            },
             "dist": {
-                "type": "path",
-                "url": "plugins/nativephp/clipboard",
-                "reference": "f54dc03f42b8bc8f92823ef05581370516e58c23"
+                "type": "zip",
+                "url": "https://api.github.com/repos/NativePHP/mobile-clipboard/zipball/42915220750b02ff555ca20b11e656f31d015536",
+                "reference": "42915220750b02ff555ca20b11e656f31d015536",
+                "shasum": ""
             },
             "require": {
-                "nativephp/mobile": "*",
+                "nativephp/mobile": "^3.0 || ^4.0",
                 "php": "^8.2"
             },
             "require-dev": {
@@ -2665,16 +2654,7 @@
                     "NativePHP\\Clipboard\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "pest"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2685,10 +2665,11 @@
                 }
             ],
             "description": "System clipboard access (copy/paste text) for NativePHP Mobile",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/NativePHP/mobile-clipboard/issues",
+                "source": "https://github.com/NativePHP/mobile-clipboard/tree/1.0.0"
+            },
+            "time": "2026-07-19T02:38:14+00:00"
         },
         {
             "name": "nativephp/mobile-discovery",
@@ -2749,11 +2730,12 @@
         },
         {
             "name": "nativephp/mobile-geolocation",
-            "version": "dev-main",
+            "version": "2.0.0",
             "dist": {
-                "type": "path",
-                "url": "plugins/nativephp/geolocation",
-                "reference": "9ec598ea75592e05988dcba9b0b5b2a0788f165b"
+                "type": "zip",
+                "url": "https://plugins.nativephp.com/dist/nativephp/mobile-geolocation/nativephp-mobile-geolocation-156606aff2263e6bd1220bc78d32058ab5193c2e-zip-36debd.zip",
+                "reference": "156606aff2263e6bd1220bc78d32058ab5193c2e",
+                "shasum": "7e2842216f1b737e40c595ae43b2b51ec010f893"
             },
             "require": {
                 "nativephp/mobile": "^4.0",
@@ -2800,10 +2782,7 @@
                 }
             ],
             "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "time": "2026-07-17T19:35:42+00:00"
         },
         {
             "name": "nativephp/mobile-local-notifications",
@@ -3190,12 +3169,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-ui.git",
-                "reference": "07fe29a7276e02240c5fbc75d31e54924e4efa2e"
+                "reference": "8e1a5ff57c8b458e3fcda4773360273ad2160943"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-ui/zipball/07fe29a7276e02240c5fbc75d31e54924e4efa2e",
-                "reference": "07fe29a7276e02240c5fbc75d31e54924e4efa2e",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ui/zipball/8e1a5ff57c8b458e3fcda4773360273ad2160943",
+                "reference": "8e1a5ff57c8b458e3fcda4773360273ad2160943",
                 "shasum": ""
             },
             "require": {
@@ -3203,6 +3182,7 @@
                 "php": "^8.2"
             },
             "require-dev": {
+                "orchestra/testbench": "^10.0",
                 "pestphp/pest": "^3.0"
             },
             "default-branch": true,
@@ -3222,11 +3202,7 @@
                     "Nativephp\\NativeUi\\": "src/"
                 }
             },
-            "scripts": {
-                "test": [
-                    "pest"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -3238,10 +3214,10 @@
             ],
             "description": "A NativePHP Mobile plugin",
             "support": {
-                "source": "https://github.com/NativePHP/mobile-ui/tree/main",
-                "issues": "https://github.com/NativePHP/mobile-ui/issues"
+                "issues": "https://github.com/NativePHP/mobile-ui/issues",
+                "source": "https://github.com/NativePHP/mobile-ui/tree/main"
             },
-            "time": "2026-07-17T18:09:13+00:00"
+            "time": "2026-07-19T02:51:31+00:00"
         },
         {
             "name": "nesbot/carbon",
