@@ -41,6 +41,13 @@
                 "symlink": true
             }
         },
+        "geolocation": {
+            "type": "path",
+            "url": "plugins/nativephp/geolocation",
+            "options": {
+                "symlink": true
+            }
+        },
         "plugins": {
             "type": "composer",
             "url": "https://plugins.nativephp.com"

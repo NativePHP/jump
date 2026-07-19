@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cb6204d29011a9e40008730f50ebb23d",
+    "content-hash": "db20d8c924fd733876a00adb52e8462e",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2730,12 +2730,11 @@
         },
         {
             "name": "nativephp/mobile-geolocation",
-            "version": "2.0.0",
+            "version": "dev-main",
             "dist": {
-                "type": "zip",
-                "url": "https://plugins.nativephp.com/dist/nativephp/mobile-geolocation/nativephp-mobile-geolocation-156606aff2263e6bd1220bc78d32058ab5193c2e-zip-36debd.zip",
-                "reference": "156606aff2263e6bd1220bc78d32058ab5193c2e",
-                "shasum": "7e2842216f1b737e40c595ae43b2b51ec010f893"
+                "type": "path",
+                "url": "plugins/nativephp/geolocation",
+                "reference": "9ec598ea75592e05988dcba9b0b5b2a0788f165b"
             },
             "require": {
                 "nativephp/mobile": "^4.0",
@@ -2782,7 +2781,10 @@
                 }
             ],
             "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
-            "time": "2026-07-17T19:35:42+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "nativephp/mobile-local-notifications",
