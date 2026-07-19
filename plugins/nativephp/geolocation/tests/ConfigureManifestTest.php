@@ -196,3 +196,25 @@ it('adds the iOS Always usage string only when background_location is on, and re
     expect($plist)->toContain('CFBundleName'); // untouched baseline
     expect(@simplexml_load_string($plist))->not->toBeFalse();
 });
+
+it('preserves an app-provided Always usage string when background_location is off', function () {
+    $dir = makeIosProject();
+
+    // Simulate the core plist merge injecting the app's own purpose string
+    // (nativephp.permissions) — needed to satisfy ITMS-90683 even when the
+    // app never uses background location.
+    $appString = 'App-provided: location is only used while the app is open.';
+    File::put($dir.'/NativePHP/Info.plist', str_replace(
+        '</dict>',
+        "    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>\n    <string>{$appString}</string>\n</dict>",
+        iosPlist($dir),
+    ));
+
+    config()->set('nativephp-geolocation.background_location', false);
+    config()->set('nativephp-geolocation.foreground_service', false);
+    runHook('ios', $dir);
+    $plist = iosPlist($dir);
+
+    expect($plist)->toContain($appString); // hook must not strip the app's key
+    expect(@simplexml_load_string($plist))->not->toBeFalse();
+});

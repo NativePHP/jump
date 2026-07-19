@@ -349,7 +349,12 @@ class ConfigureManifestCommand extends NativePluginHookCommand
             return;
         }
 
-        if ($existing instanceof DOMElement) {
+        // Only remove the string THIS hook injected (recognized by its own
+        // default value). An app-provided string — e.g. declared via
+        // nativephp.permissions to satisfy ITMS-90683, which flags the mere
+        // presence of the background-location APIs in the binary — must
+        // survive even with background_location disabled.
+        if ($existing instanceof DOMElement && $existing->textContent === $value) {
             $prev = $existing->previousSibling;
             while ($prev && ! ($prev instanceof DOMElement)) {
                 $prev = $prev->previousSibling;
