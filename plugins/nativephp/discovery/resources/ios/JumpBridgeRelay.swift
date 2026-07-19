@@ -310,9 +310,15 @@ class JumpBridgeRelay: NSObject, ObservableObject {
         case "Element.Shutdown":
             runtime.shutdown()
             sendResponse(requestId: requestId, result: ["status": "ok"], error: nil)
+            // Tail end of a native hot reload — the runloop has exited;
+            // re-drive GET / ourselves so the server re-executes the app with
+            // the changed code. The old runloop GET may not have completed
+            // yet, so clear it or driveRemoteApp() no-ops.
             if pendingHotReloadReExec {
                 pendingHotReloadReExec = false
-                DispatchQueue.main.async { [weak self] in self?.onReload?() }
+                runloopTask?.cancel()
+                runloopTask = nil
+                driveRemoteApp()
             }
         default:
             sendResponse(requestId: requestId, result: nil, error: "Unknown element method: \(method)")

@@ -363,10 +363,15 @@ object JumpBridgeRelay {
             "Element.Shutdown" -> {
                 JumpElementRuntime.shutdown()
                 sendResponse(requestId, mapOf("status" to "ok"), null)
-                // Tail end of a native hot reload — the runloop has exited; re-drive.
+                // Tail end of a native hot reload — the runloop has exited;
+                // re-drive GET / ourselves so the server re-executes the app
+                // with the changed code. The old runloop GET may not have
+                // completed yet, so clear it or driveRemoteApp() no-ops.
                 if (pendingHotReloadReExec) {
                     pendingHotReloadReExec = false
-                    mainHandler.post { onReload?.invoke() }
+                    runloopCall?.cancel()
+                    runloopCall = null
+                    driveRemoteApp()
                 }
             }
             else -> sendResponse(requestId, null, "Unknown element method: $method")
