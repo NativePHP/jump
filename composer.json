@@ -48,6 +48,14 @@
                 "symlink": true
             }
         },
+        "ui": {
+            "type": "path",
+            "url": "../plugins/nativephp/mobile-ui"
+        },
+        "mobile": {
+            "type": "path",
+            "url": "../mobile"
+        },
         "plugins": {
             "type": "composer",
             "url": "https://plugins.nativephp.com"

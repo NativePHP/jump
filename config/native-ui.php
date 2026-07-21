@@ -102,10 +102,10 @@ return [
 
         // 'System' resolves to the platform default (San Francisco on iOS, Roboto on Android).
         // Use a specific family name to load a custom font.
-        'fonts' => [
-            'default' => 'Inter-Regular',
-            'accent' => 'DynaPuff-Regular',
-        ],
+    ],
+    'fonts' => [
+        'default' => 'Inter-Regular',
+        'accent' => 'Audiowide-Regular',
     ],
 
 ];
