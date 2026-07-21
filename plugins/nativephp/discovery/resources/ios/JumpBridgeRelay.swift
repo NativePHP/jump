@@ -34,10 +34,6 @@ class JumpBridgeRelay: NSObject, ObservableObject {
     /// Fired on a live-reload signal for non-native (WebView) content.
     var onReload: (() -> Void)?
 
-    /// The shell's original LaravelBridge.send closure (delivers device-API
-    /// result events to the local WebView). Captured on first connect so we can
-    /// restore it, and fall back to it when no remote session is live.
-    private var originalLaravelSend: ((_ event: String, _ payload: [String: Any?]) -> Void)?
 
     override init() {
         super.init()
@@ -97,17 +93,20 @@ class JumpBridgeRelay: NSObject, ObservableObject {
     /// element event queue while a Jump session is live, instead of injecting
     /// them into the local WebView. Idempotent; safe to call on every connect.
     private func installLaravelEventFork() {
-        if originalLaravelSend == nil {
-            originalLaravelSend = LaravelBridge.shared.send
-        }
-        LaravelBridge.shared.send = { [weak self] event, payload in
+        LaravelBridge.shared.send = { event, payload in
             if JumpElementRuntime.shared.isActive {
                 let dict = payload.reduce(into: [String: Any]()) { $0[$1.key] = $1.value ?? NSNull() }
                 let json = (try? JSONSerialization.data(withJSONObject: dict))
                     .flatMap { String(data: $0, encoding: .utf8) } ?? "{}"
                 JumpElementRuntime.sendNativeEvent(eventName: event, payloadJson: json)
             } else {
-                self?.originalLaravelSend?(event, payload)
+                // Fall back to the CURRENT local channel, read at dispatch
+                // time. In a forwarded-WebView session this is the coordinator
+                // closure (JS injection into the page — the only road back to
+                // the served app for async device results); capturing it at
+                // install time went stale on native-direct boots, where the
+                // WebView materializes after connect.
+                LaravelBridge.shared.localSend(event, payload)
             }
         }
     }
@@ -140,7 +139,12 @@ class JumpBridgeRelay: NSObject, ObservableObject {
         let task = URLSession.shared.dataTask(with: infoUrl) { [weak self] data, _, _ in
             guard let self = self else { return }
             var wsPort = self.port
-            var ui = "native-ui"
+            // v4 servers ALWAYS declare `ui` in /jump/info; a server that
+            // omits it predates the field — i.e. a v3-era server, whose apps
+            // are WebView apps (Blade/Livewire/Inertia over HTTP). Defaulting
+            // to native-ui would leave the client waiting forever for
+            // Element.* frames a v3 server never sends.
+            var ui = "webview"
             if let data = data,
                let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
                 if let p = json["ws_port"] as? String { wsPort = p }
@@ -160,6 +164,14 @@ class JumpBridgeRelay: NSObject, ObservableObject {
                 JumpWebViewSession.shared.start(host: self.host, port: self.port)
                 DispatchQueue.main.async {
                     NativeUIBridge.shared.isActive = false
+                    // Native-direct boots never constructed the WKWebView, so
+                    // the redirect below would fire into the void (no
+                    // coordinator observes it yet). Allow + seed the lazy
+                    // WebView with "/" — its first load goes through
+                    // PHPSchemeHandler, which forwards to the connected dev
+                    // server. When a WebView already exists, the redirect
+                    // notification retargets it as before.
+                    BootState.shared.allowWebView(loading: "/")
                     NotificationCenter.default.post(
                         name: NSNotification.Name("RedirectToURLNotification"),
                         object: nil,
@@ -384,7 +396,11 @@ class JumpBridgeRelay: NSObject, ObservableObject {
             logger.info("Reconnect abandoned — dev server gone")
             isListening = false
             DispatchQueue.main.async { [weak self] in
-                JumpElementRuntime.shared.endSession()
+                // Take the escape-hatch path: it tears down the dead session
+                // AND wakes the parked local home runloop (__jumpResume) so
+                // Home republishes. A bare endSession() clears the tree with
+                // nothing behind it — the "killed server → white screen" bug.
+                self?.exitToJump()
                 self?.onSessionEnded?()
             }
             return

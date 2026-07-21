@@ -38,6 +38,24 @@ trait InteractsWithDiscovery
         Discovery::start();
     }
 
+    /**
+     * Fired by the shell when a remote Jump session ends (server died or the
+     * escape hatch) and the local home runloop resumes. While the session was
+     * live, ALL native events — including ServerLost for the very server that
+     * died — were forked to the remote app, so the store may hold phantom
+     * servers the native browser has already reported lost (it emits deltas
+     * exactly once and won't repeat them). Flush and re-browse: stop() clears
+     * the native emitted-set, start() re-reports every live server fresh.
+     */
+    #[On('__jumpResume')]
+    public function jumpSessionResumed(): void
+    {
+        $this->showServers = false;
+        app(DiscoveredServers::class)->flush();
+        Discovery::stop();
+        Discovery::start();
+    }
+
     #[On(ServerFound::class)]
     public function serverFound(string $host, string $port, string $name = 'Jump server'): void
     {

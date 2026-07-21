@@ -422,7 +422,11 @@ object JumpBridgeRelay {
             Log.i(TAG, "Reconnect abandoned after $reconnectAttempt attempts — dev server gone")
             isListening = false
             mainHandler.post {
-                JumpElementRuntime.endSession()
+                // Take the escape-hatch path: it tears down the dead session
+                // AND wakes the parked local home runloop (__jumpResume) so
+                // Home republishes. A bare endSession() clears the tree with
+                // nothing behind it — the "killed server → white screen" bug.
+                exitToJump()
                 onSessionEnded?.invoke()
             }
             return

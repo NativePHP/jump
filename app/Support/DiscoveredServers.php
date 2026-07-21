@@ -32,6 +32,16 @@ class DiscoveredServers
         unset($this->servers[$host.':'.$port]);
     }
 
+    /**
+     * Drop everything. Used when returning from a remote Jump session: any
+     * ServerLost fired while the session was live was forked to the (dead)
+     * remote app instead of this store, so entries here may be phantoms.
+     */
+    public function flush(): void
+    {
+        $this->servers = [];
+    }
+
     /** @return list<array{host: string, port: string, name: string}> */
     public function all(): array
     {
