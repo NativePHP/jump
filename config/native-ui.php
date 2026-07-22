@@ -76,7 +76,7 @@ return [
             'background' => 'black', // gray-50
             'on-background' => 'gray-300',
 
-            'surface-variant' => 'gray-700', // gray-100
+            'surface-variant' => 'gray-700', // gray-100 
             'on-surface-variant' => 'white',
 
             'outline' => 'gray-800', // gray-200
