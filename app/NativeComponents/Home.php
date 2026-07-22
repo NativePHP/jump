@@ -12,7 +12,6 @@ use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Events\Scanner\CodeScanned;
 use Native\Mobile\Facades\Browser;
 use Native\Mobile\Facades\Scanner;
-use NativePHP\Discovery\Facades\Discovery;
 
 /**
  * Scanner tab — the Jump home / launcher.
@@ -49,13 +48,15 @@ class Home extends NativeComponent
 
     /**
      * A scanned jump://connect?host=&port= QR connects to that dev server.
+     * Routed through the trait's connect() so the first-time escape-hatch
+     * coaching sheet gates this path too.
      */
     #[On(CodeScanned::class)]
     public function codeScanned(string $data): void
     {
         if (preg_match('#[?&]host=([^&]+).*?[?&]port=([^&]+)#', $data, $m)
             || preg_match('#"host"\s*:\s*"([^"]+)".*?"port"\s*:\s*"?([^",}]+)#', $data, $m)) {
-            Discovery::connect(urldecode($m[1]), urldecode($m[2]));
+            $this->connect(urldecode($m[1]), urldecode($m[2]));
         }
     }
 

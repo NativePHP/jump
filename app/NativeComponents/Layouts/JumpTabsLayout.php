@@ -115,7 +115,12 @@ class JumpTabsLayout extends NativeLayout
     {
         $store = app(DiscoveredServers::class);
 
-        if ($store->isEmpty()) {
+        // The exit-hint coaching sheet lives in the same overlay view, and a
+        // QR scan can trigger it with ZERO servers nearby — so the overlay
+        // must render (pill hidden) whenever the active screen has it open.
+        $exitHintOpen = (bool) ($screen->showExitHint ?? false);
+
+        if ($store->isEmpty() && ! $exitHintOpen) {
             return null;
         }
 
@@ -123,6 +128,7 @@ class JumpTabsLayout extends NativeLayout
             view('native.discovery-pill', [
                 'servers' => $store->all(),
                 'serverCount' => $store->count(),
+                'showPill' => ! $store->isEmpty(),
             ])
         )->offset(88);
     }

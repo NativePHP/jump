@@ -4,6 +4,7 @@ namespace App\NativeComponents\Concerns;
 
 use App\NativeComponents\Layouts\JumpTabsLayout;
 use App\Support\DiscoveredServers;
+use Illuminate\Support\Facades\Cache;
 use Native\Mobile\Attributes\On;
 use NativePHP\Discovery\Events\ServerFound;
 use NativePHP\Discovery\Events\ServerLost;
@@ -92,10 +93,72 @@ trait InteractsWithDiscovery
         $this->showServers = false;
     }
 
-    /** Connect to a discovered dev server and dismiss the sheet. */
+    /** Whether the "how to exit" coaching sheet is open. */
+    public bool $showExitHint = false;
+
+    /** "Don't show this again" checkbox state on the coaching sheet. */
+    public bool $dontShowExitHintAgain = false;
+
+    /** Connection stashed while the exit-hint sheet is up. */
+    public string $pendingHost = '';
+
+    public string $pendingPort = '';
+
+    /** Cache key (database store → device SQLite, survives restarts). */
+    private const EXIT_HINT_SEEN_KEY = 'jump.exit-hint-seen';
+
+    /**
+     * Connect to a dev server and dismiss the sheet. Interject the
+     * escape-hatch coaching sheet first — once connected, the remote app
+     * takes over the whole screen and the 3-finger swipe is the only way
+     * back, so it must be taught BEFORE the handoff. Shown on every connect
+     * until the user opts out via the "don't show this again" checkbox.
+     */
     public function connect(string $host, string $port): void
     {
         $this->showServers = false;
+
+        if (! Cache::get(self::EXIT_HINT_SEEN_KEY)) {
+            $this->pendingHost = $host;
+            $this->pendingPort = $port;
+            $this->showExitHint = true;
+
+            return;
+        }
+
         Discovery::connect($host, $port);
+    }
+
+    /** The coaching sheet's "don't show this again" checkbox. */
+    public function setDontShowExitHintAgain(bool $value): void
+    {
+        $this->dontShowExitHintAgain = $value;
+    }
+
+    /**
+     * "Got it" on the coaching sheet: connect, and only suppress future
+     * sheets if the user explicitly opted out via the checkbox.
+     */
+    public function connectPending(): void
+    {
+        if ($this->dontShowExitHintAgain) {
+            Cache::forever(self::EXIT_HINT_SEEN_KEY, true);
+        }
+        $this->showExitHint = false;
+
+        if ($this->pendingHost !== '') {
+            Discovery::connect($this->pendingHost, $this->pendingPort);
+        }
+    }
+
+    /**
+     * Idempotent close (the sheet fires @dismiss on its own slide-down too,
+     * including after connectPending closes it — a toggle would reopen it).
+     * Deliberately does NOT mark the hint as seen: backing out without
+     * connecting means the user never saw the gesture in action.
+     */
+    public function dismissExitHint(): void
+    {
+        $this->showExitHint = false;
     }
 }
