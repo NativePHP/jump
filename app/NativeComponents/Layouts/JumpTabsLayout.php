@@ -19,8 +19,8 @@ use Native\Mobile\Edge\Layouts\Builders\Tab;
 use Native\Mobile\Edge\Layouts\Builders\TabBar;
 use Native\Mobile\Edge\Layouts\NativeLayout;
 use Native\Mobile\Edge\NativeComponent;
-use Nativephp\NativeUi\Builders\FloatingOverlay;
-use Nativephp\NativeUi\Concerns\HasFloatingOverlay;
+use Native\Mobile\UI\Builders\FloatingOverlay;
+use Native\Mobile\UI\Concerns\HasFloatingOverlay;
 
 /**
  * The Jump app's root chrome: a native bottom tab bar (SwiftUI TabView /

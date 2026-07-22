@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bce02ae342c15ef56313d71b2f8aeb33",
+    "content-hash": "533b7fc54f027054c0fe15f778a13c49",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2365,7 +2365,7 @@
             "dist": {
                 "type": "path",
                 "url": "../mobile",
-                "reference": "0b67747ae0581e85307643870c91bc435effb773"
+                "reference": "3c4e3e31122d7775c1b7f2fc7b917c9ec4a7112c"
             },
             "require": {
                 "endroid/qr-code": "^6.0.9",
@@ -3186,10 +3186,16 @@
         {
             "name": "nativephp/native-ui",
             "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NativePHP/mobile-ui.git",
+                "reference": "96e1c21760fd585c2df3bae96dd70b6a420d4199"
+            },
             "dist": {
-                "type": "path",
-                "url": "../plugins/nativephp/mobile-ui",
-                "reference": "2633a4dc63c2f40c1b63523549d095a1284fb5de"
+                "type": "zip",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ui/zipball/96e1c21760fd585c2df3bae96dd70b6a420d4199",
+                "reference": "96e1c21760fd585c2df3bae96dd70b6a420d4199",
+                "shasum": ""
             },
             "require": {
                 "nativephp/mobile": "^4.0",
@@ -3199,11 +3205,12 @@
                 "orchestra/testbench": "^10.0",
                 "pestphp/pest": "^3.0"
             },
-            "type": "nativephp-ui-plugin",
+            "default-branch": true,
+            "type": "nativephp-plugin",
             "extra": {
                 "laravel": {
                     "providers": [
-                        "Nativephp\\NativeUi\\NativeUIServiceProvider"
+                        "Native\\Mobile\\UI\\NativeUIServiceProvider"
                     ]
                 },
                 "nativephp": {
@@ -3212,27 +3219,31 @@
             },
             "autoload": {
                 "psr-4": {
-                    "Nativephp\\NativeUi\\": "src/"
+                    "Native\\Mobile\\UI\\": "src/"
                 }
             },
-            "scripts": {
-                "test": [
-                    "pest"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "name": "Your Name",
-                    "email": "you@example.com"
+                    "name": "NativePHP",
+                    "email": "support@nativephp.com"
                 }
             ],
-            "description": "A NativePHP Mobile plugin",
-            "transport-options": {
-                "relative": true
-            }
+            "description": "Native SwiftUI and Jetpack Composer components for NativePHP",
+            "support": {
+                "issues": "https://github.com/NativePHP/mobile-ui/issues",
+                "source": "https://github.com/NativePHP/mobile-ui/tree/main"
+            },
+            "funding": [
+                {
+                    "url": "https://nativephp.com/sponsor",
+                    "type": "other"
+                }
+            ],
+            "time": "2026-07-22T15:19:38+00:00"
         },
         {
             "name": "nesbot/carbon",
@@ -4781,16 +4792,16 @@
         },
         {
             "name": "s2br/nativephp-mobile-splashscreen",
-            "version": "dev-allow-mobile-v4",
+            "version": "dev-mobile-v4-support",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shanerbaner82/nativephp-mobile-splashscreen.git",
-                "reference": "cdb4c413744e18a187f615da797dc2e841784d10"
+                "reference": "6d5ecf7c5c5e742df8af7b7bd4f96c3d30ef3d9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shanerbaner82/nativephp-mobile-splashscreen/zipball/cdb4c413744e18a187f615da797dc2e841784d10",
-                "reference": "cdb4c413744e18a187f615da797dc2e841784d10",
+                "url": "https://api.github.com/repos/shanerbaner82/nativephp-mobile-splashscreen/zipball/6d5ecf7c5c5e742df8af7b7bd4f96c3d30ef3d9d",
+                "reference": "6d5ecf7c5c5e742df8af7b7bd4f96c3d30ef3d9d",
                 "shasum": ""
             },
             "require": {
@@ -4836,9 +4847,9 @@
             ],
             "description": "A feature-rich NativePHP plugin for animated mobile splash screens with gradients, events, and flexible configuration.",
             "support": {
-                "source": "https://github.com/shanerbaner82/nativephp-mobile-splashscreen/tree/allow-mobile-v4"
+                "source": "https://github.com/shanerbaner82/nativephp-mobile-splashscreen/tree/mobile-v4-support"
             },
-            "time": "2026-07-17T01:32:40+00:00"
+            "time": "2026-07-22T11:04:45+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
