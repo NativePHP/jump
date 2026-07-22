@@ -39,12 +39,12 @@ return [
         // snow-flurry lime (#A2FD00) is reserved for the `accent` brand pop.
         'light' => [
             'primary' => 'red-600',
-            'on-primary' => '#FFFFFF',
+            'on-primary' => 'white',
 
             'secondary' => 'red-500',
-            'on-secondary' => '#FFFFFF',
+            'on-secondary' => 'white',
 
-            'surface' => '#FFFFFF',
+            'surface' => 'white',
             'on-surface' => '#111827', // gray-900
             'background' => 'gray-50', // gray-50
             'on-background' => '#111827',
@@ -55,7 +55,7 @@ return [
             'outline' => '#E5E7EB', // gray-200
 
             'destructive' => '#DC2626',
-            'on-destructive' => '#FFFFFF',
+            'on-destructive' => 'white',
 
             'accent' => '#A2FD00', // snow-flurry lime — brand highlight
             'on-accent' => '#16182C', // haiti (dark text on lime)
@@ -65,27 +65,27 @@ return [
         // page, cloud the card surface, torchlight the code/muted layer, with a
         // violet-400 interactive accent and the same snow-flurry brand pop.
         'dark' => [
-            'primary' => '#A78BFA', // violet-400 (text-violet-400 on the site)
-            'on-primary' => '#1E1B4B', // indigo-950 (dark text on light violet)
+            'primary' => 'red-600',
+            'on-primary' => 'white',
 
-            'secondary' => '#8B5CF6', // violet-500
-            'on-secondary' => '#FFFFFF',
+            'secondary' => 'red-500',
+            'on-secondary' => 'white',
 
-            'surface' => '#2B2E53', // cloud
-            'on-surface' => '#F3F4F6',
-            'background' => 'indigo-950', // haiti
-            'on-background' => '#F3F4F6',
+            'surface' => 'black',
+            'on-surface' => 'white', // gray-900
+            'background' => 'black', // gray-50
+            'on-background' => 'gray-300',
 
-            'surface-variant' => '#292D3E', // torchlight-surface (code layer)
-            'on-surface-variant' => '#A6ACCD', // torchlight-text (muted lavender-gray)
+            'surface-variant' => 'gray-700', // gray-100
+            'on-surface-variant' => 'white',
 
-            'outline' => '#383B61', // subtle navy border on haiti/cloud
+            'outline' => 'gray-800', // gray-200
 
-            'destructive' => '#EF4444',
-            'on-destructive' => '#FFFFFF',
+            'destructive' => '#DC2626',
+            'on-destructive' => 'white',
 
-            'accent' => '#A2FD00', // snow-flurry lime
-            'on-accent' => '#16182C',
+            'accent' => '#A2FD00', // snow-flurry lime — brand highlight
+            'on-accent' => '#16182C', // haiti (dark text on lime)
         ],
 
         // Corner radii (points / dp).
