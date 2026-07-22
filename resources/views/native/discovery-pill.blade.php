@@ -21,12 +21,12 @@
             @foreach ($servers as $server)
                 <pressable @press="connect('{{ $server['host'] }}', '{{ $server['port'] }}')">
                     <row class="w-full items-center gap-3 py-3">
-                        <native:icon :ios="App\Icons\Ios::Wifi" :android="App\Icons\Android::Wifi" :size="18" color="#4F46E5"/>
+                        <native:icon :ios="App\Icons\Ios::Wifi" :android="App\Icons\Android::Wifi" :size="18" class="text-red-600"/>
                         <column class="flex-1 gap-1">
                             <text class="text-base font-medium text-theme-on-surface">{{ $server['name'] }}</text>
                             <text class="text-xs font-mono text-theme-on-surface-variant">{{ $server['host'] }}:{{ $server['port'] }}</text>
                         </column>
-                        <native:icon :ios="App\Icons\Ios::ArrowRight" :android="App\Icons\Android::ArrowForward" :size="14" color="#4F46E5"/>
+                        <native:icon :ios="App\Icons\Ios::ArrowRight" :android="App\Icons\Android::ArrowForward" :size="14" class="text-red-600"/>
                     </row>
                 </pressable>
             @endforeach

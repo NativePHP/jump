@@ -16,7 +16,7 @@
                 <row
                     class="items-center gap-2 px-4 py-2 bg-theme-surface-variant rounded-full border border-theme-outline">
                     <native:icon :ios="App\Icons\Ios::BoltFill" :android="App\Icons\Android::ElectricBolt" :size="12"
-                                 color="#4F46E5" dark-color="#A78BFA"/>
+                                 class="text-red-500"/>
                     <text class="text-xs font-bold text-theme-primary tracking-widest">POWERED BY NATIVEPHP</text>
                 </row>
 
@@ -41,7 +41,7 @@
                     <text font="accent"
                           class="text-xl leading-none italic font-bold text-slate-800 dark:text-slate-200">Instant
                     </text>
-                    <text font="accent" class="text-xl leading-none text-slate-600">Laravel</text>
+                    <text font="accent" class="text-xl leading-none text-red-600">Laravel</text>
                     <text font="accent"
                           class="text-xl leading-none italic font-bold text-slate-800 dark:text-slate-200">Runtime.
                     </text>
@@ -75,7 +75,7 @@
                 <row class="w-full items-start gap-3 p-5 bg-theme-surface rounded-3xl border border-theme-outline">
                     <column class="w-[44] h-[44] rounded-xl bg-theme-surface-variant items-center justify-center">
                         <native:icon :ios="App\Icons\Ios::Sparkles" :android="App\Icons\Android::AutoAwesome" :size="22"
-                                     color="#4F46E5"/>
+                                     class="text-red-600"/>
                     </column>
                     <column class="flex-1 gap-1">
                         <text font="accent" class="text-lg font-bold text-theme-on-surface">NativePHP Playground</text>
@@ -84,7 +84,7 @@
                         </text>
                     </column>
                     <native:icon :ios="App\Icons\Ios::ArrowRight" :android="App\Icons\Android::ArrowForward" :size="14"
-                                 color="#4F46E5"/>
+                                 class="text-red-500"/>
                 </row>
             </pressable>
 
@@ -130,7 +130,7 @@
             <column class="w-full pt-8 gap-1">
                 <row class="items-center gap-2">
                     <native:icon :ios="App\Icons\Ios::Building2Fill" :android="App\Icons\Android::Groups" :size="16"
-                                 color="#4F46E5" dark-color="#A78BFA"/>
+                                 class="text-red-600"/>
                     <text font="accent" class="text-xs font-bold text-theme-primary tracking-widest">AGENCY PARTNERS
                     </text>
                 </row>
