@@ -185,7 +185,7 @@
                         <native:icon
                             :ios="in_array($section['slug'], $expanded, true) ? App\Icons\Ios::ChevronDown : App\Icons\Ios::ChevronRight"
                             :android="in_array($section['slug'], $expanded, true) ? App\Icons\Android::ExpandMore : App\Icons\Android::ChevronRight"
-                            :size="12" color="#4F46E5"/>
+                            :size="12" class="text-red-600"/>
                     </row>
                 </pressable>
 

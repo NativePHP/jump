@@ -35,13 +35,13 @@ return [
     'theme' => [
 
         // NativePHP brand palette — ported from nativephp.com. Light mode is
-        // white / gray-900 with an indigo interactive accent; the signature
+        // white / gray-900 with a red interactive accent; the signature
         // snow-flurry lime (#A2FD00) is reserved for the `accent` brand pop.
         'light' => [
-            'primary' => 'indigo-600',  // indigo-600 (text-indigo-600 on the site)
+            'primary' => 'red-600',
             'on-primary' => '#FFFFFF',
 
-            'secondary' => '#7C3AED', // violet-600
+            'secondary' => 'red-500',
             'on-secondary' => '#FFFFFF',
 
             'surface' => '#FFFFFF',
