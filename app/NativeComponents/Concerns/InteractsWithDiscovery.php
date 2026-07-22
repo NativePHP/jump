@@ -8,7 +8,7 @@ use Native\Mobile\Attributes\On;
 use NativePHP\Discovery\Events\ServerFound;
 use NativePHP\Discovery\Events\ServerLost;
 use NativePHP\Discovery\Facades\Discovery;
-use Nativephp\NativeUi\Theme;
+use Native\Mobile\UI\Theme;
 
 /**
  * Feeds the app-wide {@see DiscoveredServers} store from whatever tab is

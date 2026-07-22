@@ -27,7 +27,7 @@
         "nativephp/mobile-share": "^1.0",
         "nativephp/mobile-vibe": "^1.0",
         "nativephp/native-ui": "dev-main",
-        "s2br/nativephp-mobile-splashscreen": "dev-allow-mobile-v4"
+        "s2br/nativephp-mobile-splashscreen": "dev-mobile-v4-support"
     },
     "repositories": {
         "splashscreen": {
@@ -48,17 +48,13 @@
                 "symlink": true
             }
         },
-        "ui": {
-            "type": "path",
-            "url": "../plugins/nativephp/mobile-ui"
+        "plugins": {
+            "type": "composer",
+            "url": "https://plugins.nativephp.com"
         },
         "mobile": {
             "type": "path",
             "url": "../mobile"
-        },
-        "plugins": {
-            "type": "composer",
-            "url": "https://plugins.nativephp.com"
         }
     },
     "require-dev": {
