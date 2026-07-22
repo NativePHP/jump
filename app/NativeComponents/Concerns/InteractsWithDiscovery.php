@@ -8,6 +8,7 @@ use Native\Mobile\Attributes\On;
 use NativePHP\Discovery\Events\ServerFound;
 use NativePHP\Discovery\Events\ServerLost;
 use NativePHP\Discovery\Facades\Discovery;
+use Nativephp\NativeUi\Theme;
 
 /**
  * Feeds the app-wide {@see DiscoveredServers} store from whatever tab is
@@ -54,6 +55,12 @@ trait InteractsWithDiscovery
         app(DiscoveredServers::class)->flush();
         Discovery::stop();
         Discovery::start();
+
+        // The remote app pushed ITS theme (colors, typography) into the
+        // native theme store via NativeUI.Theme.Set during the session —
+        // fonts it registered don't exist in Jump's bundle, so home falls
+        // back to system fonts. Re-push Jump's own tokens on resume.
+        Theme::pushToNative();
     }
 
     #[On(ServerFound::class)]

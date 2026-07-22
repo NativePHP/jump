@@ -67,23 +67,20 @@ class JumpBridgeRelay: NSObject, ObservableObject {
         disconnect()
 
         DispatchQueue.main.async {
-            if elementLive {
-                // Native-ui remote exit: endSession() cleared currentTree, and the
-                // LOCAL Jump home runloop is still parked in wait_event — all
-                // session its discovery events were forked to the remote, so it
-                // never woke. Wake it with a benign native event: the runloop
-                // re-renders Home and its publish restores currentTree + isActive.
-                // (endSession's isActive=false was queued on main before this
-                // block, so the event routes to the LOCAL runloop, not the dead
-                // remote.) Without this the shell falls through to the blank
-                // WebView — the "3-finger swipe → white screen" bug.
-                NativeElementBridge.sendNativeEvent(eventName: "__jumpResume", payloadJson: "{}")
-            } else {
+            if !elementLive {
                 // WebView exit: the local home tree is still in currentTree (its
                 // local publishes were only suppressed while forwarding), so
                 // flipping isActive shows it immediately and interactive.
                 NativeUIBridge.shared.isActive = true
             }
+            // Wake the LOCAL Jump home runloop parked in wait_event. For a
+            // native-ui exit this is what repaints home (endSession cleared
+            // currentTree; the re-render's publish restores it — the
+            // "3-finger swipe → white screen" fix). For BOTH exit kinds the
+            // __jumpResume listener also resyncs the server list and
+            // re-pushes Jump's theme (the remote app's Theme.Set clobbered
+            // the native theme store). Mirrors Android.
+            NativeElementBridge.sendNativeEvent(eventName: "__jumpResume", payloadJson: "{}")
         }
     }
     deinit { disconnect() }
@@ -115,6 +112,12 @@ class JumpBridgeRelay: NSObject, ObservableObject {
 
     func connect(host: String, port: String) {
         disconnect()
+        // A previous webview-forward session may still be live — disconnect()
+        // deliberately leaves it alone (only exitToJump stops it), but a NEW
+        // session must not inherit its forwarding: PHPSchemeHandler would keep
+        // proxying php:// to the OLD dev server. The webview branch below
+        // re-starts it with the new host/port when the new app is webview too.
+        JumpWebViewSession.shared.stop()
         self.host = host
         self.port = port
 
@@ -267,6 +270,14 @@ class JumpBridgeRelay: NSObject, ObservableObject {
                 if JumpElementRuntime.shared.isActive {
                     self.pendingHotReloadReExec = true
                     JumpElementRuntime.shared.enqueueEvent(["type": EventType.hotReload])
+                } else if JumpWebViewSession.shared.isActive {
+                    // Forwarded WebView session: reload the page so the dev
+                    // server's file change shows up (onReload is a host hook
+                    // nobody wires — same disease as the native re-exec bug).
+                    NotificationCenter.default.post(
+                        name: NSNotification.Name("ReloadWebViewNotification"),
+                        object: nil
+                    )
                 } else {
                     self.onReload?()
                 }

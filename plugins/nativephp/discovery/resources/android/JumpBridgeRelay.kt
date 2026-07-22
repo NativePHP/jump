@@ -3,10 +3,14 @@ package com.nativephp.discovery
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
 import com.nativephp.mobile.bridge.BridgeFunctionRegistry
+import com.nativephp.mobile.network.JumpWebViewSession
+import com.nativephp.mobile.ui.MainActivity
 import com.nativephp.mobile.ui.nativerender.EventType
 import com.nativephp.mobile.ui.nativerender.NativeElementBridge
 import com.nativephp.mobile.ui.nativerender.NativeUIBridge
+import java.lang.ref.WeakReference
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -86,10 +90,22 @@ object JumpBridgeRelay {
      * startup (they need an Activity/Context the relay doesn't hold), so we
      * don't re-register here.
      */
-    fun connect(host: String, port: String) {
+    /** Activity handle for the webview-forward swap (jumpWebViewSwap). */
+    private var activityRef: WeakReference<FragmentActivity>? = null
+
+    fun connect(host: String, port: String, activity: FragmentActivity? = null) {
         disconnect()
+        // A previous webview-forward session may still be live — disconnect()
+        // deliberately leaves it alone (only exitToJump stops it), but a NEW
+        // session must not inherit its forwarding or its nav chrome: without
+        // this, scanning a v4 app from inside a v3 session keeps the v3
+        // top/bottom bars overlaid on the v4 app (and requests forwarding to
+        // the old server).
+        JumpWebViewSession.stop()
+        com.nativephp.mobile.ui.NativeUIState.clearAll()
         this.host = host
         this.port = port
+        if (activity != null) activityRef = WeakReference(activity)
 
         JumpElementRuntime.beginSession()
 
@@ -122,24 +138,35 @@ object JumpBridgeRelay {
      */
     fun exitToJump() {
         val elementLive = JumpElementRuntime.isActive
-        if (!elementLive && !isConnected) return
+        val webviewLive = JumpWebViewSession.isActive
+        if (!elementLive && !webviewLive && !isConnected) return
 
         Log.i(TAG, "Escape hatch — exiting remote app back to Jump")
 
+        // Stop forwarding first so any in-flight WebView request falls back
+        // to the local runtime instead of a dead dev server.
+        JumpWebViewSession.stop()
         if (elementLive) {
             JumpElementRuntime.endSession() // clears NativeUIBridge tree + isActive
         }
         disconnect()
 
-        // The LOCAL Jump home runloop is still parked in wait_event — during the
-        // session its events were forked to the remote, so it never woke. Wake it
-        // with a benign native event: the runloop re-renders Home and its publish
-        // restores the tree (the iOS "3-finger swipe → white screen" fix).
-        //
-        // Queued on the main handler AFTER endSession()'s own main-post, so
-        // isActive is already false when the event hits the shell's writeEvent
-        // fork and it routes to the LOCAL JNI channel, not the dead remote.
         mainHandler.post {
+            if (webviewLive && !elementLive) {
+                // The served app's nav chrome (top bar / bottom nav / side
+                // nav / FAB) arrived via its response headers into
+                // NativeUIState, which the Scaffold renders around BOTH
+                // branches — without this it stays overlaid on the Jump home.
+                com.nativephp.mobile.ui.NativeUIState.clearAll()
+                // WebView exit: the local home tree is still in the bridge
+                // (webview mode never forks local publishes away), so
+                // flipping isActive shows it immediately (mirrors iOS).
+                NativeUIBridge.isActive.value = true
+            }
+            // Wake the LOCAL Jump home runloop parked in wait_event with a
+            // benign native event: the runloop re-renders Home and its publish
+            // restores the tree (the "3-finger swipe → white screen" fix);
+            // the __jumpResume listener also resyncs the server list.
             NativeElementBridge.sendNativeEvent("__jumpResume", "{}")
         }
     }
@@ -165,13 +192,41 @@ object JumpBridgeRelay {
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
+                    // v4 servers ALWAYS declare `ui` in /jump/info; a server
+                    // that omits it predates the field — i.e. a v3-era
+                    // server, whose apps are WebView apps (Blade / Livewire /
+                    // Inertia over HTTP). Defaulting to native-ui would leave
+                    // the client waiting forever for Element.* frames a v3
+                    // server never sends.
+                    var ui = "webview"
                     wsPort = try {
                         val body = it.body?.string()
-                        if (body != null) JSONObject(body).optString("ws_port", port) else port
+                        if (body != null) {
+                            val json = JSONObject(body)
+                            ui = json.optString("ui", "webview").ifEmpty { "webview" }
+                            json.optString("ws_port", port)
+                        } else port
                     } catch (e: Exception) {
                         port
                     }
-                    Log.i(TAG, "WebSocket port: $wsPort")
+                    Log.i(TAG, "WebSocket port: $wsPort, ui: $ui")
+
+                    // WebView app: no Element.* frames to stream. Render it by
+                    // forwarding its HTTP responses through the shell's
+                    // WebView — start the session BEFORE the WS opens so
+                    // onOpen skips driveRemoteApp, then do the commit-gated
+                    // swap (Jump home stays visible until the forwarded
+                    // page's first commit). The WS stays open purely as the
+                    // device bridge (Camera, Biometrics, …).
+                    if (ui == "webview") {
+                        Log.i(TAG, "Remote app is a WebView app — rendering via HTTP forward")
+                        JumpWebViewSession.start(host, port)
+                        mainHandler.post {
+                            (activityRef?.get() as? MainActivity)?.jumpWebViewSwap("/")
+                                ?: Log.e(TAG, "No MainActivity for jumpWebViewSwap — WebView app cannot render")
+                        }
+                    }
+
                     openWebSocket()
                 }
             }
@@ -192,9 +247,14 @@ object JumpBridgeRelay {
                 isConnected = true
                 reconnectAttempt = 0  // healthy connection — reset backoff
                 mainHandler.post { onConnected?.invoke() }
-                // Now that the device WS is registered on the bridge, start the
-                // remote runloop so the server begins publishing Element.* frames.
-                driveRemoteApp()
+                // Native-ui: now that the device WS is registered on the
+                // bridge, start the remote runloop so the server begins
+                // publishing Element.* frames. WebView mode: the WebView
+                // drives requests itself via the forward — the WS is only the
+                // device bridge, so skip the runloop (mirrors iOS).
+                if (!JumpWebViewSession.isActive) {
+                    driveRemoteApp()
+                }
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
@@ -277,6 +337,10 @@ object JumpBridgeRelay {
                         if (JumpElementRuntime.isActive) {
                             pendingHotReloadReExec = true
                             JumpElementRuntime.enqueueEvent(JSONObject().put("type", EventType.HOT_RELOAD))
+                        } else if (JumpWebViewSession.isActive) {
+                            // Forwarded WebView session: reload the page so the
+                            // dev server's file change shows up.
+                            (activityRef?.get() as? MainActivity)?.ensureWebRenderer()?.webView?.reload()
                         } else {
                             onReload?.invoke()
                         }

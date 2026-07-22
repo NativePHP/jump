@@ -70,7 +70,10 @@ object DiscoveryFunctions {
             Log.i(TAG, "🔌 Discovery.Connect → $host:$port")
             Handler(Looper.getMainLooper()).post {
                 EscapeHatchGesture.install(activity)
-                JumpBridgeRelay.connect(host, port)
+                // Activity is threaded through for the webview-forward swap
+                // (MainActivity.jumpWebViewSwap) when the remote is a
+                // WebView app.
+                JumpBridgeRelay.connect(host, port, activity)
             }
             return emptyMap()
         }
