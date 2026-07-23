@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "533b7fc54f027054c0fe15f778a13c49",
+    "content-hash": "cfa82bf970e54fe5c981e7d689af2872",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2362,10 +2362,16 @@
         {
             "name": "nativephp/mobile",
             "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NativePHP/mobile-air.git",
+                "reference": "c53cae83eaa0a73d45f351f4931dc86487869a27"
+            },
             "dist": {
-                "type": "path",
-                "url": "../mobile",
-                "reference": "3c4e3e31122d7775c1b7f2fc7b917c9ec4a7112c"
+                "type": "zip",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/c53cae83eaa0a73d45f351f4931dc86487869a27",
+                "reference": "c53cae83eaa0a73d45f351f4931dc86487869a27",
+                "shasum": ""
             },
             "require": {
                 "endroid/qr-code": "^6.0.9",
@@ -2399,6 +2405,9 @@
                 "phpstan/phpstan-phpunit": "^1.0",
                 "spatie/laravel-ray": "^1.26"
             },
+            "suggest": {
+                "ext-zip": "Required by native:install to validate and extract the downloaded Android PHP binary archives"
+            },
             "type": "library",
             "extra": {
                 "laravel": {
@@ -2408,40 +2417,14 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Native\\Mobile\\": "src/"
-                },
                 "files": [
                     "src/helpers.php"
-                ]
-            },
-            "autoload-dev": {
+                ],
                 "psr-4": {
-                    "Tests\\": "tests/"
+                    "Native\\Mobile\\": "src/"
                 }
             },
-            "scripts": {
-                "qa": [
-                    "@composer format",
-                    "@composer analyse",
-                    "@composer test"
-                ],
-                "post-autoload-dump": [
-                    "@php ./vendor/bin/testbench package:discover --ansi"
-                ],
-                "analyse": [
-                    "vendor/bin/phpstan analyse"
-                ],
-                "test": [
-                    "vendor/bin/pest"
-                ],
-                "test-coverage": [
-                    "vendor/bin/pest --coverage"
-                ],
-                "format": [
-                    "vendor/bin/pint"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2465,9 +2448,11 @@
                 "laravel",
                 "nativephp"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/NativePHP/mobile-air/issues",
+                "source": "https://github.com/NativePHP/mobile-air/tree/main"
+            },
+            "time": "2026-07-23T03:13:17+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
@@ -3128,73 +3113,17 @@
             "time": "2026-07-15T18:46:27+00:00"
         },
         {
-            "name": "nativephp/mobile-vibe",
-            "version": "1.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/NativePHP/mobile-vibe.git",
-                "reference": "dc4085b0bd128b12422fd70409224a8964714344"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-vibe/zipball/dc4085b0bd128b12422fd70409224a8964714344",
-                "reference": "dc4085b0bd128b12422fd70409224a8964714344",
-                "shasum": ""
-            },
-            "require": {
-                "nativephp/mobile": "^3.0 || ^4.0",
-                "php": "^8.3"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^10.0",
-                "pestphp/pest": "^2.7|^3.0|^4.0"
-            },
-            "type": "nativephp-plugin",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "NativePHP\\Vibe\\VibeServiceProvider"
-                    ]
-                },
-                "nativephp": {
-                    "manifest": "nativephp.json"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "NativePHP\\Vibe\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bifrost Technology, LLC",
-                    "email": "support@nativephp.com"
-                }
-            ],
-            "description": "Websockets for NativePHP Mobile — live server events (Pusher protocol: Vask / Reverb / Pusher)",
-            "homepage": "https://github.com/nativephp/mobile-vibe",
-            "support": {
-                "issues": "https://github.com/nativephp/mobile-vibe/issues",
-                "source": "https://github.com/nativephp/mobile-vibe"
-            },
-            "time": "2026-07-15T18:46:26+00:00"
-        },
-        {
             "name": "nativephp/native-ui",
             "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-ui.git",
-                "reference": "96e1c21760fd585c2df3bae96dd70b6a420d4199"
+                "reference": "af914dbbd3bcdfa00426b22fb4c32fd8119f8459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-ui/zipball/96e1c21760fd585c2df3bae96dd70b6a420d4199",
-                "reference": "96e1c21760fd585c2df3bae96dd70b6a420d4199",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ui/zipball/af914dbbd3bcdfa00426b22fb4c32fd8119f8459",
+                "reference": "af914dbbd3bcdfa00426b22fb4c32fd8119f8459",
                 "shasum": ""
             },
             "require": {
@@ -3243,7 +3172,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-07-22T15:19:38+00:00"
+            "time": "2026-07-23T03:26:51+00:00"
         },
         {
             "name": "nesbot/carbon",

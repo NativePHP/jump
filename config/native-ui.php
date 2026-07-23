@@ -61,25 +61,26 @@ return [
             'on-accent' => '#16182C', // haiti (dark text on lime)
         ],
 
-        // Dark mode — the site's warm navy-purple, NOT cold slate. haiti is the
+        // Dark mode — the site's warm navy-purple, NOT flat black. haiti is the
         // page, cloud the card surface, torchlight the code/muted layer, with a
-        // violet-400 interactive accent and the same snow-flurry brand pop.
+        // red-500 interactive accent (one step brighter than light mode so it
+        // pops on the dark ground) and the same snow-flurry brand pop.
         'dark' => [
-            'primary' => 'red-600',
+            'primary' => 'red-500',
             'on-primary' => 'white',
 
-            'secondary' => 'red-500',
+            'secondary' => 'red-400',
             'on-secondary' => 'white',
 
-            'surface' => 'black',
-            'on-surface' => 'white', // gray-900
-            'background' => 'black', // gray-50
-            'on-background' => 'gray-300',
+            'surface' => '#1E2140', // between haiti and cloud — card layer
+            'on-surface' => '#F3F4F6',
+            'background' => '#16182C', // haiti
+            'on-background' => '#F3F4F6',
 
-            'surface-variant' => 'gray-700', // gray-100
-            'on-surface-variant' => 'white',
+            'surface-variant' => '#292D3E', // torchlight-surface (code/muted layer)
+            'on-surface-variant' => '#A6ACCD', // torchlight-text (muted lavender-gray)
 
-            'outline' => 'gray-800', // gray-200
+            'outline' => '#383B61', // subtle navy border on haiti/cloud
 
             'destructive' => '#DC2626',
             'on-destructive' => 'white',
