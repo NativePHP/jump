@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use Native\Mobile\Attributes\On;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Events\Scanner\CodeScanned;
+use Native\Mobile\Events\System\AppearanceChanged;
 use Native\Mobile\Facades\Browser;
 use Native\Mobile\Facades\Scanner;
 
@@ -101,34 +102,54 @@ class Home extends NativeComponent
 
     /**
      * Vetted NativePHP consulting partners, mirrored from
-     * nativephp.com/consulting. `logo` is a remote raster URL where the partner
-     * publishes one (the native <image> renderer needs http(s) raster, not the
-     * site's bundled SVG); null falls back to a lettered monogram tile.
+     * nativephp.com/consulting. Logos are transparent PNGs bundled under
+     * public/img/partners (rasterised from the site's SVGs — the native
+     * <image> renderer can't draw SVG), with a `-dark` variant swapped in via
+     * isDark(). width/height preserve each PNG's aspect ratio at a display
+     * size balanced across the set.
      *
-     * @return list<array{name: string, tagline: string, url: string, logo: ?string}>
+     * @return list<array{name: string, url: string, logo: string, width: int, height: int}>
      */
     protected function partners(): array
     {
         return [
             [
                 'name' => 'Nexcalia',
-                'tagline' => 'Smart tools for scheduling & visitor management.',
                 'url' => 'https://www.nexcalia.com/?ref=nativephp',
-                'logo' => null,
+                'logo' => $this->partnerLogo('nexcalia'),
+                'width' => 128,
+                'height' => 40,
             ],
             [
                 'name' => 'Web Mavens',
-                'tagline' => 'Laravel Partners crafting secure, SOC 2-ready apps.',
                 'url' => 'https://www.webmavens.com/?ref=nativephp',
-                'logo' => null,
+                'logo' => $this->partnerLogo('webmavens'),
+                'width' => 208,
+                'height' => 28,
             ],
             [
                 'name' => 'Synergi Tech',
-                'tagline' => 'Bespoke software for complex infrastructure.',
                 'url' => 'https://synergitech.co.uk/partners/nativephp/',
-                'logo' => 'https://synergitech.co.uk/logo.png',
+                'logo' => $this->partnerLogo('synergi'),
+                'width' => 104,
+                'height' => 48,
             ],
         ];
+    }
+
+    protected function partnerLogo(string $slug): string
+    {
+        return public_path('img/partners/'.$slug.(isDark() ? '-dark' : '').'.png');
+    }
+
+    /**
+     * The partner logos are appearance-specific rasters picked server-side,
+     * so a light/dark flip must re-render to swap them.
+     */
+    #[On(AppearanceChanged::class)]
+    public function appearanceChanged(string $mode): void
+    {
+        // Re-render only.
     }
 
     public function render(): View
