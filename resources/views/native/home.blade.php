@@ -4,7 +4,11 @@
     layout space when hidden). Making the scroll-view a sibling of the sheet
     without this wrapper collapses its height and cuts off the bottom.
 --}}
-<column class="w-full h-full ">
+{{-- The root carries bg-theme-background, not just the scroll-view: the tree
+     reaches the physical screen edge, but the scroll-view's content is inset
+     by the top safe area, so an unpainted root leaves the status-bar strip
+     showing the host's systemBackground (white) against our off-white bg. --}}
+<column class="w-full h-full bg-theme-background">
     <scroll-view class="w-full flex-1 bg-theme-background">
         <column class="w-full px-5 pb-32 safe-area">
 

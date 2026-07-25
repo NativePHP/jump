@@ -18,7 +18,7 @@
                 <pressable @press="watch('{{ $featured['url'] }}')" class="w-full px-5 pb-8">
                     <column class="w-full gap-3">
                         <column class="w-full h-[200] rounded-2xl bg-theme-surface overflow-hidden">
-                            <image src="{{ $featured['thumb'] }}" fit="1" class="w-full h-full"/>
+                            <image src="{{ $featured['thumb'] }}" fit="2" class="w-full h-full"/>
                         </column>
                         <row class="items-center gap-2">
                             <text class="text-xs font-bold text-theme-on-primary tracking-wider px-2 py-1 bg-theme-primary rounded-full">{{ $featured['category'] }}</text>
@@ -41,7 +41,7 @@
                     <pressable @press="watch('{{ $video['url'] }}')">
                         <row class="w-full gap-3 p-2 bg-theme-surface rounded-2xl border border-theme-outline">
                             <column class="w-[120] h-[68] rounded-xl bg-theme-surface-variant overflow-hidden">
-                                <image src="{{ $video['thumb'] }}" fit="1" class="w-full h-full"/>
+                                <image src="{{ $video['thumb'] }}" fit="2" class="w-full h-full"/>
                             </column>
                             <column class="flex-1 gap-1 py-1">
                                 <text class="text-sm font-semibold text-theme-on-surface">{{ $video['title'] }}</text>
