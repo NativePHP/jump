@@ -15,6 +15,19 @@ use Illuminate\Support\Str;
  */
 class DocsIndex
 {
+    private const CACHE_KEY = 'jump.docs';
+
+    /**
+     * Marker key whose mere presence means the cached corpus was fetched
+     * recently enough to trust without going to the network. Separate from
+     * the corpus key so the corpus itself survives as an offline fallback
+     * long after it stops counting as fresh.
+     */
+    private const FRESH_KEY = 'jump.docs.fresh';
+
+    /** Minutes a fetched corpus is served straight from cache. */
+    private const FRESH_MINUTES = 30;
+
     private const SECTION_NAMES = [
         'getting-started' => 'Getting Started',
         'the-basics' => 'The Basics',
@@ -41,7 +54,8 @@ class DocsIndex
         try {
             $fresh = static::fetch();
             if (! empty($fresh)) {
-                Cache::put('jump.docs', $fresh, now()->addHours(24));
+                Cache::put(self::CACHE_KEY, $fresh, now()->addHours(24));
+                Cache::put(self::FRESH_KEY, true, now()->addMinutes(self::FRESH_MINUTES));
 
                 return $fresh;
             }
@@ -49,7 +63,30 @@ class DocsIndex
             // fall through to the cached copy
         }
 
-        return Cache::get('jump.docs', []);
+        return Cache::get(self::CACHE_KEY, []);
+    }
+
+    /**
+     * The cached corpus when it's recent enough to paint immediately, else
+     * null. Lets a screen skip both the network-first fetch above AND its
+     * loading skeleton — with a warm cache there's nothing to wait for, so
+     * the skeleton would only flash for a frame.
+     *
+     * The window is deliberately short: past it, sections() refetches (and
+     * the screen shows its skeleton) so a docs update lands without waiting
+     * out the 24h fallback TTL. Pull-to-refresh still forces a fetch anytime.
+     *
+     * @return ?array<int,array{slug:string,name:string,pages:array<int,array<string,mixed>>}>
+     */
+    public static function fresh(): ?array
+    {
+        if (! Cache::has(self::FRESH_KEY)) {
+            return null;
+        }
+
+        $cached = Cache::get(self::CACHE_KEY, []);
+
+        return empty($cached) ? null : $cached;
     }
 
     /**
@@ -72,7 +109,7 @@ class DocsIndex
         // outright when it's unreachable, e.g. a nativephp.test URL from the
         // Android emulator). Warm the cache once via sections() only if the
         // Docs tab hasn't already populated it this session.
-        $sections = Cache::get('jump.docs');
+        $sections = Cache::get(self::CACHE_KEY);
         if (empty($sections)) {
             try {
                 $sections = static::sections();

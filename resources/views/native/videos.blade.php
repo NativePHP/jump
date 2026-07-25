@@ -1,11 +1,7 @@
 <scroll-view class="w-full h-full bg-theme-background">
     <column class="w-full pb-32 pt-4">
 
-        @if ($loading)
-            <column class="w-full items-center justify-center gap-4 py-24">
-                <text class="text-base text-theme-on-surface-variant">Loading videos…</text>
-            </column>
-        @elseif ($failed)
+        @if ($failed)
             <column class="w-full items-center justify-center gap-5 px-8 py-24">
                 <native:icon :ios="App\Icons\Ios::WifiSlash" :android="App\Icons\Android::WifiOff" :size="40" color="#475569" dark-color="#94A3B8"/>
                 <text class="text-base text-theme-on-surface-variant text-center">Unable to load videos. Check your connection.</text>
