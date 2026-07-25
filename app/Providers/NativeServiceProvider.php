@@ -16,7 +16,6 @@ use NativePHP\Clipboard\ClipboardServiceProvider;
 use NativePHP\Discovery\DiscoveryServiceProvider;
 use NativePHP\LocalNotifications\LocalNotificationsServiceProvider;
 use NativePHP\MediaPlayer\MediaPlayerServiceProvider;
-use NativePHP\Vibe\VibeServiceProvider;
 use S2BR\MobileSplashscreen\MobileSplashscreenServiceProvider;
 
 class NativeServiceProvider extends ServiceProvider
@@ -61,9 +60,7 @@ class NativeServiceProvider extends ServiceProvider
             BiometricsServiceProvider::class,
             GeolocationServiceProvider::class,
             MediaPlayerServiceProvider::class,
-            LocalNotificationsServiceProvider::class,
-            VibeServiceProvider::class,
-            MobileSplashscreenServiceProvider::class,
+            LocalNotificationsServiceProvider::class
         ];
     }
 }
