@@ -27,6 +27,22 @@ trait InteractsWithDiscovery
     public bool $showServers = false;
 
     /**
+     * Whether the full-screen "connecting…" cover is up.
+     *
+     * It exists for more than politeness: the remote app pushes its OWN theme
+     * (colors, typography) as it boots, which lands while Jump's UI is still on
+     * screen. Its font aliases name files that don't exist in Jump's bundle, so
+     * home visibly re-renders in fallback fonts for the second or two before
+     * the remote tree takes over. Covering that window hides the shift — and
+     * the cover itself is styled with fixed colors and no font tokens, so the
+     * incoming theme can't move it either.
+     */
+    public bool $connecting = false;
+
+    /** Advertised name of the server being connected to, for the cover's copy. */
+    public string $connectingTo = '';
+
+    /**
      * Start browsing the LAN. Call from each tab's `mount()` — NOT from a
      * service provider: the native browser reports already-running servers in
      * an immediate burst right after `start()`, and `#[On(ServerFound)]`
@@ -53,6 +69,12 @@ trait InteractsWithDiscovery
     public function jumpSessionResumed(): void
     {
         $this->showServers = false;
+        // Covers both exits: a clean 3-finger swipe, and a connection that
+        // died or never produced a tree (the relay routes an abandoned
+        // reconnect through the same escape-hatch path). Either way home is
+        // about to repaint, so the cover must not survive into it.
+        $this->connecting = false;
+        $this->connectingTo = '';
         app(DiscoveredServers::class)->flush();
         Discovery::stop();
         Discovery::start();
@@ -126,7 +148,20 @@ trait InteractsWithDiscovery
             return;
         }
 
+        $this->raiseConnectingCover($host, $port);
+
         Discovery::connect($host, $port);
+    }
+
+    /**
+     * Raise the cover BEFORE the bridge call. Discovery::connect() returns
+     * immediately (the native side dials on the main queue), so this render
+     * lands first and the remote tree replaces it whenever it's ready.
+     */
+    private function raiseConnectingCover(string $host, string $port): void
+    {
+        $this->connectingTo = app(DiscoveredServers::class)->nameFor($host, $port);
+        $this->connecting = true;
     }
 
     /** The coaching sheet's "don't show this again" checkbox. */
@@ -147,6 +182,8 @@ trait InteractsWithDiscovery
         $this->showExitHint = false;
 
         if ($this->pendingHost !== '') {
+            $this->raiseConnectingCover($this->pendingHost, $this->pendingPort);
+
             Discovery::connect($this->pendingHost, $this->pendingPort);
         }
     }

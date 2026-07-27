@@ -34,6 +34,38 @@
     </bottom-sheet>
 
     {{--
+        Connecting cover. Full-screen (iOS presents <modal> as a
+        fullScreenCover) so Jump's UI is hidden for the second or two between
+        tapping a server and the remote app's first frame.
+
+        Not just polish: the remote app pushes its own theme as it boots, and
+        its font aliases name files Jump doesn't bundle — so home would
+        visibly re-render in fallback fonts while it waits. Every colour here
+        is a literal and there are no `font=` tokens, so the incoming theme
+        can't move this screen either.
+
+        Not dismissible: the escape-hatch gesture is the way out, which is
+        exactly what the sheet below has just taught.
+    --}}
+    <modal :visible="$connecting" :dismissible="false">
+        <column class="w-full h-full items-center justify-center gap-6 px-10 bg-white dark:bg-slate-950">
+            <native:activity-indicator :size="36" color="#DC2626"/>
+            <column class="w-full items-center gap-2">
+                <text class="text-lg font-bold text-center text-slate-900 dark:text-slate-100">
+                    @if ($connectingTo !== '')
+                        Connecting to {{ $connectingTo }}
+                    @else
+                        Connecting
+                    @endif
+                </text>
+                <text class="text-sm text-center text-slate-500 dark:text-slate-400">Starting the app on your
+                    phone — swipe right with three fingers any time to come back.
+                </text>
+            </column>
+        </column>
+    </modal>
+
+    {{--
         Escape-hatch coaching sheet. Interjected by
         InteractsWithDiscovery::connect() before every Jump until the user
         opts out via the checkbox (flag kept in the cache table / device

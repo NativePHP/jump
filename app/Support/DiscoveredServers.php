@@ -48,6 +48,15 @@ class DiscoveredServers
         return array_values($this->servers);
     }
 
+    /**
+     * Advertised name for a connection, or '' when it isn't (or is no longer)
+     * in the store — a QR scan connects to a host:port that was never browsed.
+     */
+    public function nameFor(string $host, string $port): string
+    {
+        return $this->servers[$host.':'.$port]['name'] ?? '';
+    }
+
     public function count(): int
     {
         return count($this->servers);
