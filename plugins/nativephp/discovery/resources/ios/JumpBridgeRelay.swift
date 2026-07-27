@@ -59,6 +59,12 @@ class JumpBridgeRelay: NSObject, ObservableObject {
 
         logger.info("Escape hatch — exiting remote app back to Jump")
 
+        // Drop any fonts the remote app pushed for the session. CoreText
+        // registration is process-wide, so leaving them installed would let the
+        // remote app's faces keep answering to tokens Jump also uses.
+        // `__jumpResume` re-pushes Jump's own theme right after.
+        NativeUIFontResolver.clearRuntimeFonts()
+
         // Stop forwarding / streaming and drop the WS.
         JumpWebViewSession.shared.stop()
         if elementLive {

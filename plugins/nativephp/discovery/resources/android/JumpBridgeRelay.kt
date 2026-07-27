@@ -143,6 +143,11 @@ object JumpBridgeRelay {
 
         Log.i(TAG, "Escape hatch — exiting remote app back to Jump")
 
+        // Drop any fonts the remote app pushed for the session, so its faces
+        // stop answering to tokens Jump also uses. `__jumpResume` re-pushes
+        // Jump's own theme right after.
+        com.nativephp.plugins.native_ui.ui.NativeUIFontResolver.clearRuntimeFonts()
+
         // Stop forwarding first so any in-flight WebView request falls back
         // to the local runtime instead of a dead dev server.
         JumpWebViewSession.stop()
