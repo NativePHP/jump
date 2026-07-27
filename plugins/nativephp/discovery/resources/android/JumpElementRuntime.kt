@@ -80,12 +80,31 @@ object JumpElementRuntime {
     // Element lifecycle
     // ─────────────────────────────────────────────────────────────────────
 
-    /** Element.Init — register renderers (idempotent) and mark the session live. */
+    /**
+     * Set once the renderer registrations have run for this process.
+     *
+     * They are NOT idempotent, despite reading that way. Element renderers go
+     * into a map keyed by type, so re-registering those is harmless — but
+     * plugin ROOT HOSTS (the floating overlay, the drawer) append to the root
+     * host registry, which folds every entry around the content. Registering
+     * on each Element.Init therefore stacked one extra copy of the overlay per
+     * session: two "servers nearby" pills after one Jump, three after two,
+     * each with its own copy of the bottom sheets inside (which is what made a
+     * dismissed sheet look like it reopened — there was a second one behind
+     * it). Nothing clears the registries, so once per process is enough.
+     */
+    @Volatile
+    private var renderersRegistered = false
+
+    /** Element.Init — register renderers once, and mark the session live. */
     fun initialize() {
         Log.i(TAG, "Element.Init")
         mainHandler.post {
-            registerNativeChromeRenderers()
-            registerPluginRenderers()
+            if (!renderersRegistered) {
+                registerNativeChromeRenderers()
+                registerPluginRenderers()
+                renderersRegistered = true
+            }
             suppressed = false
             isActive = true
         }
