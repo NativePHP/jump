@@ -91,13 +91,25 @@ object JumpElementRuntime {
         }
     }
 
-    /** Tear down the current session's UI and stop routing events remotely. */
-    fun endSession() {
+    /**
+     * Tear down the current session's UI and stop routing events remotely.
+     *
+     * [keepingLastFrame] stops the session WITHOUT clearing the bridge's tree,
+     * leaving the remote app's final frame on screen for `AnimatedContent` to
+     * animate OUT as Jump's home animates in (see `JumpBridgeRelay.exitToJump`).
+     * The frame is inert either way — `suppressed`/`isActive` are already false,
+     * so no further remote publishes land and taps stop routing remotely.
+     * Callers that keep the frame MUST get a local publish on screen afterwards
+     * (waking home does this), or the dead frame just sits there. Mirrors iOS.
+     */
+    fun endSession(keepingLastFrame: Boolean = false) {
         mainHandler.post {
             suppressed = true
             isActive = false
-            NativeUIBridge.isActive.value = false
-            NativeUIBridge.currentTree.value = null
+            if (!keepingLastFrame) {
+                NativeUIBridge.isActive.value = false
+                NativeUIBridge.currentTree.value = null
+            }
         }
         reset()
     }

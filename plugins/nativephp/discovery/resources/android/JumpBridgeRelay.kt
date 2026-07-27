@@ -147,11 +147,28 @@ object JumpBridgeRelay {
         // to the local runtime instead of a dead dev server.
         JumpWebViewSession.stop()
         if (elementLive) {
-            JumpElementRuntime.endSession() // clears NativeUIBridge tree + isActive
+            // Keep the remote app's final frame on screen so AnimatedContent has
+            // something to animate OUT when home's republish bumps screenKey.
+            // Clearing the tree here is what made the exit snap: the remote UI
+            // vanished a frame or more before home arrived.
+            JumpElementRuntime.endSession(keepingLastFrame = true)
         }
         disconnect()
 
         mainHandler.post {
+            if (elementLive) {
+                // Stage the swap BEFORE waking home, so the publish that
+                // repaints home is consumed as a navigation and bumps
+                // screenKey — driving AnimatedContent. `slide_from_left` sends
+                // the remote app out to the trailing edge while home enters
+                // from the leading one: the "back" idiom, matching the
+                // 3-finger swipe-RIGHT that got us here.
+                //
+                // Degrades quietly: a remote app whose root sentinel matches
+                // home's (tabs → tabs) counts as a native-chrome continuation,
+                // which skips the screenKey bump — today's instant repaint.
+                NativeUIBridge.setNavigationPending("slide_from_left")
+            }
             if (webviewLive && !elementLive) {
                 // The served app's nav chrome (top bar / bottom nav / side
                 // nav / FAB) arrived via its response headers into

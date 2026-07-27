@@ -57,12 +57,22 @@ final class JumpElementRuntime: ObservableObject, @unchecked Sendable {
     }
 
     /// Tear down the current session's UI and stop routing events remotely.
-    func endSession() {
+    ///
+    /// `keepingLastFrame` stops the session WITHOUT clearing the shell's tree,
+    /// leaving the remote app's final frame on screen as something for Jump's
+    /// home to animate in over (see `JumpBridgeRelay.exitToJump`). The frame is
+    /// inert either way — `suppressed`/`isActive` are already false, so no
+    /// further remote publishes land and taps no longer route to the remote
+    /// queue. Callers that keep the frame MUST get a local publish on screen
+    /// afterwards (waking home does this), or the dead frame just sits there.
+    func endSession(keepingLastFrame: Bool = false) {
         DispatchQueue.main.async {
             self.suppressed = true
             self.isActive = false
-            NativeUIBridge.shared.isActive = false
-            NativeUIBridge.shared.currentTree = nil
+            if !keepingLastFrame {
+                NativeUIBridge.shared.isActive = false
+                NativeUIBridge.shared.currentTree = nil
+            }
         }
         reset()
     }
