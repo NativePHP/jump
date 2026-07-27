@@ -143,15 +143,45 @@ object JumpBridgeRelay {
 
         Log.i(TAG, "Escape hatch — exiting remote app back to Jump")
 
+        // Drop any fonts the remote app pushed for the session, so its faces
+        // stop answering to tokens Jump also uses. `__jumpResume` re-pushes
+        // Jump's own theme right after.
+        //
+        // Resolved by NAME through the bridge registry rather than calling the
+        // plugin's resolver directly: this file is built against whatever
+        // native-ui version the host bundles, and older ones have no runtime
+        // font store at all. Absent function → nothing was ever pushed →
+        // nothing to clean up.
+        com.nativephp.mobile.bridge.BridgeFunctionRegistry.shared
+            .get("NativeUI.Fonts.Clear")
+            ?.let { runCatching { it.execute(emptyMap()) } }
+
         // Stop forwarding first so any in-flight WebView request falls back
         // to the local runtime instead of a dead dev server.
         JumpWebViewSession.stop()
         if (elementLive) {
-            JumpElementRuntime.endSession() // clears NativeUIBridge tree + isActive
+            // Keep the remote app's final frame on screen so AnimatedContent has
+            // something to animate OUT when home's republish bumps screenKey.
+            // Clearing the tree here is what made the exit snap: the remote UI
+            // vanished a frame or more before home arrived.
+            JumpElementRuntime.endSession(keepingLastFrame = true)
         }
         disconnect()
 
         mainHandler.post {
+            if (elementLive) {
+                // Stage the swap BEFORE waking home, so the publish that
+                // repaints home is consumed as a navigation and bumps
+                // screenKey — driving AnimatedContent. `slide_from_left` sends
+                // the remote app out to the trailing edge while home enters
+                // from the leading one: the "back" idiom, matching the
+                // 3-finger swipe-RIGHT that got us here.
+                //
+                // Degrades quietly: a remote app whose root sentinel matches
+                // home's (tabs → tabs) counts as a native-chrome continuation,
+                // which skips the screenKey bump — today's instant repaint.
+                NativeUIBridge.setNavigationPending("slide_from_left")
+            }
             if (webviewLive && !elementLive) {
                 // The served app's nav chrome (top bar / bottom nav / side
                 // nav / FAB) arrived via its response headers into

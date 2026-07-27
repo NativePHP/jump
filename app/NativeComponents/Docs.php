@@ -8,6 +8,8 @@ use App\Support\DocsIndex;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Fluent;
 use Illuminate\View\View;
+use Native\Mobile\Attributes\Lazy;
+use Native\Mobile\Edge\Element;
 use Native\Mobile\Edge\Layouts\Builders\NavAction;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Edge\NativeElementCollector;
@@ -17,7 +19,10 @@ use NativePHP\Clipboard\Facades\Clipboard;
 /**
  * Docs tab — the NativePHP mobile docs, fetched from the public MCP navigation
  * API (full page content inline), cached 24h. Collapsible section TOC → page.
+ * #[Lazy] paints the skeleton while a cold/stale cache is fetched; a fresh
+ * cache paints the real TOC straight away (see publishPlaceholder()).
  */
+#[Lazy]
 class Docs extends NativeComponent
 {
     use InteractsWithDiscovery;
@@ -41,8 +46,6 @@ class Docs extends NativeComponent
 
     public ?array $page = null;
 
-    public bool $loading = true;
-
     public bool $failed = false;
 
     /**
@@ -60,17 +63,38 @@ class Docs extends NativeComponent
         return 'Docs';
     }
 
+    protected function placeholder(): Element|View
+    {
+        return view('native.docs-skeleton');
+    }
+
+    /**
+     * Skip the skeleton when the corpus is already cached and fresh — mount()
+     * then paints the real TOC in the same frame, so a skeleton would just be
+     * a one-frame flash. Only a cold or stale cache pays the network-first
+     * fetch that the skeleton exists to cover.
+     */
+    public function publishPlaceholder(): void
+    {
+        if (DocsIndex::fresh() !== null) {
+            return;
+        }
+
+        parent::publishPlaceholder();
+    }
+
     public function mount(): void
     {
         $this->startDiscovery();
 
+        // Fresh cache → paint from it (publishPlaceholder() skipped the
+        // skeleton on the same condition); otherwise fetch network-first.
         try {
-            $this->sections = DocsIndex::sections();
-            $this->failed = empty($this->sections);
+            $this->sections = DocsIndex::fresh() ?? DocsIndex::sections();
         } catch (\Throwable) {
-            $this->failed = true;
+            // Leave sections empty — the failed flag below covers it.
         }
-        $this->loading = false;
+        $this->failed = empty($this->sections);
 
         // Deep link (https://nativephp.com/docs/mobile/{v}/{section}/{page}) —
         // land directly on the linked page. API page ids mirror the website

@@ -47,22 +47,50 @@ final class JumpElementRuntime: ObservableObject, @unchecked Sendable {
 
     // MARK: - Element lifecycle
 
+    /// Set once `registerPluginRenderers()` has run for this process.
+    ///
+    /// It is NOT idempotent, despite reading that way. Element renderers go
+    /// into a dictionary keyed by type, so re-registering those is harmless —
+    /// but plugin ROOT HOSTS (the floating overlay, the drawer) append to
+    /// `NativeRootHostRegistry`, whose `wrap()` folds every entry around the
+    /// content. Registering on each Element.Init therefore stacked one extra
+    /// copy of the overlay per session: two "servers nearby" pills after one
+    /// Jump, three after two, each with its own copy of the bottom sheets
+    /// inside (which is what made a dismissed sheet look like it reopened —
+    /// there was a second one behind it).
+    ///
+    /// Nothing clears either registry, so once per process is enough.
+    private var pluginRenderersRegistered = false
+
     func initialize() {
         logger.info("Element.Init")
         DispatchQueue.main.async {
-            registerPluginRenderers()  // shell's renderer registration (idempotent, main-thread)
+            if !self.pluginRenderersRegistered {
+                registerPluginRenderers()  // main-thread; see the flag's note
+                self.pluginRenderersRegistered = true
+            }
             self.suppressed = false
             self.isActive = true
         }
     }
 
     /// Tear down the current session's UI and stop routing events remotely.
-    func endSession() {
+    ///
+    /// `keepingLastFrame` stops the session WITHOUT clearing the shell's tree,
+    /// leaving the remote app's final frame on screen as something for Jump's
+    /// home to animate in over (see `JumpBridgeRelay.exitToJump`). The frame is
+    /// inert either way — `suppressed`/`isActive` are already false, so no
+    /// further remote publishes land and taps no longer route to the remote
+    /// queue. Callers that keep the frame MUST get a local publish on screen
+    /// afterwards (waking home does this), or the dead frame just sits there.
+    func endSession(keepingLastFrame: Bool = false) {
         DispatchQueue.main.async {
             self.suppressed = true
             self.isActive = false
-            NativeUIBridge.shared.isActive = false
-            NativeUIBridge.shared.currentTree = nil
+            if !keepingLastFrame {
+                NativeUIBridge.shared.isActive = false
+                NativeUIBridge.shared.currentTree = nil
+            }
         }
         reset()
     }

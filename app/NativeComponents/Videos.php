@@ -8,13 +8,18 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
+use Native\Mobile\Attributes\Lazy;
+use Native\Mobile\Edge\Element;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Facades\Browser;
 
 /**
  * Videos tab — the NativePHP YouTube channel feed (RSS), fetched + parsed
  * server-side and cached 6h. Featured card + list, matching the Jump app.
+ * #[Lazy] paints the skeleton while a cold cache is fetched; a warm cache
+ * paints the real feed straight away (see publishPlaceholder()).
  */
+#[Lazy]
 class Videos extends NativeComponent
 {
     use InteractsWithDiscovery;
@@ -22,12 +27,31 @@ class Videos extends NativeComponent
 
     private const FEED = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCbkAE6vLlR6lOy_nxd--22g';
 
+    private const CACHE_KEY = 'jump.videos';
+
     /** @var array<int,array<string,string>> */
     public array $videos = [];
 
-    public bool $loading = true;
-
     public bool $failed = false;
+
+    protected function placeholder(): Element|View
+    {
+        return view('native.videos-skeleton');
+    }
+
+    /**
+     * Skip the skeleton when the feed is already cached — load() returns from
+     * cache within the frame, so a skeleton would just be a one-frame flash.
+     * Only a cold cache pays the fetch that the skeleton exists to cover.
+     */
+    public function publishPlaceholder(): void
+    {
+        if (Cache::has(self::CACHE_KEY)) {
+            return;
+        }
+
+        parent::publishPlaceholder();
+    }
 
     public function navTitle(): string
     {
@@ -42,8 +66,7 @@ class Videos extends NativeComponent
 
     public function reload(): void
     {
-        Cache::forget('jump.videos');
-        $this->loading = true;
+        Cache::forget(self::CACHE_KEY);
         $this->failed = false;
         $this->load();
     }
@@ -51,12 +74,11 @@ class Videos extends NativeComponent
     private function load(): void
     {
         try {
-            $this->videos = Cache::remember('jump.videos', now()->addHours(6), fn () => $this->fetch());
+            $this->videos = Cache::remember(self::CACHE_KEY, now()->addHours(6), fn () => $this->fetch());
             $this->failed = empty($this->videos);
         } catch (\Throwable) {
             $this->failed = true;
         }
-        $this->loading = false;
     }
 
     /** @return array<int,array<string,string>> */

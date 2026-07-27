@@ -1,11 +1,7 @@
 <scroll-view class="w-full h-full bg-theme-background">
     <column class="w-full pb-32 pt-4">
 
-        @if ($loading)
-            <column class="w-full items-center justify-center gap-4 py-24">
-                <text class="text-base text-theme-on-surface-variant">Loading videos…</text>
-            </column>
-        @elseif ($failed)
+        @if ($failed)
             <column class="w-full items-center justify-center gap-5 px-8 py-24">
                 <native:icon :ios="App\Icons\Ios::WifiSlash" :android="App\Icons\Android::WifiOff" :size="40" color="#475569" dark-color="#94A3B8"/>
                 <text class="text-base text-theme-on-surface-variant text-center">Unable to load videos. Check your connection.</text>
@@ -22,7 +18,7 @@
                 <pressable @press="watch('{{ $featured['url'] }}')" class="w-full px-5 pb-8">
                     <column class="w-full gap-3">
                         <column class="w-full h-[200] rounded-2xl bg-theme-surface overflow-hidden">
-                            <image src="{{ $featured['thumb'] }}" fit="1" class="w-full h-full"/>
+                            <image src="{{ $featured['thumb'] }}" fit="2" class="w-full h-full"/>
                         </column>
                         <row class="items-center gap-2">
                             <text class="text-xs font-bold text-theme-on-primary tracking-wider px-2 py-1 bg-theme-primary rounded-full">{{ $featured['category'] }}</text>
@@ -45,7 +41,7 @@
                     <pressable @press="watch('{{ $video['url'] }}')">
                         <row class="w-full gap-3 p-2 bg-theme-surface rounded-2xl border border-theme-outline">
                             <column class="w-[120] h-[68] rounded-xl bg-theme-surface-variant overflow-hidden">
-                                <image src="{{ $video['thumb'] }}" fit="1" class="w-full h-full"/>
+                                <image src="{{ $video['thumb'] }}" fit="2" class="w-full h-full"/>
                             </column>
                             <column class="flex-1 gap-1 py-1">
                                 <text class="text-sm font-semibold text-theme-on-surface">{{ $video['title'] }}</text>

@@ -4,7 +4,11 @@
     layout space when hidden). Making the scroll-view a sibling of the sheet
     without this wrapper collapses its height and cuts off the bottom.
 --}}
-<column class="w-full h-full ">
+{{-- The root carries bg-theme-background, not just the scroll-view: the tree
+     reaches the physical screen edge, but the scroll-view's content is inset
+     by the top safe area, so an unpainted root leaves the status-bar strip
+     showing the host's systemBackground (white) against our off-white bg. --}}
+<column class="w-full h-full bg-theme-background">
     <scroll-view class="w-full flex-1 bg-theme-background">
         <column class="w-full px-5 pb-32 safe-area">
 
@@ -139,32 +143,14 @@
                 </text>
             </column>
 
-            <column class="w-full pt-4 gap-3">
+            {{-- Bare tappable logos (dark-variant rasters swap in via the
+                 component) — sized per-logo to keep aspect ratio, so no card
+                 chrome or text to fight platform layout quirks. --}}
+            <column class="w-full pt-6 pb-2 gap-8 items-center">
                 @foreach ($partners as $partner)
-                    <pressable @press="openPartner('{{ $partner['url'] }}')" class="w-full">
-                        <row
-                            class="w-full items-center gap-3 p-4 bg-theme-surface rounded-2xl border border-theme-outline">
-                            @if ($partner['logo'])
-                                {{-- Logo on a white chip so a dark wordmark stays legible on the dark card too. --}}
-                                <column class="w-[64] h-[44] rounded-xl bg-white items-center justify-center px-2">
-                                    <image src="{{ $partner['logo'] }}" alt="{{ $partner['name'] }} logo"
-                                           class="w-[52] h-[28] object-contain"/>
-                                </column>
-                            @else
-                                <column
-                                    class="w-[44] h-[44] rounded-xl bg-theme-surface-variant items-center justify-center">
-                                    <text
-                                        font="accent"
-                                        class="text-lg font-black text-theme-primary">{{ Str::substr($partner['name'], 0, 1) }}</text>
-                                </column>
-                            @endif
-                            <column class="flex-1 gap-1">
-                                <text class="text-base font-bold text-theme-on-surface">{{ $partner['name'] }}</text>
-                                <text class="text-sm text-theme-on-surface-variant">{{ $partner['tagline'] }}</text>
-                            </column>
-                            <native:icon :ios="App\Icons\Ios::ArrowUpRight" :android="App\Icons\Android::ArrowOutward"
-                                         :size="14" color="#94A3B8" dark-color="#A6ACCD"/>
-                        </row>
+                    <pressable @press="openPartner('{{ $partner['url'] }}')">
+                        <image src="{{ $partner['logo'] }}" alt="{{ $partner['name'] }} logo" fit="1"
+                               class="w-[{{ $partner['width'] }}] h-[{{ $partner['height'] }}]"/>
                     </pressable>
                 @endforeach
             </column>

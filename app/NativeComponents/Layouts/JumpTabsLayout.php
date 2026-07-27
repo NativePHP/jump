@@ -120,7 +120,14 @@ class JumpTabsLayout extends NativeLayout
         // must render (pill hidden) whenever the active screen has it open.
         $exitHintOpen = (bool) ($screen->showExitHint ?? false);
 
-        if ($store->isEmpty() && ! $exitHintOpen) {
+        // Same for the connecting cover, and it matters more: the server can
+        // drop out of the store mid-connect (its ServerLost fires while we're
+        // dialling), which would empty the store and take the cover down with
+        // the overlay — leaving Jump's UI exposed for exactly the window the
+        // cover exists to hide.
+        $connecting = (bool) ($screen->connecting ?? false);
+
+        if ($store->isEmpty() && ! $exitHintOpen && ! $connecting) {
             return null;
         }
 

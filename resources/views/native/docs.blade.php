@@ -1,9 +1,4 @@
-@if ($loading)
-    <column class="w-full h-full items-center justify-center gap-4 bg-theme-background">
-        <text class="text-base text-theme-on-surface-variant">Loading documentation…</text>
-    </column>
-
-@elseif ($failed)
+@if ($failed)
     <column class="w-full h-full items-center justify-center gap-5 px-8 bg-theme-background">
         <native:icon :ios="App\Icons\Ios::WifiSlash" :android="App\Icons\Android::WifiOff" :size="40" color="#475569" dark-color="#94A3B8"/>
         <text class="text-base text-theme-on-surface-variant text-center">Unable to load documentation. Check your connection.</text>
