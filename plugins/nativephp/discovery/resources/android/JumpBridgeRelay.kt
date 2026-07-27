@@ -146,7 +146,15 @@ object JumpBridgeRelay {
         // Drop any fonts the remote app pushed for the session, so its faces
         // stop answering to tokens Jump also uses. `__jumpResume` re-pushes
         // Jump's own theme right after.
-        com.nativephp.plugins.native_ui.ui.NativeUIFontResolver.clearRuntimeFonts()
+        //
+        // Resolved by NAME through the bridge registry rather than calling the
+        // plugin's resolver directly: this file is built against whatever
+        // native-ui version the host bundles, and older ones have no runtime
+        // font store at all. Absent function → nothing was ever pushed →
+        // nothing to clean up.
+        com.nativephp.mobile.bridge.BridgeFunctionRegistry.shared
+            .get("NativeUI.Fonts.Clear")
+            ?.let { runCatching { it.execute(emptyMap()) } }
 
         // Stop forwarding first so any in-flight WebView request falls back
         // to the local runtime instead of a dead dev server.

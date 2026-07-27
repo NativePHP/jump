@@ -59,11 +59,19 @@ class JumpBridgeRelay: NSObject, ObservableObject {
 
         logger.info("Escape hatch — exiting remote app back to Jump")
 
-        // Drop any fonts the remote app pushed for the session. CoreText
+        // Drop any fonts the remote app pushed for the session. Font
         // registration is process-wide, so leaving them installed would let the
         // remote app's faces keep answering to tokens Jump also uses.
         // `__jumpResume` re-pushes Jump's own theme right after.
-        NativeUIFontResolver.clearRuntimeFonts()
+        //
+        // Resolved by NAME through the bridge registry rather than calling the
+        // plugin's resolver directly: this file is built against whatever
+        // native-ui version the host bundles, and older ones have no runtime
+        // font store at all. Absent function → nothing was ever pushed →
+        // nothing to clean up.
+        if let clearFonts = BridgeFunctionRegistry.shared.get("NativeUI.Fonts.Clear") {
+            _ = try? clearFonts.execute(parameters: [:])
+        }
 
         // Stop forwarding / streaming and drop the WS.
         JumpWebViewSession.shared.stop()
