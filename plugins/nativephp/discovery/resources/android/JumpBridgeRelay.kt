@@ -102,7 +102,7 @@ object JumpBridgeRelay {
         // top/bottom bars overlaid on the v4 app (and requests forwarding to
         // the old server).
         JumpWebViewSession.stop()
-        com.nativephp.mobile.ui.NativeUIState.clearAll()
+        // NativeUIState removed in mobile Gen-B chrome deletion — no-op
         this.host = host
         this.port = port
         if (activity != null) activityRef = WeakReference(activity)
@@ -157,7 +157,7 @@ object JumpBridgeRelay {
                 // nav / FAB) arrived via its response headers into
                 // NativeUIState, which the Scaffold renders around BOTH
                 // branches — without this it stays overlaid on the Jump home.
-                com.nativephp.mobile.ui.NativeUIState.clearAll()
+                // NativeUIState removed in mobile Gen-B chrome deletion — no-op
                 // WebView exit: the local home tree is still in the bridge
                 // (webview mode never forks local publishes away), so
                 // flipping isActive shows it immediately (mirrors iOS).

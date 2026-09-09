@@ -69,6 +69,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Deeplink Paths
+    |--------------------------------------------------------------------------
+    |
+    | Restrict which paths on the deeplink host open your app. By default the
+    | app claims the WHOLE domain, so every link to it — marketing pages, blog
+    | posts, anything you never routed — is taken away from the browser and
+    | dead-ends inside the app.
+    |
+    | Android only: iOS scopes this server-side in the host's
+    | apple-app-site-association file. Keep the two lists in sync.
+    |
+    */
+
+    'deeplink_paths' => array_values(array_filter(
+        array_map('trim', explode(',', (string) env('NATIVEPHP_DEEPLINK_PATHS', ''))),
+        fn ($path) => $path !== '',
+    )),
+
+    /*
+    |--------------------------------------------------------------------------
     | Start URL
     |--------------------------------------------------------------------------
     |

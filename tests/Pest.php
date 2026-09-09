@@ -67,6 +67,9 @@ function fakeDocsApi(): void
                 'concepts' => [
                     ['id' => 'mobile/4/concepts/deep-links', 'title' => 'Deep Links', 'description' => 'Universal and app links.', 'content' => '## Deep Links', 'order' => 1],
                 ],
+                'plugins/core' => [
+                    ['id' => 'mobile/4/plugins/core/camera', 'title' => 'Camera', 'description' => 'Camera plugin.', 'content' => '## Camera', 'order' => 1],
+                ],
             ],
         ]),
         // Block everything else (e.g. the Videos tab's RSS fetch) — screens

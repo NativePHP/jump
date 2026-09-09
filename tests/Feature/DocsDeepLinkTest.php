@@ -46,3 +46,33 @@ test('the plain docs route still opens the TOC', function () {
     expect($screen->get('page'))->toBeNull()
         ->and($screen->get('expanded'))->toBe(['getting-started']);
 });
+
+test('a nested docs universal link opens the linked page', function () {
+    fakeDocsApi();
+
+    $screen = Native::visit('/docs/mobile/4/plugins/core/camera')
+        ->assertScreen(Docs::class);
+
+    expect($screen->get('page'))->not->toBeNull()
+        ->and($screen->get('page')['id'])->toBe('mobile/4/plugins/core/camera')
+        ->and($screen->get('expanded'))->toContain('plugins/core');
+});
+
+test('a section-only docs link expands the TOC without opening a page', function () {
+    fakeDocsApi();
+
+    $screen = Native::visit('/docs/mobile/4/concepts');
+
+    expect($screen->get('page'))->toBeNull()
+        ->and($screen->get('expanded'))->toContain('concepts');
+});
+
+test('an unknown nested docs link still expands the section', function () {
+    fakeDocsApi();
+
+    $screen = Native::visit('/docs/mobile/4/plugins/core/does-not-exist');
+
+    expect($screen->get('page'))->toBeNull()
+        ->and($screen->get('expanded'))->toContain('plugins/core')
+        ->and($screen->get('sections'))->not->toBeEmpty();
+});
