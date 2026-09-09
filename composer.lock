@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9740141c71f0bab198043eea31a16906",
+    "content-hash": "8cd2c87e0a11cab4cf9f57f98543111f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2365,19 +2365,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-air.git",
-                "reference": "7b3882647020c565cf5590e1662586e3472b1ebe"
+                "reference": "31cf9d7c669b1fc3fe51d41716e48ce3a94a2a3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/7b3882647020c565cf5590e1662586e3472b1ebe",
-                "reference": "7b3882647020c565cf5590e1662586e3472b1ebe",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/31cf9d7c669b1fc3fe51d41716e48ce3a94a2a3a",
+                "reference": "31cf9d7c669b1fc3fe51d41716e48ce3a94a2a3a",
                 "shasum": ""
             },
             "require": {
                 "endroid/qr-code": "^6.0.9",
                 "ext-dom": "*",
                 "ext-simplexml": "*",
-                "guzzlehttp/guzzle": "^7.9",
+                "guzzlehttp/guzzle": "^7.9 || ^8.0",
                 "illuminate/contracts": "^10.0|^11.0|^12.0|^13.0",
                 "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
                 "laravel/prompts": "^0.1.1|^0.2|^0.3",
@@ -2418,14 +2418,40 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
                 "psr-4": {
                     "Native\\Mobile\\": "src/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\": "tests/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "scripts": {
+                "qa": [
+                    "@composer format",
+                    "@composer analyse",
+                    "@composer test"
+                ],
+                "post-autoload-dump": [
+                    "@php ./vendor/bin/testbench package:discover --ansi"
+                ],
+                "analyse": [
+                    "vendor/bin/phpstan analyse"
+                ],
+                "test": [
+                    "vendor/bin/pest"
+                ],
+                "test-coverage": [
+                    "vendor/bin/pest --coverage"
+                ],
+                "format": [
+                    "vendor/bin/pint"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2450,10 +2476,10 @@
                 "nativephp"
             ],
             "support": {
-                "issues": "https://github.com/NativePHP/mobile-air/issues",
-                "source": "https://github.com/NativePHP/mobile-air/tree/main"
+                "source": "https://github.com/NativePHP/mobile-air/tree/main",
+                "issues": "https://github.com/NativePHP/mobile-air/issues"
             },
-            "time": "2026-08-07T12:55:28+00:00"
+            "time": "2026-09-09T23:13:03+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
@@ -2677,7 +2703,7 @@
         },
         {
             "name": "nativephp/mobile-discovery",
-            "version": "dev-main",
+            "version": "dev-fix/android-deeplink-path-scoping",
             "dist": {
                 "type": "path",
                 "url": "plugins/nativephp/discovery",
@@ -2734,7 +2760,7 @@
         },
         {
             "name": "nativephp/mobile-geolocation",
-            "version": "dev-main",
+            "version": "dev-fix/android-deeplink-path-scoping",
             "dist": {
                 "type": "path",
                 "url": "plugins/nativephp/geolocation",
