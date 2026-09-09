@@ -78,12 +78,20 @@ class Docs extends NativeComponent
         // older docs version falls back to the v4 page of the same slug, and
         // an unknown id just shows the TOC with nothing opened.
         if ($section = $this->param('section')) {
-            $tail = $section.'/'.$this->param('page');
-            $this->open('mobile/'.$this->param('version').'/'.$tail);
-            if (! $this->page && $this->param('version') !== '4') {
-                $this->open('mobile/4/'.$tail);
+            // Nested section slugs ("plugins/core") arrive as two params.
+            if ($subsection = $this->param('subsection')) {
+                $section .= '/'.$subsection;
             }
-            if ($this->page && ! in_array($section, $this->expanded, true)) {
+            if ($page = $this->param('page')) {
+                $tail = $section.'/'.$page;
+                $this->open('mobile/'.$this->param('version').'/'.$tail);
+                if (! $this->page && $this->param('version') !== '4') {
+                    $this->open('mobile/4/'.$tail);
+                }
+            }
+            // A section-only link, or a page slug the docs no longer publish,
+            // still lands on the right part of the TOC instead of nothing.
+            if (! in_array($section, $this->expanded, true)) {
                 $this->expanded[] = $section;
             }
         } elseif ($this->sections !== []) {
