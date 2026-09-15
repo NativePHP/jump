@@ -481,7 +481,7 @@ return [
     | support you cannot revoke this action.
     |
     */
-    'ipad' => false,
+    'ipad' => true,
 
     /*
     |--------------------------------------------------------------------------
