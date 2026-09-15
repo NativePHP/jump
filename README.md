@@ -75,7 +75,7 @@ Jump ships with the NativePHP mobile API surface it demonstrates and uses:
 - **PHP** 8.4+
 - **Laravel** 13.x
 - [`nativephp/mobile`](https://nativephp.com/docs/mobile) + [`nativephp/native-ui`](https://nativephp.com)
-- Xcode (iOS) and/or Android Studio for local device builds
+- Xcode for local iOS builds, or Android Studio for local Android builds
 
 ## Getting started
 
