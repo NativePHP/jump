@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">⚡ Jump</h1>
+<h1 align="center">Jump</h1>
 
 <p align="center">
   <strong>An instant Laravel runtime for your phone.</strong><br>
