@@ -6,7 +6,7 @@
 --}}
 <column class="w-full h-full ">
     <scroll-view class="w-full flex-1 bg-theme-background">
-        <column class="w-full px-5 pb-32 safe-area">
+        <column class="w-full px-5 safe-area-top">
 
             {{-- Discovered-servers pill is now app-wide (JumpTabsLayout::floatingOverlay). --}}
 
@@ -24,7 +24,7 @@
                     <pressable class="flex-1 " @press="checkForOtaUpdate">
                         <text
                             class="px-4 py-3 bg-theme-surface-variant rounded-xl border border-theme-outline text-sm font-semibold text-theme-on-surface text-center">
-                            Checking
+                            Check
                         </text>
                     </pressable>
                     <pressable class="flex-1" @press="downloadOtaUpdate">
