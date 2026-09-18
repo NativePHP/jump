@@ -21,10 +21,10 @@
                 </row>
 
                 <row class="w-full items-center gap-3">
-                    <pressable class="flex-1" @press="checkForOtaUpdate">
+                    <pressable class="flex-1 " @press="checkForOtaUpdate">
                         <text
-                            class="px-4 py-3 bg-theme-surface-variant bg-yellow-400 rounded-xl border border-theme-outline text-sm font-semibold text-theme-on-surface text-center">
-                            Check
+                            class="px-4 py-3 bg-theme-surface-variant rounded-xl border border-theme-outline text-sm font-semibold text-theme-on-surface text-center">
+                            Checksyouout
                         </text>
                     </pressable>
                     <pressable class="flex-1" @press="downloadOtaUpdate">
