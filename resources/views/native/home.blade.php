@@ -24,7 +24,7 @@
                     <pressable class="flex-1 " @press="checkForOtaUpdate">
                         <text
                             class="px-4 py-3 bg-theme-surface-variant rounded-xl border border-theme-outline text-sm font-semibold text-theme-on-surface text-center">
-                            Check
+                            Checking android ota
                         </text>
                     </pressable>
                     <pressable class="flex-1" @press="downloadOtaUpdate">
