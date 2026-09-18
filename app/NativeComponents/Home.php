@@ -12,6 +12,7 @@ use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Events\Scanner\CodeScanned;
 use Native\Mobile\Facades\Browser;
 use Native\Mobile\Facades\Scanner;
+use Nativephp\MobileOta\Facades\Ota;
 
 /**
  * Scanner tab — the Jump home / launcher.
@@ -31,6 +32,11 @@ class Home extends NativeComponent
 
     public bool $showHow = false;
 
+    /** Lines describing the last OTA check or download, newest run only. */
+    public array $otaLog = [];
+
+    public string $otaState = 'idle';
+
     public function navTitle(): string
     {
         return 'Jump';
@@ -39,6 +45,75 @@ class Home extends NativeComponent
     public function mount(): void
     {
         $this->startDiscovery();
+    }
+
+    /**
+     * Ask Bifrost what this shell should be running. Everything the answer
+     * turned on is written to the panel: what we asked with, what came back,
+     * and why it decided what it decided.
+     */
+    public function checkForOtaUpdate(): void
+    {
+        $identity = Ota::identity();
+        $this->otaState = 'checking';
+        $this->otaLog = [
+            'endpoint  '.(config('nativephp-ota.endpoint') ?: '(unset)'),
+            'project   '.(config('nativephp-ota.project_uuid') ?: '(unset)'),
+            'arc       '.$identity['arc'],
+            'shell     '.$this->shorten($identity['shell_fingerprint']).'  algo '.$identity['fingerprint_algorithm'],
+            'holding   '.($identity['release_uuid'] ? $this->shorten($identity['release_uuid']) : '(no release yet)'),
+            '',
+        ];
+
+        $result = Ota::check();
+        logger()->info('OTA check', $result);
+
+        $this->otaLog[] = match (true) {
+            ! empty($result['available']) => 'AVAILABLE '.$this->shorten($result['release'] ?? ''),
+            ! empty($result['upToDate']) => 'UP TO DATE',
+            default => 'NO UPDATE — '.($result['reason'] ?? 'unknown'),
+        };
+
+        foreach (['requested', 'status', 'release', 'sha256', 'size', 'reason', 'download_url'] as $key) {
+            if (! empty($result[$key])) {
+                $this->otaLog[] = sprintf('%-9s %s', $key, $this->shorten((string) $result[$key], 52));
+            }
+        }
+
+        $this->otaState = ! empty($result['available']) ? 'available' : 'idle';
+    }
+
+    /**
+     * Fetch the payload and queue it. Core extracts it on the next launch, so
+     * nothing visible changes until the app is restarted.
+     */
+    public function downloadOtaUpdate(): void
+    {
+        $this->otaState = 'downloading';
+        $this->otaLog[] = '';
+        $this->otaLog[] = 'downloading…';
+
+        $result = Ota::downloadAndApply();
+        logger()->info('OTA download', $result);
+
+        $queued = ! empty($result['queued']) || ! empty($result['applyOnNextBoot']);
+
+        $this->otaLog[] = $queued
+            ? 'QUEUED — restart the app to apply'
+            : 'FAILED — '.($result['error'] ?? $result['reason'] ?? 'unknown');
+
+        if ($queued) {
+            $this->otaLog[] = 'path      '.$this->shorten((string) ($result['path'] ?? ''), 44);
+        }
+
+        $this->otaState = $queued ? 'queued' : 'idle';
+    }
+
+    private function shorten(?string $value, int $length = 13): string
+    {
+        $value = (string) $value;
+
+        return strlen($value) > $length ? substr($value, 0, $length).'…' : $value;
     }
 
     public function scan(): void
@@ -135,6 +210,7 @@ class Home extends NativeComponent
     {
         return view('native.home', [
             'partners' => $this->partners(),
+            'otaRelease' => Ota::currentRelease(),
         ]);
     }
 }

@@ -16,7 +16,7 @@ use NativePHP\Clipboard\ClipboardServiceProvider;
 use NativePHP\Discovery\DiscoveryServiceProvider;
 use NativePHP\LocalNotifications\LocalNotificationsServiceProvider;
 use NativePHP\MediaPlayer\MediaPlayerServiceProvider;
-use S2BR\MobileSplashscreen\MobileSplashscreenServiceProvider;
+use Nativephp\MobileOta\OtaServiceProvider;
 
 class NativeServiceProvider extends ServiceProvider
 {
@@ -60,7 +60,8 @@ class NativeServiceProvider extends ServiceProvider
             BiometricsServiceProvider::class,
             GeolocationServiceProvider::class,
             MediaPlayerServiceProvider::class,
-            LocalNotificationsServiceProvider::class
+            LocalNotificationsServiceProvider::class,
+            OtaServiceProvider::class,
         ];
     }
 }

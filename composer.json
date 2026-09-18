@@ -12,7 +12,7 @@
         "php": "^8.4",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
-        "nativephp/mobile": "dev-main as 4.0",
+        "nativephp/mobile": "dev-feat/ota-client as 4.0",
         "nativephp/mobile-biometrics": "^1.0.3",
         "nativephp/mobile-browser": "^1.0",
         "nativephp/mobile-camera": "^1.0",
@@ -25,7 +25,8 @@
         "nativephp/mobile-scanner": "^1.0",
         "nativephp/mobile-secure-storage": "^1.0",
         "nativephp/mobile-share": "^1.0",
-        "nativephp/mobile-ui": "0.3.0"
+        "nativephp/mobile-ui": "0.3.0",
+        "nativephp/mobile-ota": "^0.1.0"
     },
     "repositories": {
         "mobile-air": {
@@ -35,13 +36,6 @@
         "discovery": {
             "type": "path",
             "url": "plugins/nativephp/discovery",
-            "options": {
-                "symlink": true
-            }
-        },
-        "geolocation": {
-            "type": "path",
-            "url": "plugins/nativephp/geolocation",
             "options": {
                 "symlink": true
             }

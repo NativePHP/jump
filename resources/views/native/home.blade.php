@@ -10,6 +10,40 @@
 
             {{-- Discovered-servers pill is now app-wide (JumpTabsLayout::floatingOverlay). --}}
 
+            {{-- ── OTA (pilot) ── --}}
+            <column class="w-full gap-2 mt-4 p-4 bg-theme-surface rounded-xl border border-theme-outline">
+                <row class="w-full items-center gap-3">
+                    <column class="flex-1 gap-1">
+                        <text class="text-sm font-bold text-theme-on-surface tracking-wide">OVER THE AIR</text>
+                        <text class="text-xs text-theme-on-surface-variant">running {{ $otaRelease ?? 'the bundled release' }}</text>
+                    </column>
+                    <text class="text-xs text-theme-primary">{{ $otaState }}</text>
+                </row>
+
+                <row class="w-full items-center gap-3">
+                    <pressable class="flex-1" @press="checkForOtaUpdate">
+                        <text
+                            class="px-4 py-3 bg-theme-surface-variant rounded-xl border border-theme-outline text-sm font-semibold text-theme-on-surface text-center">
+                            Check
+                        </text>
+                    </pressable>
+                    <pressable class="flex-1" @press="downloadOtaUpdate">
+                        <text
+                            class="px-4 py-3 bg-theme-surface-variant rounded-xl border border-theme-outline text-sm font-semibold text-theme-on-surface text-center">
+                            Download
+                        </text>
+                    </pressable>
+                </row>
+
+                @if(count($otaLog))
+                    <column class="w-full gap-1 p-3 bg-theme-background rounded-lg select-text">
+                        @foreach($otaLog as $line)
+                            <text class="text-[11px] text-theme-on-surface-variant">{{ $line ?: ' ' }}</text>
+                        @endforeach
+                    </column>
+                @endif
+            </column>
+
             {{-- Hero --}}
             <column class="w-full items-center pt-6 select-text">
                 {{-- Kicker pill --}}

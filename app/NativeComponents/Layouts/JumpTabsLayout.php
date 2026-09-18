@@ -75,12 +75,12 @@ class JumpTabsLayout extends NativeLayout
         // Top-bar gear → Settings, on the Scanner + Builds tabs (matches the
         // native app). A `url()` action navigates natively to the route.
         if (! $screen instanceof Settings) {
-            //            $bar->action(
-            //                NavAction::make('settings')
-            //                    ->icon(ios: Ios::GearshapeFill, android: Android::Settings)
-            //                    ->url('/settings')
-            //                    ->a11yLabel('Settings')
-            //            );
+            $bar->action(
+                NavAction::make('settings')
+                    ->icon(ios: Ios::GearshapeFill, android: Android::Settings)
+                    ->url('/settings')
+                    ->a11yLabel('Settings')
+            );
         }
 
         return $bar;
