@@ -2373,12 +2373,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-air.git",
-                "reference": "60c9f160c290d57670673173454b818e513a645e"
+                "reference": "ef7948f5ffa99bc4ca52b0d5f321479a0b1bfe4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/60c9f160c290d57670673173454b818e513a645e",
-                "reference": "60c9f160c290d57670673173454b818e513a645e",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/ef7948f5ffa99bc4ca52b0d5f321479a0b1bfe4d",
+                "reference": "ef7948f5ffa99bc4ca52b0d5f321479a0b1bfe4d",
                 "shasum": ""
             },
             "require": {
@@ -2488,7 +2488,7 @@
                 "source": "https://github.com/NativePHP/mobile-air/tree/feat/ota-client",
                 "issues": "https://github.com/NativePHP/mobile-air/issues"
             },
-            "time": "2026-09-18T15:38:35+00:00"
+            "time": "2026-09-18T19:23:59+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
@@ -2927,16 +2927,16 @@
         },
         {
             "name": "nativephp/mobile-ota",
-            "version": "0.1.2",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-ota.git",
-                "reference": "e90f9583e10d6d77307687b3d4a00b3cbf3e2da1"
+                "reference": "609465a185decde8c44e946573e815ee14278c14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/e90f9583e10d6d77307687b3d4a00b3cbf3e2da1",
-                "reference": "e90f9583e10d6d77307687b3d4a00b3cbf3e2da1",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/609465a185decde8c44e946573e815ee14278c14",
+                "reference": "609465a185decde8c44e946573e815ee14278c14",
                 "shasum": ""
             },
             "require": {
@@ -2976,9 +2976,9 @@
             "description": "Over-the-air PHP payload updates for NativePHP Mobile",
             "support": {
                 "issues": "https://github.com/NativePHP/mobile-ota/issues",
-                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.2"
+                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.3"
             },
-            "time": "2026-09-18T15:45:33+00:00"
+            "time": "2026-09-18T20:04:12+00:00"
         },
         {
             "name": "nativephp/mobile-scanner",
