@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cfb2e7d485e515c091955f629952e565",
+    "content-hash": "6e935d5310b192b2792096e3e6272741",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2373,12 +2373,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-air.git",
-                "reference": "4ca1cf00f41b4cd4294c8d21bdf49d96f900468d"
+                "reference": "df5fbcc834ae85bd25f5d57cf5070723241889b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/4ca1cf00f41b4cd4294c8d21bdf49d96f900468d",
-                "reference": "4ca1cf00f41b4cd4294c8d21bdf49d96f900468d",
+                "url": "https://api.github.com/repos/NativePHP/mobile-air/zipball/df5fbcc834ae85bd25f5d57cf5070723241889b2",
+                "reference": "df5fbcc834ae85bd25f5d57cf5070723241889b2",
                 "shasum": ""
             },
             "require": {
@@ -2488,7 +2488,7 @@
                 "source": "https://github.com/NativePHP/mobile-air/tree/feat/ota-client",
                 "issues": "https://github.com/NativePHP/mobile-air/issues"
             },
-            "time": "2026-09-18T11:35:25+00:00"
+            "time": "2026-09-18T13:22:24+00:00"
         },
         {
             "name": "nativephp/mobile-biometrics",
@@ -2768,62 +2768,6 @@
             }
         },
         {
-            "name": "nativephp/mobile-geolocation",
-            "version": "2.1.0",
-            "dist": {
-                "type": "zip",
-                "url": "https://plugins.nativephp.com/dist/nativephp/mobile-geolocation/nativephp-mobile-geolocation-8f1989daa4cf8c876916ef9fcb7fa73765743e80-zip-0c0ae4.zip",
-                "reference": "8f1989daa4cf8c876916ef9fcb7fa73765743e80",
-                "shasum": "893a1255879daabf5b99ebdb71ae5e09873c2ac7"
-            },
-            "require": {
-                "nativephp/mobile": "^4.0",
-                "php": "^8.3"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^10.0",
-                "pestphp/pest": "^2.7|^3.0|^4.0"
-            },
-            "type": "nativephp-plugin",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Native\\Mobile\\Providers\\GeolocationServiceProvider"
-                    ]
-                },
-                "nativephp": {
-                    "manifest": "nativephp.json"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Native\\Mobile\\Providers\\": "src/",
-                    "NativePHP\\Geolocation\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "pest"
-                ]
-            },
-            "license": [
-                "proprietary"
-            ],
-            "authors": [
-                {
-                    "name": "NativePHP",
-                    "email": "support@nativephp.com"
-                }
-            ],
-            "description": "Geolocation plugin for NativePHP Mobile - GPS location and permission handling",
-            "time": "2026-09-07T02:42:19+00:00"
-        },
-        {
             "name": "nativephp/mobile-local-notifications",
             "version": "0.0.1",
             "dist": {
@@ -2983,16 +2927,16 @@
         },
         {
             "name": "nativephp/mobile-ota",
-            "version": "0.1.0",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-ota.git",
-                "reference": "072cb7527f6eb28c955fd8cddeb3338dfa4e7a8c"
+                "reference": "2b790bd9d74f7cb8c084466d0a50f57d8f6f5170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/072cb7527f6eb28c955fd8cddeb3338dfa4e7a8c",
-                "reference": "072cb7527f6eb28c955fd8cddeb3338dfa4e7a8c",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/2b790bd9d74f7cb8c084466d0a50f57d8f6f5170",
+                "reference": "2b790bd9d74f7cb8c084466d0a50f57d8f6f5170",
                 "shasum": ""
             },
             "require": {
@@ -3032,9 +2976,9 @@
             "description": "Over-the-air PHP payload updates for NativePHP Mobile",
             "support": {
                 "issues": "https://github.com/NativePHP/mobile-ota/issues",
-                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.0"
+                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.1"
             },
-            "time": "2026-09-18T11:21:06+00:00"
+            "time": "2026-09-18T13:55:37+00:00"
         },
         {
             "name": "nativephp/mobile-scanner",
