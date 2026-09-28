@@ -12,6 +12,7 @@ use Native\Mobile\Providers\ScannerServiceProvider;
 use Native\Mobile\Providers\SecureStorageServiceProvider;
 use Native\Mobile\Providers\ShareServiceProvider;
 use Native\Mobile\UI\NativeUIServiceProvider;
+use Nativephp\MobileOta\OtaServiceProvider;
 use NativePHP\Clipboard\ClipboardServiceProvider;
 use NativePHP\Discovery\DiscoveryServiceProvider;
 use NativePHP\LocalNotifications\LocalNotificationsServiceProvider;
@@ -60,7 +61,8 @@ class NativeServiceProvider extends ServiceProvider
             BiometricsServiceProvider::class,
             GeolocationServiceProvider::class,
             MediaPlayerServiceProvider::class,
-            LocalNotificationsServiceProvider::class
+            LocalNotificationsServiceProvider::class,
+            OtaServiceProvider::class,
         ];
     }
 }
