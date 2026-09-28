@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1bc0474d457ae4562e11b56be300f0b3",
+    "content-hash": "dcf199e484f0c78099441da2c223dae7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2976,16 +2976,16 @@
         },
         {
             "name": "nativephp/mobile-ota",
-            "version": "0.1.5",
+            "version": "0.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-ota.git",
-                "reference": "33ce9dd44e33d7fe012e7cd92af55c3487da3b98"
+                "reference": "e19e67d12cc4aa77b889c6c48b94092f34a85bef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/33ce9dd44e33d7fe012e7cd92af55c3487da3b98",
-                "reference": "33ce9dd44e33d7fe012e7cd92af55c3487da3b98",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/e19e67d12cc4aa77b889c6c48b94092f34a85bef",
+                "reference": "e19e67d12cc4aa77b889c6c48b94092f34a85bef",
                 "shasum": ""
             },
             "require": {
@@ -3025,9 +3025,9 @@
             "description": "Over-the-air PHP payload updates for NativePHP Mobile",
             "support": {
                 "issues": "https://github.com/NativePHP/mobile-ota/issues",
-                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.5"
+                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.6"
             },
-            "time": "2026-09-28T22:05:53+00:00"
+            "time": "2026-09-28T22:24:37+00:00"
         },
         {
             "name": "nativephp/mobile-scanner",
