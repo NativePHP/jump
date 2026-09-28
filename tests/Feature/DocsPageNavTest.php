@@ -23,7 +23,7 @@ test('the first page shows only a Next link and it opens the next page in place'
         ->assertDontSee('Previous')
         ->tap('Deep Links');
 
-    expect($screen->get('page')['id'])->toBe('mobile/4/concepts/deep-links')
+    expect($screen->get('currentPage')['id'])->toBe('mobile/4/concepts/deep-links')
         ->and($screen->get('expanded'))->toContain('concepts');
 });
 
@@ -36,7 +36,7 @@ test('the last page shows only a Previous link and it opens back in place', func
         ->assertDontSee('Next')
         ->tap('Introduction');
 
-    expect($screen->get('page')['id'])->toBe('mobile/4/getting-started/introduction')
+    expect($screen->get('currentPage')['id'])->toBe('mobile/4/getting-started/introduction')
         ->and($screen->get('expanded'))->toContain('getting-started');
 });
 
@@ -45,6 +45,6 @@ test('a deep-link route still opens the linked page at mount', function () {
 
     $screen = Native::visit('/docs/mobile/4/concepts/deep-links');
 
-    expect($screen->get('page')['id'])->toBe('mobile/4/concepts/deep-links')
+    expect($screen->get('currentPage')['id'])->toBe('mobile/4/concepts/deep-links')
         ->and($screen->get('expanded'))->toContain('concepts');
 });

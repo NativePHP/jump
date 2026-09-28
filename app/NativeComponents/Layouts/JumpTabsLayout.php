@@ -47,8 +47,8 @@ class JumpTabsLayout extends NativeLayout
         // deep links navigate to /docs/{...}), so it needs `back(true)` for
         // Android's TopAppBar arrow; iOS pushed levels get the automatic
         // NavigationStack chevron either way (manual back only renders at
-        // root). $page is only set on reader instances, never on the TOC.
-        $isDocsReader = $screen instanceof Docs && $screen->page !== null;
+        // root). $currentPage is only set on reader instances, never on the TOC.
+        $isDocsReader = $screen instanceof Docs && $screen->currentPage !== null;
 
         // The string title isn't drawn (the titleView lockup owns the
         // principal slot) but it labels this level in the back-chevron

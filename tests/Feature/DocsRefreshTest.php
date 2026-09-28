@@ -33,13 +33,13 @@ test('refresh refetches the corpus and updates the open page in place', function
     $screen = Native::visit('/docs/mobile/4/getting-started/introduction')
         ->assertScreen(Docs::class);
 
-    expect($screen->get('page')['content'])->toBe('Old body.');
+    expect($screen->get('currentPage')['content'])->toBe('Old body.');
 
     $pages[0]['content'] = 'New body.';
     $screen->call('refresh');
 
-    expect($screen->get('page'))->not->toBeNull()
-        ->and($screen->get('page')['content'])->toBe('New body.')
+    expect($screen->get('currentPage'))->not->toBeNull()
+        ->and($screen->get('currentPage')['content'])->toBe('New body.')
         ->and($screen->get('failed'))->toBeFalse();
 });
 
@@ -51,12 +51,12 @@ test('refresh falls back to the TOC when the open page vanished upstream', funct
     fakeMutableDocsApi($pages);
 
     $screen = Native::visit('/docs/mobile/4/getting-started/old-page');
-    expect($screen->get('page'))->not->toBeNull();
+    expect($screen->get('currentPage'))->not->toBeNull();
 
     array_splice($pages, 1, 1); // the page is removed from the published docs
     $screen->call('refresh');
 
-    expect($screen->get('page'))->toBeNull()
+    expect($screen->get('currentPage'))->toBeNull()
         ->and($screen->get('sections'))->not->toBeEmpty();
 });
 
@@ -64,7 +64,7 @@ test('refresh keeps the current view when the source is unreachable', function (
     fakeDocsApi();
 
     $screen = Native::visit('/docs/mobile/4/concepts/deep-links');
-    expect($screen->get('page'))->not->toBeNull();
+    expect($screen->get('currentPage'))->not->toBeNull();
 
     // Simulate going offline with an empty cache: the fetch throws and
     // sections() has nothing to fall back to — refresh must be a no-op,
@@ -77,7 +77,7 @@ test('refresh keeps the current view when the source is unreachable', function (
 
     $screen->call('refresh');
 
-    expect($screen->get('page'))->not->toBeNull()
-        ->and($screen->get('page')['id'])->toBe('mobile/4/concepts/deep-links')
+    expect($screen->get('currentPage'))->not->toBeNull()
+        ->and($screen->get('currentPage')['id'])->toBe('mobile/4/concepts/deep-links')
         ->and($screen->get('failed'))->toBeFalse();
 });

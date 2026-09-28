@@ -39,7 +39,7 @@ class Docs extends NativeComponent
     /** @var array<int,string> expanded section slugs */
     public array $expanded = [];
 
-    public ?array $page = null;
+    public ?array $currentPage = null;
 
     public bool $loading = true;
 
@@ -85,7 +85,7 @@ class Docs extends NativeComponent
             if ($page = $this->param('page')) {
                 $tail = $section.'/'.$page;
                 $this->open('mobile/'.$this->param('version').'/'.$tail);
-                if (! $this->page && $this->param('version') !== '4') {
+                if (! $this->currentPage && $this->param('version') !== '4') {
                     $this->open('mobile/4/'.$tail);
                 }
             }
@@ -115,7 +115,7 @@ class Docs extends NativeComponent
         foreach ($this->sections as $section) {
             foreach ($section['pages'] as $p) {
                 if ($p['id'] === $id) {
-                    $this->page = $p + ['section' => $section['name']];
+                    $this->currentPage = $p + ['section' => $section['name']];
                     $this->demoState = [];
 
                     return;
@@ -133,7 +133,7 @@ class Docs extends NativeComponent
      * that chevron pops natively, PHP's root-screen guard ignores the back
      * event, and the two sides desync — the screen shows a stale cached tree
      * whose callbacks are dead (next/prev stop working). Scroll-to-top now
-     * comes from `:native:key="$page['id']"` on the reader's scroll container
+     * comes from `:native:key="$currentPage['id']"` on the reader's scroll container
      * (fresh native identity per page), and expanding the section keeps the
      * TOC in sync for when the reader closes.
      */
@@ -141,9 +141,9 @@ class Docs extends NativeComponent
     {
         $this->open($id);
 
-        if ($this->page) {
+        if ($this->currentPage) {
             foreach ($this->sections as $section) {
-                if ($section['name'] === $this->page['section']
+                if ($section['name'] === $this->currentPage['section']
                     && ! in_array($section['slug'], $this->expanded, true)) {
                     $this->expanded[] = $section['slug'];
                 }
@@ -172,11 +172,11 @@ class Docs extends NativeComponent
         $this->sections = $fresh;
         $this->failed = false;
 
-        if ($this->page) {
-            $id = $this->page['id'];
-            $this->page = null;
+        if ($this->currentPage) {
+            $id = $this->currentPage['id'];
+            $this->currentPage = null;
             $this->open($id); // resets demoState when found
-            if (! $this->page) {
+            if (! $this->currentPage) {
                 // Page vanished upstream (renamed/removed) — back to the TOC.
                 $this->demoState = [];
             }
@@ -241,11 +241,11 @@ class Docs extends NativeComponent
      */
     public function copyCode(int $index): void
     {
-        if (! $this->page) {
+        if (! $this->currentPage) {
             return;
         }
 
-        $block = $this->toBlocks($this->page['content'])[$index] ?? null;
+        $block = $this->toBlocks($this->currentPage['content'])[$index] ?? null;
 
         if (! is_array($block) || ! isset($block['raw'])) {
             return;
@@ -263,7 +263,7 @@ class Docs extends NativeComponent
     public function render(): View
     {
         return view('native.docs', [
-            'blocks' => $this->page ? $this->toBlocks($this->page['content']) : [],
+            'blocks' => $this->currentPage ? $this->toBlocks($this->currentPage['content']) : [],
             'adjacent' => $this->adjacentPages(),
             // A closure the view calls from a @php block to splice a snippet's
             // live native elements into the page tree at that position.
@@ -280,7 +280,7 @@ class Docs extends NativeComponent
      */
     private function adjacentPages(): array
     {
-        if (! $this->page) {
+        if (! $this->currentPage) {
             return ['prev' => null, 'next' => null];
         }
 
@@ -292,7 +292,7 @@ class Docs extends NativeComponent
         }
 
         foreach ($flat as $i => $p) {
-            if ($p['id'] === $this->page['id']) {
+            if ($p['id'] === $this->currentPage['id']) {
                 return ['prev' => $flat[$i - 1] ?? null, 'next' => $flat[$i + 1] ?? null];
             }
         }

@@ -15,8 +15,8 @@ test('a docs universal link opens the linked page', function () {
     $screen = Native::visit('/docs/mobile/4/concepts/deep-links')
         ->assertScreen(Docs::class);
 
-    expect($screen->get('page'))->not->toBeNull()
-        ->and($screen->get('page')['id'])->toBe('mobile/4/concepts/deep-links')
+    expect($screen->get('currentPage'))->not->toBeNull()
+        ->and($screen->get('currentPage')['id'])->toBe('mobile/4/concepts/deep-links')
         ->and($screen->get('expanded'))->toContain('concepts');
 });
 
@@ -25,8 +25,8 @@ test('a link to an older docs version falls back to the v4 page', function () {
 
     $screen = Native::visit('/docs/mobile/2/concepts/deep-links');
 
-    expect($screen->get('page'))->not->toBeNull()
-        ->and($screen->get('page')['id'])->toBe('mobile/4/concepts/deep-links');
+    expect($screen->get('currentPage'))->not->toBeNull()
+        ->and($screen->get('currentPage')['id'])->toBe('mobile/4/concepts/deep-links');
 });
 
 test('an unknown docs link falls back to the TOC', function () {
@@ -34,7 +34,7 @@ test('an unknown docs link falls back to the TOC', function () {
 
     $screen = Native::visit('/docs/mobile/4/concepts/does-not-exist');
 
-    expect($screen->get('page'))->toBeNull()
+    expect($screen->get('currentPage'))->toBeNull()
         ->and($screen->get('sections'))->not->toBeEmpty();
 });
 
@@ -43,7 +43,7 @@ test('the plain docs route still opens the TOC', function () {
 
     $screen = Native::visit('/docs');
 
-    expect($screen->get('page'))->toBeNull()
+    expect($screen->get('currentPage'))->toBeNull()
         ->and($screen->get('expanded'))->toBe(['getting-started']);
 });
 
@@ -53,8 +53,8 @@ test('a nested docs universal link opens the linked page', function () {
     $screen = Native::visit('/docs/mobile/4/plugins/core/camera')
         ->assertScreen(Docs::class);
 
-    expect($screen->get('page'))->not->toBeNull()
-        ->and($screen->get('page')['id'])->toBe('mobile/4/plugins/core/camera')
+    expect($screen->get('currentPage'))->not->toBeNull()
+        ->and($screen->get('currentPage')['id'])->toBe('mobile/4/plugins/core/camera')
         ->and($screen->get('expanded'))->toContain('plugins/core');
 });
 
@@ -63,7 +63,7 @@ test('a section-only docs link expands the TOC without opening a page', function
 
     $screen = Native::visit('/docs/mobile/4/concepts');
 
-    expect($screen->get('page'))->toBeNull()
+    expect($screen->get('currentPage'))->toBeNull()
         ->and($screen->get('expanded'))->toContain('concepts');
 });
 
@@ -72,7 +72,7 @@ test('an unknown nested docs link still expands the section', function () {
 
     $screen = Native::visit('/docs/mobile/4/plugins/core/does-not-exist');
 
-    expect($screen->get('page'))->toBeNull()
+    expect($screen->get('currentPage'))->toBeNull()
         ->and($screen->get('expanded'))->toContain('plugins/core')
         ->and($screen->get('sections'))->not->toBeEmpty();
 });

@@ -9,7 +9,7 @@
         <text class="text-base text-theme-on-surface-variant text-center">Unable to load documentation. Check your connection.</text>
     </column>
 
-@elseif ($page)
+@elseif ($currentPage)
     {{-- ── Page reader ── --}}
     {{-- The reader is reached by a real navigation (TOC tap / search result /
          deep link all push the /docs/{...} route), so the native back chevron
@@ -18,16 +18,16 @@
         {{-- Keyed by page id: prev/next flips the page in place (no
              navigation), so the scroll container needs a fresh native
              identity per page to reset the scroll offset to the top. --}}
-        <refreshable @refresh="refresh" :native:key="$page['id']" class="w-full flex-1">
+        <refreshable @refresh="refresh" :native:key="$currentPage['id']" class="w-full flex-1">
             <column class="w-full px-5 pb-32 gap-4">
                 <column class="w-full items-start gap-3 pt-1">
                     {{-- Section banner — full-width, centered small-caps eyebrow. --}}
                     <row class="w-full justify-center px-4 py-2 bg-theme-surface-variant rounded-full">
-                        <text class="text-sm font-bold text-theme-primary tracking-widest text-center">{{ strtoupper($page['section']) }}</text>
+                        <text class="text-sm font-bold text-theme-primary tracking-widest text-center">{{ strtoupper($currentPage['section']) }}</text>
                     </row>
-                    <text class="text-3xl font-black text-theme-on-surface">{{ $page['title'] }}</text>
-                    @if ($page['description'])
-                        <text class="text-base text-theme-on-surface-variant">{{ $page['description'] }}</text>
+                    <text class="text-3xl font-black text-theme-on-surface">{{ $currentPage['title'] }}</text>
+                    @if ($currentPage['description'])
+                        <text class="text-base text-theme-on-surface-variant">{{ $currentPage['description'] }}</text>
                     @endif
                 </column>
 
