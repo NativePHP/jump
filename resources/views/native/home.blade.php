@@ -20,9 +20,6 @@
                     <text class="text-xs font-bold text-theme-primary tracking-widest">POWERED BY NATIVEPHP</text>
                 </row>
 
-                {{-- OTA test marker --}}
-                <text class="text-2xl font-bold text-red-600 pt-6">Hello World</text>
-
                 {{-- JUMP wordmark — static mid-leap pose (padding), with a slow
                      per-letter float (translate-y yoyo). animate-delay staggers
                      each letter's phase so a soft wave travels through the word.
