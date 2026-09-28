@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cd2c87e0a11cab4cf9f57f98543111f",
+    "content-hash": "bbd61807e3d7dde9bf9d1206a638bd7b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2703,7 +2703,7 @@
         },
         {
             "name": "nativephp/mobile-discovery",
-            "version": "dev-fix/android-deeplink-path-scoping",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "plugins/nativephp/discovery",
@@ -2760,7 +2760,7 @@
         },
         {
             "name": "nativephp/mobile-geolocation",
-            "version": "dev-fix/android-deeplink-path-scoping",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "plugins/nativephp/geolocation",
@@ -2973,6 +2973,61 @@
                 "source": "https://github.com/NativePHP/mobile-network/tree/1.0.2"
             },
             "time": "2026-07-15T18:46:26+00:00"
+        },
+        {
+            "name": "nativephp/mobile-ota",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NativePHP/mobile-ota.git",
+                "reference": "26a80bff2120157f5f8ff6d6915380bff70124dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/26a80bff2120157f5f8ff6d6915380bff70124dd",
+                "reference": "26a80bff2120157f5f8ff6d6915380bff70124dd",
+                "shasum": ""
+            },
+            "require": {
+                "nativephp/mobile": "^3.0 || ^4.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^10.0",
+                "pestphp/pest": "^2.7|^3.0|^4.0"
+            },
+            "type": "nativephp-plugin",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Nativephp\\MobileOta\\OtaServiceProvider"
+                    ]
+                },
+                "nativephp": {
+                    "manifest": "nativephp.json"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nativephp\\MobileOta\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bifrost Technology, LLC",
+                    "email": "support@nativephp.com"
+                }
+            ],
+            "description": "Over-the-air PHP payload updates for NativePHP Mobile",
+            "support": {
+                "issues": "https://github.com/NativePHP/mobile-ota/issues",
+                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.4"
+            },
+            "time": "2026-09-23T01:59:08+00:00"
         },
         {
             "name": "nativephp/mobile-scanner",
