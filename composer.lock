@@ -1699,16 +1699,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.9.1",
+            "version": "2.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "73cb188c785abfa7a7bec73487148202968274c6"
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/73cb188c785abfa7a7bec73487148202968274c6",
-                "reference": "73cb188c785abfa7a7bec73487148202968274c6",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/6efbd9c472b91db0a3350fcd601c8332c2382e1f",
+                "reference": "6efbd9c472b91db0a3350fcd601c8332c2382e1f",
                 "shasum": ""
             },
             "require": {
@@ -1745,7 +1745,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.10-dev"
+                    "dev-main": "2.11-dev"
                 }
             },
             "autoload": {
@@ -1802,7 +1802,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-08-09T14:10:38+00:00"
+            "time": "2026-09-21T13:07:34+00:00"
         },
         {
             "name": "league/config",
@@ -2977,16 +2977,16 @@
         },
         {
             "name": "nativephp/mobile-ota",
-            "version": "0.1.6",
+            "version": "0.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/NativePHP/mobile-ota.git",
-                "reference": "e19e67d12cc4aa77b889c6c48b94092f34a85bef"
+                "reference": "fd8b112eff06810c639094d0b86d567a80dced61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/e19e67d12cc4aa77b889c6c48b94092f34a85bef",
-                "reference": "e19e67d12cc4aa77b889c6c48b94092f34a85bef",
+                "url": "https://api.github.com/repos/NativePHP/mobile-ota/zipball/fd8b112eff06810c639094d0b86d567a80dced61",
+                "reference": "fd8b112eff06810c639094d0b86d567a80dced61",
                 "shasum": ""
             },
             "require": {
@@ -3026,9 +3026,9 @@
             "description": "Over-the-air PHP payload updates for NativePHP Mobile",
             "support": {
                 "issues": "https://github.com/NativePHP/mobile-ota/issues",
-                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.6"
+                "source": "https://github.com/NativePHP/mobile-ota/tree/0.1.7"
             },
-            "time": "2026-09-28T22:24:37+00:00"
+            "time": "2026-09-29T00:06:33+00:00"
         },
         {
             "name": "nativephp/mobile-scanner",
