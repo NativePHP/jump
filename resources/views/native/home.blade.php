@@ -21,7 +21,7 @@
                 </row>
 
                 {{-- OTA test marker --}}
-                <text class="text-2xl font-bold text-blue-600 pt-6">Prompt OTA works</text>
+                <text class="text-2xl font-bold text-blue-600 pt-6">Prompt OTA v2</text>
 
                 {{-- JUMP wordmark — static mid-leap pose (padding), with a slow
                      per-letter float (translate-y yoyo). animate-delay staggers
