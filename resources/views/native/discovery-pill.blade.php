@@ -41,26 +41,36 @@
         the exit gesture must be taught BEFORE handoff.
     --}}
     <bottom-sheet :visible="$showExitHint" @dismiss="dismissExitHint" detents="medium">
-        <column class="w-full px-6 pt-6 pb-10 gap-5">
-            <text font="accent" class="text-2xl font-black text-theme-on-surface">Before you Jump</text>
-            <text class="text-base text-theme-on-surface-variant">The app you're connecting to will take over this screen — here's how to get back:</text>
+        {{--
+            The sheet body must scroll: both renderers give the content the
+            detent's height and clip whatever overflows, and `medium` on a
+            small phone (iPhone 13 mini, 375×812pt) is shorter than this
+            content once the headings wrap — the checkbox and "Got it" button
+            end up below the fold with no way to reach them. Same pattern as
+            the How-it-works sheet in native/home.blade.php.
+        --}}
+        <scroll-view class="w-full h-full">
+            <column class="w-full px-6 pt-6 pb-10 gap-5">
+                <text font="accent" class="text-2xl font-black text-theme-on-surface">Before you Jump</text>
+                <text class="text-base text-theme-on-surface-variant">The app you're connecting to will take over this screen — here's how to get back:</text>
 
-            <row class="w-full items-center gap-4 py-4 px-5 bg-theme-surface-variant rounded-2xl">
-                <native:icon :ios="App\Icons\Ios::HandDraw" :android="App\Icons\Android::Gesture" :size="34" class="text-red-600"/>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Swipe right with three fingers</text>
-                    <text class="text-sm text-theme-on-surface-variant">Anywhere on the screen, any time — you'll land right back here.</text>
-                </column>
-                <native:icon :ios="App\Icons\Ios::ArrowRight" :android="App\Icons\Android::ArrowForward" :size="20" class="text-red-600"/>
-            </row>
-
-            <checkbox :value="$dontShowExitHintAgain" label="Don't show this again" @change="setDontShowExitHintAgain"/>
-
-            <pressable @press="connectPending">
-                <row class="w-full items-center justify-center py-4 bg-theme-primary rounded-full">
-                    <text font="accent" class="text-base font-bold text-theme-on-primary">Got it — Jump in</text>
+                <row class="w-full items-center gap-4 py-4 px-5 bg-theme-surface-variant rounded-2xl">
+                    <native:icon :ios="App\Icons\Ios::HandDraw" :android="App\Icons\Android::Gesture" :size="34" class="text-red-600"/>
+                    <column class="flex-1 gap-1">
+                        <text class="text-base font-bold text-theme-on-surface">Swipe right with three fingers</text>
+                        <text class="text-sm text-theme-on-surface-variant">Anywhere on the screen, any time — you'll land right back here.</text>
+                    </column>
+                    <native:icon :ios="App\Icons\Ios::ArrowRight" :android="App\Icons\Android::ArrowForward" :size="20" class="text-red-600"/>
                 </row>
-            </pressable>
-        </column>
+
+                <checkbox :value="$dontShowExitHintAgain" label="Don't show this again" @change="setDontShowExitHintAgain"/>
+
+                <pressable @press="connectPending">
+                    <row class="w-full items-center justify-center py-4 bg-theme-primary rounded-full">
+                        <text font="accent" class="text-base font-bold text-theme-on-primary">Got it — Jump in</text>
+                    </row>
+                </pressable>
+            </column>
+        </scroll-view>
     </bottom-sheet>
 </column>
