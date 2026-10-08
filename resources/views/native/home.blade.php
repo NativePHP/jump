@@ -63,8 +63,8 @@
                     </column>
                     <column class="flex-1 gap-1">
                         <text font="accent" class="text-lg font-bold text-theme-on-surface">NativePHP Playground</text>
-                        <text class="text-sm text-theme-on-surface-variant">A bundled Laravel app that demonstrates 20
-                            native APIs — camera, share, scanner, secure storage, and more.
+                        <text class="text-sm text-theme-on-surface-variant">A bundled Laravel app that demonstrates ten
+                            native APIs — camera, location, notifications, biometrics, and more.
                         </text>
                     </column>
                     <native:icon :ios="App\Icons\Ios::ArrowRight" :android="App\Icons\Android::ArrowForward" :size="14"
@@ -133,7 +133,7 @@
                     ['n' => '1', 'ios' => App\Icons\Ios::Terminal, 'android' => App\Icons\Android::Terminal, 'title' => 'Start the Jump CLI', 'body' => 'In a Laravel application, run composer require nativephp/mobile nativephp/mobile-ui, then php artisan native:jump to prepare it for the mobile runtime.'],
                     ['n' => '2', 'ios' => App\Icons\Ios::QrcodeViewfinder, 'android' => App\Icons\Android::QrCodeScanner, 'title' => 'Scan the QR Code', 'body' => 'A QR code will appear in your terminal. Tap "Scan" in this app and point your camera at it.'],
                     ['n' => '3', 'ios' => App\Icons\Ios::BoltHorizontalFill, 'android' => App\Icons\Android::Bolt, 'title' => 'Instant Connection', 'body' => 'Your phone connects over your local network and runs the project in the Jump runtime.'],
-                    ['n' => '4', 'ios' => App\Icons\Ios::HandTapFill, 'android' => App\Icons\Android::TouchApp, 'title' => 'Explore Native APIs', 'body' => "Access camera, push notifications, biometrics, geolocation, and more through NativePHP's Laravel APIs — they execute right on your phone."],
+                    ['n' => '4', 'ios' => App\Icons\Ios::HandTapFill, 'android' => App\Icons\Android::TouchApp, 'title' => 'Explore Native APIs', 'body' => "Access the camera, local notifications, biometrics, geolocation, and more through NativePHP's Laravel APIs — they execute right on your phone."],
                     ['n' => '5', 'ios' => App\Icons\Ios::ArrowTriangle2Circlepath, 'android' => App\Icons\Android::Sync, 'title' => 'Live Reload', 'body' => 'Save a file and the runtime reloads automatically. Shake to exit and return here when you\'re done.'],
                 ] as $step)
                     <row class="w-full items-start gap-4">

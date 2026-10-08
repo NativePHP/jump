@@ -106,7 +106,7 @@
             </column>
             @include('native.playground.code', ['code' => $code['location']])
             <row class="w-full items-center gap-3">
-                <button @press="getLocation" icon="location.fill" size="sm" class="flex-1">Where am I?</button>
+                <button @press="getLocation" icon="location.fill" size="sm" class="{{ $locationBlocked ? 'flex-1' : 'w-full' }}">Where am I?</button>
                 @if($locationBlocked)
                     <button @press="openLocationSettings" icon="gearshape.fill" variant="ghost" size="sm" class="flex-1">Open Settings</button>
                 @endif

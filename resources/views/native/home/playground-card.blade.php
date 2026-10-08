@@ -7,8 +7,8 @@
         </column>
         <column class="flex-1 gap-1">
             <text font="accent" class="text-sm lg:text-xl font-bold text-theme-on-surface">SuperNative Playground</text>
-            <text class="text-sm text-theme-on-surface-variant">A bundled Laravel app that demonstrates 20
-                native APIs — camera, share, scanner, secure storage, and more.
+            <text class="text-sm text-theme-on-surface-variant">A bundled Laravel app that demonstrates ten
+                native APIs — camera, location, notifications, biometrics, and more.
             </text>
         </column>
         <native:icon :ios="App\Icons\Ios::ArrowRight" :android="App\Icons\Android::ArrowForward" :size="14"
