@@ -11,13 +11,12 @@ use Native\Mobile\Providers\NetworkServiceProvider;
 use Native\Mobile\Providers\ScannerServiceProvider;
 use Native\Mobile\Providers\SecureStorageServiceProvider;
 use Native\Mobile\Providers\ShareServiceProvider;
+use Native\Mobile\Skia\SkiaServiceProvider;
 use Native\Mobile\UI\NativeUIServiceProvider;
-use Nativephp\MobileOta\OtaServiceProvider;
 use NativePHP\Clipboard\ClipboardServiceProvider;
 use NativePHP\Discovery\DiscoveryServiceProvider;
 use NativePHP\LocalNotifications\LocalNotificationsServiceProvider;
 use NativePHP\MediaPlayer\MediaPlayerServiceProvider;
-use S2BR\MobileSplashscreen\MobileSplashscreenServiceProvider;
 
 class NativeServiceProvider extends ServiceProvider
 {
@@ -50,6 +49,7 @@ class NativeServiceProvider extends ServiceProvider
     {
         return [
             NativeUIServiceProvider::class,
+            SkiaServiceProvider::class,
             DiscoveryServiceProvider::class,
             ClipboardServiceProvider::class,
             BrowserServiceProvider::class,
@@ -62,7 +62,6 @@ class NativeServiceProvider extends ServiceProvider
             GeolocationServiceProvider::class,
             MediaPlayerServiceProvider::class,
             LocalNotificationsServiceProvider::class,
-            OtaServiceProvider::class,
         ];
     }
 }
