@@ -5,8 +5,9 @@ use Native\Mobile\Testing\Native;
 /**
  * Prev/next footer on the docs page reader — neighbors come from the corpus
  * flattened in nav order (crossing section boundaries), mirroring the
- * website's footer links. fakeDocsApi() serves two pages: Introduction
- * (getting-started) then Deep Links (concepts).
+ * website's footer links. fakeDocsApi() serves three pages in nav order:
+ * Introduction (getting-started), Deep Links (concepts), then Camera
+ * (plugins/core) — so Deep Links sits in the middle and has both links.
  *
  * Taps flip the page IN PLACE (no navigation): a replace() to a child URI of
  * the tab root reads as a native push (system chevron) while PHP's stack
@@ -27,17 +28,27 @@ test('the first page shows only a Next link and it opens the next page in place'
         ->and($screen->get('expanded'))->toContain('concepts');
 });
 
+test('a middle page shows both Previous and Next links', function () {
+    fakeDocsApi();
+
+    Native::visit('/docs/mobile/4/concepts/deep-links')
+        ->assertSee('Previous')
+        ->assertSee('Introduction')
+        ->assertSee('Next')
+        ->assertSee('Camera');
+});
+
 test('the last page shows only a Previous link and it opens back in place', function () {
     fakeDocsApi();
 
-    $screen = Native::visit('/docs/mobile/4/concepts/deep-links')
+    $screen = Native::visit('/docs/mobile/4/plugins/core/camera')
         ->assertSee('Previous')
-        ->assertSee('Introduction')
+        ->assertSee('Deep Links')
         ->assertDontSee('Next')
-        ->tap('Introduction');
+        ->tap('Deep Links');
 
-    expect($screen->get('currentPage')['id'])->toBe('mobile/4/getting-started/introduction')
-        ->and($screen->get('expanded'))->toContain('getting-started');
+    expect($screen->get('currentPage')['id'])->toBe('mobile/4/concepts/deep-links')
+        ->and($screen->get('expanded'))->toContain('concepts');
 });
 
 test('a deep-link route still opens the linked page at mount', function () {
