@@ -3,11 +3,7 @@
 
         {{-- Hero --}}
         <column class="w-full gap-2 pt-2">
-            <row class="items-center gap-2">
-                <column class="w-[8] h-[8] rounded-full bg-violet-500" />
-                <text class="text-xs font-bold uppercase text-violet-400 tracking-widest">NativePHP Playground</text>
-            </row>
-            <text class="text-3xl font-black text-theme-on-background">Laravel, running on your phone.</text>
+            <text font="accent" class="text-3xl text-theme-on-background">Laravel, running on your phone.</text>
             <text class="text-sm text-theme-on-surface-variant">
                 Ten native APIs, one page. Each card shows the PHP you'd write, then runs that exact call on this device.
             </text>
@@ -15,17 +11,16 @@
 
         {{-- 01 · Camera --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">01</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Camera</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Camera</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Open the system camera and get the photo back in PHP.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['camera'] }}</text>
             </column>
-            <button @press="takePhoto" icon="camera.fill" size="sm" class="self-start">Take a photo</button>
+            @include('native.playground.code', ['code' => $code['camera']])
+            <button @press="takePhoto" icon="camera.fill" size="sm" class="w-full">Take a photo</button>
             @if($cameraStatus)
                 <text class="text-sm text-theme-on-surface-variant">{{ $cameraStatus }}</text>
             @endif
@@ -46,17 +41,16 @@
 
         {{-- 02 · Gallery --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">02</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Gallery</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Gallery</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Pick images from the photo library with the system picker.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['gallery'] }}</text>
             </column>
-            <button @press="pickImages" icon="photo.on.rectangle" size="sm" class="self-start">Open gallery</button>
+            @include('native.playground.code', ['code' => $code['gallery']])
+            <button @press="pickImages" icon="photo.on.rectangle" size="sm" class="w-full">Open gallery</button>
             @if($galleryStatus)
                 <text class="text-sm text-theme-on-surface-variant">{{ $galleryStatus }}</text>
             @endif
@@ -73,17 +67,16 @@
 
         {{-- 03 · Video --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">03</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Video</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Video</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Record up to 30 seconds and play it back inline.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['video'] }}</text>
             </column>
-            <button @press="recordVideo" icon="video.fill" size="sm" class="self-start">Record video</button>
+            @include('native.playground.code', ['code' => $code['video']])
+            <button @press="recordVideo" icon="video.fill" size="sm" class="w-full">Record video</button>
             @if($videoStatus)
                 <text class="text-sm text-theme-on-surface-variant">{{ $videoStatus }}</text>
             @endif
@@ -103,20 +96,19 @@
 
         {{-- 04 · Location --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">04</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Location</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Location</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Request permission, then read the current GPS position.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['location'] }}</text>
             </column>
-            <row class="items-center gap-3">
-                <button @press="getLocation" icon="location.fill" size="sm">Where am I?</button>
+            @include('native.playground.code', ['code' => $code['location']])
+            <row class="w-full items-center gap-3">
+                <button @press="getLocation" icon="location.fill" size="sm" class="flex-1">Where am I?</button>
                 @if($locationBlocked)
-                    <button @press="openLocationSettings" icon="gearshape.fill" variant="ghost" size="sm">Open Settings</button>
+                    <button @press="openLocationSettings" icon="gearshape.fill" variant="ghost" size="sm" class="flex-1">Open Settings</button>
                 @endif
                 @if($locating)
                     <activity-indicator/>
@@ -135,42 +127,40 @@
 
         {{-- 05 · Notifications --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">05</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Notifications</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Notifications</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Send local notifications — immediately or on a delay.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['notifications'] }}</text>
             </column>
+            @include('native.playground.code', ['code' => $code['notifications']])
             @if(! $notifyGranted)
-                <button @press="requestNotifyPermission" icon="bell.badge.fill" size="sm" class="self-start">Request permission</button>
+                <button @press="requestNotifyPermission" icon="bell.badge.fill" size="sm" class="w-full">Request permission</button>
             @else
                 <row class="items-center gap-2">
                     <icon ios="checkmark.circle.fill" android="check_circle" color="#10B981" :size="18"/>
                     <text class="text-sm text-theme-on-surface">Notifications enabled</text>
                 </row>
             @endif
-            <row class="gap-3">
-                <button @press="sendNotification" icon="bell.fill" size="sm">Send now</button>
-                <button @press="sendDelayedNotification" icon="clock.fill" size="sm">In 10 seconds</button>
+            <row class="w-full gap-3">
+                <button @press="sendNotification" icon="bell.fill" size="sm" class="flex-1">Send now</button>
+                <button @press="sendDelayedNotification" icon="clock.fill" size="sm" class="flex-1">In 10 seconds</button>
             </row>
         </column>
 
         {{-- 06 · Biometrics --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">06</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Biometrics</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Biometrics</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Face ID / Touch ID on iOS, fingerprint on Android.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['biometrics'] }}</text>
             </column>
+            @include('native.playground.code', ['code' => $code['biometrics']])
             <row class="w-full items-center gap-3">
                 @if($bioState === 'unlocked')
                     <stack class="w-10 h-10 rounded-full bg-emerald-500 items-center justify-center">
@@ -199,16 +189,15 @@
 
         {{-- 07 · Device info --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">07</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Device info</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Device info</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Synchronous reads of hardware and battery state.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['device'] }}</text>
             </column>
+            @include('native.playground.code', ['code' => $code['device']])
             @if(count($deviceInfo) || count($battery))
                 <column class="w-full gap-2">
                     @foreach($deviceInfo as $key => $value)
@@ -227,21 +216,20 @@
             @else
                 <text class="text-sm text-theme-on-surface-variant">Only available on a device.</text>
             @endif
-            <button @press="readDevice" variant="ghost" size="sm" class="self-start">Refresh</button>
+            <button @press="readDevice" variant="ghost" size="sm" class="w-full">Refresh</button>
         </column>
 
         {{-- 08 · Flashlight --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">08</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Flashlight</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Flashlight</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Toggle the camera torch and read back the new state.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['flashlight'] }}</text>
             </column>
+            @include('native.playground.code', ['code' => $code['flashlight']])
             <pressable @press="toggleTorch" class="w-full">
                 <row class="w-full p-4 gap-3 items-center rounded-xl {{ $torchOn ? 'bg-amber-400' : 'bg-theme-surface-variant' }}">
                     <icon ios="{{ $torchOn ? 'flashlight.on.fill' : 'flashlight.off.fill' }}"
@@ -256,16 +244,15 @@
 
         {{-- 09 · Network --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">09</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Network</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Network</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Connection state, type and cost hints.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['network'] }}</text>
             </column>
+            @include('native.playground.code', ['code' => $code['network']])
             @php($connected = (bool) ($network['connected'] ?? false))
             <row class="items-center gap-2">
                 <icon ios="{{ $connected ? 'wifi' : 'wifi.slash' }}" android="{{ $connected ? 'wifi' : 'wifi_off' }}"
@@ -284,21 +271,20 @@
             @else
                 <text class="text-sm text-theme-on-surface-variant">Only available on a device.</text>
             @endif
-            <button @press="readNetwork" variant="ghost" size="sm" class="self-start">Refresh</button>
+            <button @press="readNetwork" variant="ghost" size="sm" class="w-full">Refresh</button>
         </column>
 
         {{-- 10 · Haptics --}}
         <column class="w-full p-4 gap-3 bg-theme-surface rounded-2xl border border-theme-outline">
-            <row class="w-full items-baseline gap-2">
-                <text class="text-xs font-mono text-theme-outline">10</text>
-                <column class="flex-1 gap-1">
-                    <text class="text-base font-bold text-theme-on-surface">Haptics</text>
+            <column class="w-full gap-1">
+                <row class="items-center gap-2">
+                    <text font="accent" class="text-lg text-theme-primary">Haptics</text>
+                </row>
+                <column class="w-full gap-1">
                     <text class="text-sm text-theme-on-surface-variant">Fire the system haptic engine.</text>
                 </column>
-            </row>
-            <column class="w-full p-3 rounded-lg bg-theme-surface-variant">
-                <text class="text-xs font-mono text-theme-on-surface-variant">{{ $code['haptics'] }}</text>
             </column>
+            @include('native.playground.code', ['code' => $code['haptics']])
             <pressable @press="vibrate" class="w-full">
                 <row class="w-full p-4 gap-3 items-center bg-theme-surface-variant rounded-xl">
                     <icon ios="iphone.radiowaves.left.and.right" android="vibration" color="#EC4899" :size="24"/>

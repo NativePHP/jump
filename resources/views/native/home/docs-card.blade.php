@@ -1,0 +1,18 @@
+{{-- Home partial: see native.home for the per-width layouts that place it. --}}
+<pressable @press="goDocs" class="{{ $class ?? 'flex-1' }}">
+    <column
+        class="w-full h-[190] p-4 bg-theme-surface rounded-3xl border border-theme-outline justify-between">
+        <column class="gap-2">
+            <text font="accent" class="text-base font-bold text-theme-on-surface">Official Docs</text>
+            <text class="text-sm text-theme-on-surface-variant">Learn the Jump runtime and SuperNative
+                APIs.
+            </text>
+        </column>
+        <row class="w-full items-center justify-between px-4 py-2 bg-theme-surface-variant rounded-xl">
+            <text class="text-sm font-bold text-theme-on-surface">Browse</text>
+            <spacer/>
+            <native:icon :size="20" :android="\App\Icons\Android::Book" :ios="\App\Icons\Ios::Book"
+                         class="text-theme-primary"/>
+        </row>
+    </column>
+</pressable>

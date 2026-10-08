@@ -9,7 +9,8 @@
     @if ($showPill)
         <pressable @press="toggleServers">
             <row class="items-center gap-2 px-5 py-3 bg-theme-primary rounded-full shadow-lg">
-                <native:icon :ios="App\Icons\Ios::Wifi" :android="App\Icons\Android::Wifi" :size="16" color="#FFFFFF"/>
+                <skia-canvas :scene="App\Support\JumpSkia::radar()" animated canvas-id="radar"
+                             a11y-label="Searching the network" class="w-[22] h-[22]"/>
                 <text class="text-sm font-semibold text-theme-on-primary">{{ $serverCount === 1 ? '1 server nearby' : $serverCount.' servers nearby' }}</text>
             </row>
         </pressable>

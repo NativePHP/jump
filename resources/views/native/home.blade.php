@@ -12,35 +12,16 @@
 
             {{-- Hero --}}
             <column class="w-full items-center pt-6 select-text">
-                {{-- Kicker pill --}}
-                <row
-                    class="items-center gap-2 px-4 py-2 bg-theme-surface-variant rounded-full border border-theme-outline">
-                    <native:icon :ios="App\Icons\Ios::BoltFill" :android="App\Icons\Android::ElectricBolt" :size="12"
-                                 class="text-red-500"/>
-                    <text class="text-xs font-bold text-theme-primary tracking-widest">POWERED BY NATIVEPHP</text>
-                </row>
-
-                {{-- OTA test marker --}}
-                <text class="text-2xl font-bold text-blue-600 pt-6">Prompt OTA v5</text>
-
-                {{-- JUMP wordmark — static mid-leap pose (padding), with a slow
-                     per-letter float (translate-y yoyo). animate-delay staggers
-                     each letter's phase so a soft wave travels through the word.
-                     Speed lines stay still. --}}
-                <row class="items-end pt-[48]">
-                    <column class="items-end gap-2 pb-[24] pr-3">
-                        <column class="w-[34] h-[5] rounded-full bg-theme-primary opacity-[0.6]"/>
-                        <column class="w-[22] h-[5] rounded-full bg-theme-primary opacity-[0.35]"/>
-                        <column class="w-[12] h-[5] rounded-full bg-theme-primary opacity-[0.18]"/>
-                    </column>
-                    <text font="accent" class="text-[72] leading-none italic text-theme-primary uppercase">jump</text>
-                </row>
+                {{-- JUMP wordmark: solid red letters with a light tracing each outline,
+                     over a soft aurora / streaks / embers backdrop (all Skia, see JumpSkia::hero). --}}
+                <skia-canvas :scene="App\Support\JumpSkia::hero()" fit="contain" animated
+                             canvas-id="jump-hero" a11y-label="Jump" class="w-full h-[170]"/>
 
                 {{-- ground line the letters leap from --}}
                 <column class="w-[230] h-[4] rounded-full bg-theme-outline opacity-[0.5] mt-2"/>
 
                 {{-- Tagline --}}
-                <row class="items-end gap-2 pt-4">
+                <row class="w-full items-end justify-center gap-2 pt-4">
                     <text font="accent"
                           class="text-xl leading-none italic font-bold text-slate-800 dark:text-slate-200">Instant
                     </text>
@@ -50,25 +31,25 @@
                     </text>
                 </row>
 
-                <text class="text-base text-theme-on-surface-variant pt-3 leading-relaxed text-center">
+                <text class="w-full text-base text-theme-on-surface-variant pt-3 leading-relaxed text-center">
                     Jump turns your phone into a live Laravel machine. Scan a Jump QR code and your
                     project runs right here — natively.
                 </text>
 
-                <row class="gap-3 pt-6">
-                    <pressable @press="scan">
-                        <row class="items-center gap-2 px-6 py-4 bg-theme-primary rounded-2xl">
+                <row class="w-full gap-3 pt-6">
+                    <pressable @press="scan" class="flex-1">
+                        <row class="w-full items-center justify-center gap-2 px-3 py-4 bg-theme-primary rounded-2xl">
                             <native:icon :ios="App\Icons\Ios::QrcodeViewfinder"
                                          :android="App\Icons\Android::QrCodeScanner" :size="18" color="#FFFFFF"/>
-                            <text font="accent" class="text-base font-bold text-theme-on-primary">JUMP</text>
+                            <text font="accent" class="text-base font-bold text-theme-on-primary">Scan</text>
                         </row>
                     </pressable>
-                    <pressable @press="openHow">
-                        <text
-                            font="accent"
-                            class="px-6 py-4 bg-theme-surface-variant rounded-2xl border border-theme-outline text-base font-semibold text-theme-on-surface">
-                            How it works
-                        </text>
+                    <pressable @press="openHow" class="flex-1">
+                        <row class="w-full items-center justify-center gap-2 px-3 py-4 bg-theme-surface-variant rounded-2xl border border-theme-outline">
+                            <native:icon :ios="App\Icons\Ios::InfoCircle" :android="App\Icons\Android::Info" :size="18"
+                                         class="text-theme-on-surface"/>
+                            <text font="accent" class="text-base font-semibold text-theme-on-surface">How it works</text>
+                        </row>
                     </pressable>
                 </row>
             </column>
@@ -102,7 +83,7 @@
                                 APIs.
                             </text>
                         </column>
-                        <row class="items-center px-4 py-2 bg-theme-surface-variant rounded-xl self-start">
+                        <row class="w-full items-center justify-between px-4 py-2 bg-theme-surface-variant rounded-xl">
                             <text class="text-sm font-bold text-theme-on-surface">Browse</text>
                             <spacer/>
                             <native:icon :size="20" :android="\App\Icons\Android::Book" :ios="\App\Icons\Ios::Book"
@@ -119,7 +100,7 @@
                                 mobile.
                             </text>
                         </column>
-                        <row class="items-center px-4 py-2 bg-theme-primary rounded-xl self-start">
+                        <row class="w-full items-center justify-between px-4 py-2 bg-theme-primary rounded-xl">
                             <text class="text-sm font-bold text-theme-on-primary">Watch</text>
                             <spacer/>
                             <native:icon :size="20" :android="\App\Icons\Android::PlayCircleFill"
@@ -129,49 +110,6 @@
                 </pressable>
             </row>
 
-            {{-- ─────────── Agency Partners ─────────── --}}
-            <column class="w-full pt-8 gap-1">
-                <row class="items-center gap-2">
-                    <native:icon :ios="App\Icons\Ios::Building2Fill" :android="App\Icons\Android::Groups" :size="16"
-                                 class="text-red-600"/>
-                    <text font="accent" class="text-xs font-bold text-theme-primary tracking-widest">AGENCY PARTNERS
-                    </text>
-                </row>
-                <text class="text-base text-theme-on-surface-variant pt-1">Vetted agencies with deep NativePHP
-                    experience who can help bring your project to life.
-                </text>
-            </column>
-
-            <column class="w-full pt-4 gap-3">
-                @foreach ($partners as $partner)
-                    <pressable @press="openPartner('{{ $partner['url'] }}')" class="w-full">
-                        <row
-                            class="w-full items-center gap-3 p-4 bg-theme-surface rounded-2xl border border-theme-outline">
-                            @if ($partner['logo'])
-                                {{-- Logo on a white chip so a dark wordmark stays legible on the dark card too. --}}
-                                <column class="w-[64] h-[44] rounded-xl bg-white items-center justify-center px-2">
-                                    <image src="{{ $partner['logo'] }}" alt="{{ $partner['name'] }} logo"
-                                           class="w-[52] h-[28] object-contain"/>
-                                </column>
-                            @else
-                                <column
-                                    class="w-[44] h-[44] rounded-xl bg-theme-surface-variant items-center justify-center">
-                                    <text
-                                        font="accent"
-                                        class="text-lg font-black text-theme-primary">{{ Str::substr($partner['name'], 0, 1) }}</text>
-                                </column>
-                            @endif
-                            <column class="flex-1 gap-1">
-                                <text class="text-base font-bold text-theme-on-surface">{{ $partner['name'] }}</text>
-                                <text class="text-sm text-theme-on-surface-variant">{{ $partner['tagline'] }}</text>
-                            </column>
-                            <native:icon :ios="App\Icons\Ios::ArrowUpRight" :android="App\Icons\Android::ArrowOutward"
-                                         :size="14" color="#94A3B8" dark-color="#A6ACCD"/>
-                        </row>
-                    </pressable>
-                @endforeach
-            </column>
-
         </column>
     </scroll-view>
 
@@ -180,7 +118,7 @@
         <scroll-view class="w-full h-full bg-theme-background">
             <column class="w-full px-6 pb-16 pt-4 gap-6">
                 <row class="w-full items-center justify-between">
-                    <text class="text-3xl font-black text-theme-on-surface">How Jump Works</text>
+                    <text font="accent" class="text-3xl text-theme-primary">How Jump Works</text>
                     <pressable @press="closeHow">
                         <native:icon :ios="App\Icons\Ios::XmarkCircleFill" :android="App\Icons\Android::Cancel"
                                      :size="28"
@@ -192,7 +130,7 @@
                 </text>
 
                 @foreach ([
-                    ['n' => '1', 'ios' => App\Icons\Ios::Terminal, 'android' => App\Icons\Android::Terminal, 'title' => 'Start the Jump CLI', 'body' => 'In a Laravel application, run composer require nativephp/mobile, then php artisan native:jump to prepare it for the mobile runtime.'],
+                    ['n' => '1', 'ios' => App\Icons\Ios::Terminal, 'android' => App\Icons\Android::Terminal, 'title' => 'Start the Jump CLI', 'body' => 'In a Laravel application, run composer require nativephp/mobile nativephp/mobile-ui, then php artisan native:jump to prepare it for the mobile runtime.'],
                     ['n' => '2', 'ios' => App\Icons\Ios::QrcodeViewfinder, 'android' => App\Icons\Android::QrCodeScanner, 'title' => 'Scan the QR Code', 'body' => 'A QR code will appear in your terminal. Tap "Scan" in this app and point your camera at it.'],
                     ['n' => '3', 'ios' => App\Icons\Ios::BoltHorizontalFill, 'android' => App\Icons\Android::Bolt, 'title' => 'Instant Connection', 'body' => 'Your phone connects over your local network and runs the project in the Jump runtime.'],
                     ['n' => '4', 'ios' => App\Icons\Ios::HandTapFill, 'android' => App\Icons\Android::TouchApp, 'title' => 'Explore Native APIs', 'body' => "Access camera, push notifications, biometrics, geolocation, and more through NativePHP's Laravel APIs — they execute right on your phone."],
@@ -203,9 +141,7 @@
                             <native:icon :ios="$step['ios']" :android="$step['android']" :size="20" color="#FFFFFF"/>
                         </column>
                         <column class="flex-1 gap-1">
-                            <text class="text-xs font-bold text-theme-primary tracking-widest">
-                                STEP {{ $step['n'] }}</text>
-                            <text class="text-lg font-bold text-theme-on-surface">{{ $step['title'] }}</text>
+                            <text font="accent" class="text-lg text-theme-primary">{{ $step['title'] }}</text>
                             <text class="text-sm text-theme-on-surface-variant">{{ $step['body'] }}</text>
                         </column>
                     </row>

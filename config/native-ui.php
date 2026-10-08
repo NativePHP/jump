@@ -61,10 +61,11 @@ return [
             'on-accent' => '#16182C', // haiti (dark text on lime)
         ],
 
-        // Dark mode — the site's warm navy-purple, NOT flat black. haiti is the
-        // page, cloud the card surface, torchlight the code/muted layer, with a
-        // red-500 interactive accent (one step brighter than light mode so it
-        // pops on the dark ground) and the same snow-flurry brand pop.
+        // Dark mode — neutral black / ash / charcoal (no blue or purple cast): a
+        // near-black page, charcoal cards, a slightly lighter muted layer for
+        // code and inputs, thin gray borders, and zinc text. Red-500 stays the
+        // interactive accent (one step brighter than light mode) plus the same
+        // snow-flurry brand pop.
         'dark' => [
             'primary' => 'red-500',
             'on-primary' => 'white',
@@ -72,21 +73,21 @@ return [
             'secondary' => 'red-400',
             'on-secondary' => 'white',
 
-            'surface' => '#1E2140', // between haiti and cloud — card layer
-            'on-surface' => '#F3F4F6',
-            'background' => '#16182C', // haiti
-            'on-background' => '#F3F4F6',
+            'surface' => '#151517', // card layer
+            'on-surface' => '#F4F4F5', // zinc-100
+            'background' => '#09090B', // zinc-950 — near-black page
+            'on-background' => '#F4F4F5',
 
-            'surface-variant' => '#292D3E', // torchlight-surface (code/muted layer)
-            'on-surface-variant' => '#A6ACCD', // torchlight-text (muted lavender-gray)
+            'surface-variant' => '#202024', // muted / input / code layer
+            'on-surface-variant' => '#A1A1AA', // zinc-400
 
-            'outline' => '#383B61', // subtle navy border on haiti/cloud
+            'outline' => '#2E2E33', // subtle gray border
 
             'destructive' => '#DC2626',
             'on-destructive' => 'white',
 
             'accent' => '#A2FD00', // snow-flurry lime — brand highlight
-            'on-accent' => '#16182C', // haiti (dark text on lime)
+            'on-accent' => '#09090B', // near-black text on lime
         ],
 
         // Corner radii (points / dp).
