@@ -1,4 +1,4 @@
-package com.nativephp.discovery
+package com.nativephp.jumpclient
 
 import android.os.Handler
 import android.os.Looper

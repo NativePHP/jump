@@ -1,4 +1,4 @@
-package com.nativephp.discovery
+package com.nativephp.jumpclient
 
 import android.app.Activity
 import android.util.Log
@@ -6,7 +6,7 @@ import android.view.MotionEvent
 import android.view.Window
 
 /**
- * Android port of the shell's iOS `EscapeHatchGesture`: a global 3-finger
+ * Android twin of iOS `JumpEscapeHatchGesture`: a global 3-finger
  * swipe-right that exits a connected remote app back to the Jump home.
  *
  * iOS attaches a `UISwipeGestureRecognizer` to the key window with
@@ -16,7 +16,7 @@ import android.view.Window
  * every touch BEFORE the view tree (WebView or Compose) consumes it. Events
  * are always delegated unmodified; the gesture never consumes anything.
  *
- * Installed idempotently from `DiscoveryFunctions.Start`/`Connect` (main
+ * Installed idempotently from `JumpClientFunctions.Connect` (main
  * thread). It stays installed for the Activity's lifetime; firing is a no-op
  * unless a remote session is live ([JumpBridgeRelay.exitToJump] guards).
  */

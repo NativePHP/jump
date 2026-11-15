@@ -16,7 +16,7 @@ import os.log
 final class JumpElementRuntime: ObservableObject, @unchecked Sendable {
     static let shared = JumpElementRuntime()
 
-    private let logger = Logger(subsystem: "com.nativephp.discovery", category: "ElementRuntime")
+    private let logger = Logger(subsystem: "com.nativephp.jumpclient", category: "ElementRuntime")
 
     /// True while a remote session is live. Read by the shell's
     /// `NativeElementBridge.writeEvent` to fork the event transport.

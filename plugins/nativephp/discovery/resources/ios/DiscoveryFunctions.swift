@@ -32,25 +32,4 @@ enum DiscoveryFunctions {
             return [:]
         }
     }
-
-    // MARK: - Discovery.Connect
-
-    /// Connect to a discovered dev server by host + port. Drives the ported
-    /// `JumpBridgeRelay`, which opens the WebSocket to the dev server and
-    /// streams its native UI into `NativeUIBridge.shared` (rendered in place by
-    /// the shell's existing renderers).
-    class Connect: BridgeFunction {
-        func execute(parameters: [String: Any]) throws -> [String: Any] {
-            guard let host = parameters["host"] as? String,
-                  let port = parameters["port"] as? String else {
-                print("❌ Discovery.Connect missing host/port: \(parameters)")
-                return [:]
-            }
-            print("🔌 Discovery.Connect → \(host):\(port)")
-            DispatchQueue.main.async {
-                JumpBridgeRelay.shared.connect(host: host, port: port)
-            }
-            return [:]
-        }
-    }
 }

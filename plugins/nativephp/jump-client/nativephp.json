@@ -1,0 +1,31 @@
+{
+    "namespace": "JumpClient",
+    "bridge_functions": [
+        {
+            "name": "JumpClient.Connect",
+            "android": "com.nativephp.jumpclient.JumpClientFunctions.Connect",
+            "ios": "JumpClientFunctions.Connect",
+            "description": "Connect to a native:jump dev server by host + port and render its app in place"
+        }
+    ],
+    "android": {
+        "min_version": 26,
+        "permissions": [
+            "android.permission.INTERNET"
+        ],
+        "dependencies": {
+            "implementation": [
+                "com.squareup.okhttp3:okhttp:4.12.0"
+            ]
+        },
+        "proguard_rules": [
+            "-dontwarn org.slf4j.impl.StaticLoggerBinder"
+        ]
+    },
+    "ios": {
+        "min_version": "18.2"
+    },
+    "hooks": {
+        "pre_compile": "native:jump-client:patch-shell"
+    }
+}
