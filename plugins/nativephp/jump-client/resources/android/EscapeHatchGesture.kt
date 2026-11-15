@@ -140,7 +140,17 @@ object EscapeHatchGesture {
     }
 }
 
-/** Plugin init (nativephp.json `android.init_function`), called once at launch. */
+/**
+ * Plugin init (nativephp.json `android.init_function`), called once at launch.
+ *
+ * Core calls this from a background thread after MainActivity has already
+ * resumed, so the lifecycle callback alone would miss it until its next
+ * resume. Install on it directly as well.
+ */
 fun jumpClientPluginInit(context: Context) {
     EscapeHatchGesture.installForAppLifetime(context)
+
+    android.os.Handler(android.os.Looper.getMainLooper()).post {
+        com.nativephp.mobile.ui.MainActivity.instance?.let { EscapeHatchGesture.install(it) }
+    }
 }
