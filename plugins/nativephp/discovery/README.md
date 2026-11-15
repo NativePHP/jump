@@ -30,6 +30,18 @@ Dispatched from native code as servers appear / disappear — listen with
 - `NativePHP\Discovery\Events\ServerFound` — `{ host, port, name }`
 - `NativePHP\Discovery\Events\ServerLost`  — `{ host, port }`
 
+## Local network permission (iOS)
+
+iOS asks the user before an app browses the local network. The plugin ships a
+generic prompt. To say it in your app's own words, set it in
+`config/nativephp.php`, which wins over the plugin's:
+
+```php
+'permissions' => [
+    'NSLocalNetworkUsageDescription' => 'MyApp finds dev servers on your Wi-Fi network.',
+],
+```
+
 ## Install (local dev)
 
 Add a path repository to the app's `composer.json`, require the package, then

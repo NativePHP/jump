@@ -26,7 +26,7 @@
     "ios": {
         "min_version": "18.2",
         "info_plist": {
-            "NSLocalNetworkUsageDescription": "Jump discovers development servers running on your Wi-Fi network so you can connect without scanning a QR code.",
+            "NSLocalNetworkUsageDescription": "This app looks for development servers on your local network so it can connect to them.",
             "NSBonjourServices": [
                 "_jump._tcp"
             ]
