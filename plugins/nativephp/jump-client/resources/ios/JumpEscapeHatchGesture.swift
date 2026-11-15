@@ -16,9 +16,10 @@ import UIKit
 /// the app still builds against a core that ships the old one; nothing
 /// observes that notification any more, so the old recognizer is inert.
 ///
-/// Installed idempotently from `JumpClientFunctions.Connect` (main thread),
-/// mirroring Android's `EscapeHatchGesture.install`. It stays installed for
-/// the window's lifetime; firing is a no-op unless a remote session is live
+/// Installed at app launch (`jumpClientPluginInit`) and again whenever a
+/// window becomes key, so every way into a remote session can be swiped out
+/// of: Connect, a QR scan, or a `jump://webview` deep link. Installing is
+/// idempotent; firing is a no-op unless a remote session is live
 /// (`JumpBridgeRelay.exitToJump` guards).
 final class JumpEscapeHatchGesture: NSObject, UIGestureRecognizerDelegate {
 
@@ -27,10 +28,35 @@ final class JumpEscapeHatchGesture: NSObject, UIGestureRecognizerDelegate {
     private weak var installedOn: UIWindow?
     private var recognizer: UISwipeGestureRecognizer?
 
+    private var observingWindows = false
+
     /// Attach the recognizer to the key window once; safe to call repeatedly.
     /// Must be called on the main thread.
     static func install() {
         shared.attach()
+    }
+
+    /// Install now if there is a key window, and on every window that
+    /// becomes key later. Plugin init runs before the first window exists,
+    /// which is why the observer is needed at all.
+    static func installForAppLifetime() {
+        DispatchQueue.main.async {
+            shared.observeWindows()
+            shared.attach()
+        }
+    }
+
+    private func observeWindows() {
+        guard !observingWindows else { return }
+        observingWindows = true
+
+        NotificationCenter.default.addObserver(
+            forName: UIWindow.didBecomeKeyNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.attach()
+        }
     }
 
     private func attach() {
@@ -69,4 +95,9 @@ final class JumpEscapeHatchGesture: NSObject, UIGestureRecognizerDelegate {
     // Coexist with the app's own gestures rather than competing with them.
     func gestureRecognizer(_ g: UIGestureRecognizer,
                            shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool { true }
+}
+
+/// Plugin init (nativephp.json `ios.init_function`), called once at launch.
+func jumpClientPluginInit() {
+    JumpEscapeHatchGesture.installForAppLifetime()
 }

@@ -20,10 +20,12 @@
         },
         "proguard_rules": [
             "-dontwarn org.slf4j.impl.StaticLoggerBinder"
-        ]
+        ],
+        "init_function": "com.nativephp.jumpclient.jumpClientPluginInit"
     },
     "ios": {
-        "min_version": "18.2"
+        "min_version": "18.2",
+        "init_function": "jumpClientPluginInit"
     },
     "hooks": {
         "pre_compile": "native:jump-client:patch-shell"
