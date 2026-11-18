@@ -10,7 +10,6 @@ use Illuminate\View\View;
 use Native\Mobile\Attributes\On;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Events\Scanner\CodeScanned;
-use Native\Mobile\Facades\Browser;
 use Native\Mobile\Facades\Scanner;
 
 /**
@@ -90,51 +89,8 @@ class Home extends NativeComponent
         $this->navigate('/videos');
     }
 
-    /**
-     * Opens a partner agency's site in the system browser. Called from the
-     * "Agency Partners" cards (@press="openPartner('...')").
-     */
-    public function openPartner(string $url): void
-    {
-        Browser::open($url);
-    }
-
-    /**
-     * Vetted NativePHP consulting partners, mirrored from
-     * nativephp.com/consulting. `logo` is a remote raster URL where the partner
-     * publishes one (the native <image> renderer needs http(s) raster, not the
-     * site's bundled SVG); null falls back to a lettered monogram tile.
-     *
-     * @return list<array{name: string, tagline: string, url: string, logo: ?string}>
-     */
-    protected function partners(): array
-    {
-        return [
-            [
-                'name' => 'Nexcalia',
-                'tagline' => 'Smart tools for scheduling & visitor management.',
-                'url' => 'https://www.nexcalia.com/?ref=nativephp',
-                'logo' => null,
-            ],
-            [
-                'name' => 'Web Mavens',
-                'tagline' => 'Laravel Partners crafting secure, SOC 2-ready apps.',
-                'url' => 'https://www.webmavens.com/?ref=nativephp',
-                'logo' => null,
-            ],
-            [
-                'name' => 'Synergi Tech',
-                'tagline' => 'Bespoke software for complex infrastructure.',
-                'url' => 'https://synergitech.co.uk/partners/nativephp/',
-                'logo' => 'https://synergitech.co.uk/logo.png',
-            ],
-        ];
-    }
-
     public function render(): View
     {
-        return view('native.home', [
-            'partners' => $this->partners(),
-        ]);
+        return view('native.home');
     }
 }

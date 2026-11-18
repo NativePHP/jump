@@ -24,10 +24,12 @@ test('every demo card renders with its code snippet', function () {
         $screen->assertSee($title);
     }
 
-    $screen->assertSee('Camera::getPhoto()')
-        ->assertSee('Geolocation::getCurrentPosition()')
-        ->assertSee('Biometrics::prompt()')
-        ->assertSee('Haptics::vibrate();');
+    // Snippets are syntax-highlighted, so each token is its own text run:
+    // assert on the identifiers rather than a whole line.
+    $screen->assertSee('getPhoto')
+        ->assertSee('getCurrentPosition')
+        ->assertSee('prompt')
+        ->assertSee('vibrate');
 });
 
 test('the haptics demo counts buzzes', function () {

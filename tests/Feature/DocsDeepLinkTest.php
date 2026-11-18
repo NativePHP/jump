@@ -38,13 +38,13 @@ test('an unknown docs link falls back to the TOC', function () {
         ->and($screen->get('sections'))->not->toBeEmpty();
 });
 
-test('the plain docs route still opens the TOC', function () {
+test('the plain docs route opens the TOC with every section collapsed', function () {
     fakeDocsApi();
 
     $screen = Native::visit('/docs');
 
     expect($screen->get('currentPage'))->toBeNull()
-        ->and($screen->get('expanded'))->toBe(['getting-started']);
+        ->and($screen->get('expanded'))->toBe([]);
 });
 
 test('a nested docs universal link opens the linked page', function () {

@@ -384,13 +384,51 @@ class Home extends NativeComponent
     protected function code(): array
     {
         return [
-            'camera' => "Camera::getPhoto()\n    ->photoTaken(fn (\$event) => \$this->photos[] = \$event->path);",
-            'gallery' => "Camera::pickImages('images', multiple: true, max: 4)\n    ->mediaSelected(fn (\$event) => \$event->files);",
-            'video' => "Camera::recordVideo()->maxDuration(30)\n    ->videoRecorded(fn (\$event) => \$event->path);",
-            'location' => "Geolocation::getCurrentPosition()\n    ->locationReceived(fn (\$event) => \$event->latitude);",
-            'notifications' => "LocalNotifications::send('hello')\n    ->title('Hello from Laravel!')\n    ->body('Sent by PHP running on your device.');",
-            'biometrics' => "Biometrics::prompt()\n    ->completed(fn (\$event) => \$event->success);",
-            'device' => "\$info = Device::getInfo();\n\$battery = Device::getBatteryInfo();",
+            'camera' => <<<'PHP'
+            Camera::getPhoto()
+                ->photoTaken(function ($event) {
+                    $this->photos[] = $event->path;
+                });
+            PHP,
+            'gallery' => <<<'PHP'
+            Camera::pickImages(
+                'images',
+                multiple: true,
+                max: 4,
+            )->mediaSelected(function ($event) {
+                $files = $event->files;
+            });
+            PHP,
+            'video' => <<<'PHP'
+            Camera::recordVideo()
+                ->maxDuration(30)
+                ->videoRecorded(function ($event) {
+                    $path = $event->path;
+                });
+            PHP,
+            'location' => <<<'PHP'
+            Geolocation::getCurrentPosition()
+                ->locationReceived(function ($event) {
+                    $lat = $event->latitude;
+                });
+            PHP,
+            'notifications' => <<<'PHP'
+            LocalNotifications::send('hello')
+                ->title('Hello from Laravel!')
+                ->body(
+                    'Sent by PHP on your device.'
+                );
+            PHP,
+            'biometrics' => <<<'PHP'
+            Biometrics::prompt()
+                ->completed(function ($event) {
+                    $ok = $event->success;
+                });
+            PHP,
+            'device' => <<<'PHP'
+            $info = Device::getInfo();
+            $battery = Device::getBatteryInfo();
+            PHP,
             'flashlight' => 'Device::flashlight();',
             'network' => '$status = Network::status();',
             'haptics' => 'Haptics::vibrate();',

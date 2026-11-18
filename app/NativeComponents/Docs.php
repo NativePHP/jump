@@ -39,6 +39,9 @@ class Docs extends NativeComponent
     /** @var array<int,string> expanded section slugs */
     public array $expanded = [];
 
+    /** Slug of the section whose page list is showing (section-card TOC); null = the card grid. */
+    public ?string $activeSection = null;
+
     public ?array $currentPage = null;
 
     public bool $loading = true;
@@ -94,11 +97,21 @@ class Docs extends NativeComponent
             if (! in_array($section, $this->expanded, true)) {
                 $this->expanded[] = $section;
             }
-        } elseif ($this->sections !== []) {
-            // Plain TOC — open the first section so the landing view isn't a
-            // wall of collapsed headers.
-            $this->expanded = [$this->sections[0]['slug']];
+            if (! $this->currentPage) {
+                $this->activeSection = $section;
+            }
         }
+        // Plain TOC: every section starts collapsed.
+    }
+
+    public function openSection(string $slug): void
+    {
+        $this->activeSection = $slug;
+    }
+
+    public function closeSection(): void
+    {
+        $this->activeSection = null;
     }
 
     public function toggle(string $slug): void

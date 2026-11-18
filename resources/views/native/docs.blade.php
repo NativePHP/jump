@@ -1,5 +1,7 @@
 @if ($loading)
     <column class="w-full h-full items-center justify-center gap-4 bg-theme-background">
+        <skia-canvas :scene="App\Support\JumpSkia::loader()" animated canvas-id="loader"
+                     a11y-label="Loading" class="w-[64] h-[64]"/>
         <text class="text-base text-theme-on-surface-variant">Loading documentation…</text>
     </column>
 
@@ -175,33 +177,88 @@
     </column>
 
 @else
-    {{-- ── Table of contents ── --}}
+    {{-- ── Table of contents: section cards → tap for that section's pages ── --}}
+    @php
+        $icons = [
+            'getting-started' => ['sparkles', 'rocket_launch'],
+            'architecture' => ['building.columns.fill', 'account_tree'],
+            'basics' => ['book.fill', 'menu_book'],
+            'digging' => ['magnifyingglass', 'travel_explore'],
+            'edge' => ['square.stack.3d.up.fill', 'widgets'],
+            'plugins/core' => ['cpu.fill', 'memory'],
+            'plugins' => ['puzzlepiece.extension.fill', 'extension'],
+            'testing' => ['checkmark.shield.fill', 'verified'],
+            'publishing' => ['paperplane.fill', 'send'],
+        ];
+        $iconFor = function (string $slug) use ($icons): array {
+            foreach ($icons as $key => $pair) {
+                if (str_contains($slug, $key)) {
+                    return $pair;
+                }
+            }
+
+            return ['doc.text.fill', 'description'];
+        };
+        $active = collect($sections)->firstWhere('slug', $activeSection);
+    @endphp
+
     <refreshable @refresh="refresh" class="w-full h-full bg-theme-background">
-        <column class="w-full px-5 pt-3 pb-32">
-            @foreach ($sections as $section)
-                <pressable @press="toggle('{{ $section['slug'] }}')">
-                    <row class="w-full items-center py-3">
-                        <text class="flex-1 text-sm font-bold text-theme-primary tracking-widest">{{ strtoupper($section['name']) }}</text>
-                        <native:icon
-                            :ios="in_array($section['slug'], $expanded, true) ? App\Icons\Ios::ChevronDown : App\Icons\Ios::ChevronRight"
-                            :android="in_array($section['slug'], $expanded, true) ? App\Icons\Android::ExpandMore : App\Icons\Android::ChevronRight"
-                            :size="12" class="text-red-600"/>
+        @if ($active)
+            <column class="w-full px-5 pt-3 pb-32 gap-4">
+                <pressable @press="closeSection">
+                    <row class="items-center gap-1 py-1">
+                        <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft"
+                                     :size="12" class="text-theme-primary"/>
+                        <text class="text-sm font-semibold text-theme-primary">Docs</text>
                     </row>
                 </pressable>
 
-                @if (in_array($section['slug'], $expanded, true))
-                    @foreach ($section['pages'] as $p)
-                        {{-- Real navigation to the page's deep-link route (not
-                             open()-in-place): PHP's stack genuinely grows, so
-                             the reader gets a native back chevron that pops in
-                             sync. Same route search results and universal
-                             links use. --}}
+                <column class="w-full gap-1">
+                    <text font="accent" class="text-3xl text-theme-on-background">{{ $active['name'] }}</text>
+                    <text class="text-sm text-theme-on-surface-variant">{{ count($active['pages']) }} pages</text>
+                </column>
+
+                <column class="w-full bg-theme-surface rounded-2xl border border-theme-outline overflow-hidden">
+                    @foreach ($active['pages'] as $i => $p)
+                        {{-- Real navigation to the page's deep-link route (not open()-in-place):
+                             PHP's stack genuinely grows, so the reader gets a native back chevron. --}}
+                        @if ($i > 0)
+                            <column class="w-full h-[1] bg-theme-outline opacity-[0.6]"/>
+                        @endif
                         <pressable @press="navigate('/docs/{{ $p['id'] }}')">
-                            <text class="w-full text-base text-theme-on-surface-variant px-3 py-2">{{ $p['title'] }}</text>
+                            <row class="w-full items-center gap-2 px-4 py-3">
+                                <text class="flex-1 text-base text-theme-on-surface">{{ $p['title'] }}</text>
+                                <native:icon :ios="App\Icons\Ios::ChevronRight" :android="App\Icons\Android::ChevronRight"
+                                             :size="10" class="text-theme-on-surface-variant"/>
+                            </row>
                         </pressable>
                     @endforeach
-                @endif
-            @endforeach
-        </column>
+                </column>
+            </column>
+        @else
+            <column class="w-full px-5 pt-3 pb-32 gap-3">
+                @foreach (array_chunk($sections, 2) as $rowIndex => $pair)
+                    <row class="w-full gap-3">
+                        @foreach ($pair as $col => $section)
+                            @php([$ios, $android] = $iconFor($section['slug']))
+                            <pressable @press="openSection('{{ $section['slug'] }}')" class="flex-1">
+                                <stack class="w-full h-[140] bg-theme-surface rounded-2xl border border-theme-outline overflow-hidden">
+                                    {{-- Skia glow + orbiting dots behind the icon (seeded per card) --}}
+                                    <skia-canvas :scene="App\Support\JumpSkia::sectionCard($rowIndex * 2 + $col)" fit="cover" animated
+                                                 canvas-id="section-{{ preg_replace('/[^A-Za-z0-9_-]+/', '-', $section['slug']) }}" a11y-label="" class="w-full h-[140]"/>
+                                    <column class="w-full h-[140] px-3 gap-3 justify-center items-center">
+                                        <icon ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="52"/>
+                                        <text font="accent" class="w-full text-base text-theme-primary text-center">{{ $section['name'] }}</text>
+                                    </column>
+                                </stack>
+                            </pressable>
+                        @endforeach
+                        @if (count($pair) < 2)
+                            <column class="flex-1"/>
+                        @endif
+                    </row>
+                @endforeach
+            </column>
+        @endif
     </refreshable>
 @endif

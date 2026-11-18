@@ -80,10 +80,14 @@ return [
     | Android only: iOS scopes this server-side in the host's
     | apple-app-site-association file. Keep the two lists in sync.
     |
+    | Defaults to /docs/mobile/ (the only part of nativephp.com Jump routes) so a
+    | build with no env var set can never claim the whole domain. Set
+    | NATIVEPHP_DEEPLINK_PATHS to override; list several with commas.
+    |
     */
 
     'deeplink_paths' => array_values(array_filter(
-        array_map('trim', explode(',', (string) env('NATIVEPHP_DEEPLINK_PATHS', ''))),
+        array_map('trim', explode(',', (string) env('NATIVEPHP_DEEPLINK_PATHS', '/docs/mobile/'))),
         fn ($path) => $path !== '',
     )),
 

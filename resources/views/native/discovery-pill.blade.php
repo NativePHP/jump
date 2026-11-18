@@ -9,13 +9,15 @@
     @if ($showPill)
         <pressable @press="toggleServers">
             <row class="items-center gap-2 px-5 py-3 bg-theme-primary rounded-full shadow-lg">
-                <native:icon :ios="App\Icons\Ios::Wifi" :android="App\Icons\Android::Wifi" :size="16" color="#FFFFFF"/>
+                <skia-canvas :scene="App\Support\JumpSkia::radar()" animated canvas-id="radar"
+                             a11y-label="Searching the network" class="w-[22] h-[22]"/>
                 <text class="text-sm font-semibold text-theme-on-primary">{{ $serverCount === 1 ? '1 server nearby' : $serverCount.' servers nearby' }}</text>
             </row>
         </pressable>
     @endif
 
-    <bottom-sheet :visible="$showServers" @dismiss="closeServers" detents="medium">
+    <bottom-sheet :visible="$showServers" @dismiss="closeServers" detents="medium,large">
+        <scroll-view class="w-full h-full">
         <column class="w-full px-5 pt-5 pb-8 gap-1">
             <text class="text-lg font-bold text-theme-on-surface pb-2">On your network</text>
             @foreach ($servers as $server)
@@ -31,6 +33,7 @@
                 </pressable>
             @endforeach
         </column>
+        </scroll-view>
     </bottom-sheet>
 
     {{--
@@ -41,14 +44,6 @@
         the exit gesture must be taught BEFORE handoff.
     --}}
     <bottom-sheet :visible="$showExitHint" @dismiss="dismissExitHint" detents="medium">
-        {{--
-            The sheet body must scroll: both renderers give the content the
-            detent's height and clip whatever overflows, and `medium` on a
-            small phone (iPhone 13 mini, 375×812pt) is shorter than this
-            content once the headings wrap — the checkbox and "Got it" button
-            end up below the fold with no way to reach them. Same pattern as
-            the How-it-works sheet in native/home.blade.php.
-        --}}
         <scroll-view class="w-full h-full">
             <column class="w-full px-6 pt-6 pb-10 gap-5">
                 <text font="accent" class="text-2xl font-black text-theme-on-surface">Before you Jump</text>

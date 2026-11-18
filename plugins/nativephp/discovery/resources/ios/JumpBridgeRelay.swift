@@ -121,10 +121,12 @@ class JumpBridgeRelay: NSObject, ObservableObject {
         self.host = host
         self.port = port
 
-        // Ensure the device-API + plugin bridge functions are registered so
-        // remote bridge_calls resolve. Idempotent (register overwrites).
-        registerBridgeFunctions()
-        registerPluginBridgeFunctions()
+        // Bridge functions, renderers and plugin chrome hosts are registered
+        // once at app launch (NativePHPApp.init -> registerBridgeFunctions()).
+        // Do NOT re-run them per connect: plugin init appends root hosts
+        // (NativeRootHostRegistry.register isn't idempotent), so every
+        // connect stacked another floating-overlay host and the "N servers
+        // nearby" pill - and its shadow - got drawn once more each time.
 
         JumpElementRuntime.shared.beginSession()
         installLaravelEventFork()
