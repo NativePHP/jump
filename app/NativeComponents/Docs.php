@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Native\Mobile\Edge\Layouts\Builders\NavAction;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Edge\NativeElementCollector;
+use Native\Mobile\Edge\Transition;
 use Native\Mobile\Facades\Dialog;
 use NativePHP\Clipboard\Facades\Clipboard;
 
@@ -113,10 +114,14 @@ class Docs extends NativeComponent
      * Push the section's page list as its own screen, the same way a page is
      * pushed, so it gets the native back chevron and swipe-back. The route is
      * the website's section path, which mount() resolves back to the section.
+     *
+     * A morph push: the card's icon and the index heading's icon share a
+     * ref, so the icon flies into the heading. Needs mobile-air with morph
+     * support inside native chrome; older versions treat it as a plain push.
      */
     public function openSection(string $slug): void
     {
-        $this->navigate('/docs/mobile/4/'.$slug);
+        $this->navigate('/docs/mobile/4/'.$slug, [], Transition::Morph);
     }
 
     private function hasSection(string $slug): bool

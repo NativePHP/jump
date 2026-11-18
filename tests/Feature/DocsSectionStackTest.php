@@ -1,6 +1,7 @@
 <?php
 
 use App\NativeComponents\Docs;
+use Native\Mobile\Edge\Transition;
 use Native\Mobile\Testing\Native;
 
 /**
@@ -12,7 +13,8 @@ test('tapping a section card pushes the section index', function () {
 
     Native::visit('/docs')
         ->call('openSection', 'concepts')
-        ->assertNavigatedTo('/docs/mobile/4/concepts');
+        ->assertNavigatedTo('/docs/mobile/4/concepts')
+        ->assertTransition(Transition::Morph);
 });
 
 test('the section index lists its pages under the section heading', function () {
