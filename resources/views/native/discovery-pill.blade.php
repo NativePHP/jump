@@ -16,7 +16,8 @@
         </pressable>
     @endif
 
-    <bottom-sheet :visible="$showServers" @dismiss="closeServers" detents="medium">
+    <bottom-sheet :visible="$showServers" @dismiss="closeServers" detents="medium,large">
+        <scroll-view class="w-full h-full">
         <column class="w-full px-5 pt-5 pb-8 gap-1">
             <text class="text-lg font-bold text-theme-on-surface pb-2">On your network</text>
             @foreach ($servers as $server)
@@ -32,6 +33,7 @@
                 </pressable>
             @endforeach
         </column>
+        </scroll-view>
     </bottom-sheet>
 
     {{--
@@ -41,7 +43,8 @@
         SQLite) — once connected, the remote app owns the whole screen, so
         the exit gesture must be taught BEFORE handoff.
     --}}
-    <bottom-sheet :visible="$showExitHint" @dismiss="dismissExitHint" detents="medium">
+    <bottom-sheet :visible="$showExitHint" @dismiss="dismissExitHint" detents="medium,large">
+        <scroll-view class="w-full h-full">
         <column class="w-full px-6 pt-6 pb-10 gap-5">
             <text font="accent" class="text-2xl font-black text-theme-on-surface">Before you Jump</text>
             <text class="text-base text-theme-on-surface-variant">The app you're connecting to will take over this screen — here's how to get back:</text>
@@ -63,5 +66,6 @@
                 </row>
             </pressable>
         </column>
+        </scroll-view>
     </bottom-sheet>
 </column>
