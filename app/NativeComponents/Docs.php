@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Native\Mobile\Edge\Layouts\Builders\NavAction;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Edge\NativeElementCollector;
+use Native\Mobile\Edge\Transition;
 use Native\Mobile\Facades\Dialog;
 use NativePHP\Clipboard\Facades\Clipboard;
 
@@ -91,6 +92,11 @@ class Docs extends NativeComponent
                 if (! $this->currentPage && $this->param('version') !== '4') {
                     $this->open('mobile/4/'.$tail);
                 }
+                // A nested section's index ("/docs/mobile/4/plugins/core")
+                // matches the page route, with the subsection as the page.
+                if (! $this->currentPage && $this->hasSection($tail)) {
+                    $section = $tail;
+                }
             }
             // A section-only link, or a page slug the docs no longer publish,
             // still lands on the right part of the TOC instead of nothing.
@@ -104,14 +110,29 @@ class Docs extends NativeComponent
         // Plain TOC: every section starts collapsed.
     }
 
+    /**
+     * Push the section's page list as its own screen, the same way a page is
+     * pushed, so it gets the native back chevron and swipe-back. The route is
+     * the website's section path, which mount() resolves back to the section.
+     *
+     * A morph push: the card's icon and the index heading's icon share a
+     * ref, so the icon flies into the heading. Needs mobile-air with morph
+     * support inside native chrome; older versions treat it as a plain push.
+     */
     public function openSection(string $slug): void
     {
-        $this->activeSection = $slug;
+        $this->navigate('/docs/mobile/4/'.$slug, [], Transition::Morph);
     }
 
-    public function closeSection(): void
+    private function hasSection(string $slug): bool
     {
-        $this->activeSection = null;
+        foreach ($this->sections as $section) {
+            if ($section['slug'] === $slug) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function toggle(string $slug): void

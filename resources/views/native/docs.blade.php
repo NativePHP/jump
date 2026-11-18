@@ -200,23 +200,24 @@
             return ['doc.text.fill', 'description'];
         };
         $active = collect($sections)->firstWhere('slug', $activeSection);
+        // Shared between a section's card and its index heading, so the icon
+        // can fly from one to the other on a morph navigation.
+        $iconRef = fn (string $slug): string => 'docs-section-icon-'.preg_replace('/[^A-Za-z0-9_-]+/', '-', $slug);
     @endphp
 
     <refreshable @refresh="refresh" class="w-full h-full bg-theme-background">
         @if ($active)
+            {{-- Section index: pushed as its own screen (openSection navigates),
+                 so the native back chevron returns to the card grid. --}}
+            @php([$ios, $android] = $iconFor($active['slug']))
             <column class="w-full px-5 pt-3 pb-32 gap-4">
-                <pressable @press="closeSection">
-                    <row class="items-center gap-1 py-1">
-                        <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft"
-                                     :size="12" class="text-theme-primary"/>
-                        <text class="text-sm font-semibold text-theme-primary">Docs</text>
-                    </row>
-                </pressable>
-
-                <column class="w-full gap-1">
-                    <text font="accent" class="text-3xl text-theme-on-background">{{ $active['name'] }}</text>
-                    <text class="text-sm text-theme-on-surface-variant">{{ count($active['pages']) }} pages</text>
-                </column>
+                <row class="w-full items-center gap-4">
+                    <icon ref="{{ $iconRef($active['slug']) }}" ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="44"/>
+                    <column class="flex-1 gap-1">
+                        <text font="accent" class="text-3xl text-theme-on-background">{{ $active['name'] }}</text>
+                        <text class="text-sm text-theme-on-surface-variant">{{ count($active['pages']) }} pages</text>
+                    </column>
+                </row>
 
                 <column class="w-full bg-theme-surface rounded-2xl border border-theme-outline overflow-hidden">
                     @foreach ($active['pages'] as $i => $p)
@@ -247,7 +248,7 @@
                                     <skia-canvas :scene="App\Support\JumpSkia::sectionCard($rowIndex * 2 + $col)" fit="cover" animated
                                                  canvas-id="section-{{ preg_replace('/[^A-Za-z0-9_-]+/', '-', $section['slug']) }}" a11y-label="" class="w-full h-[140]"/>
                                     <column class="w-full h-[140] px-3 gap-3 justify-center items-center">
-                                        <icon ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="52"/>
+                                        <icon ref="{{ $iconRef($section['slug']) }}" ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="52"/>
                                         <text font="accent" class="w-full text-base text-theme-primary text-center">{{ $section['name'] }}</text>
                                     </column>
                                 </stack>
