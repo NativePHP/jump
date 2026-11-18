@@ -12,7 +12,7 @@
         "php": "^8.4",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
-        "nativephp/mobile": "^4.6.0",
+        "nativephp/mobile": "^4.8.0",
         "nativephp/mobile-biometrics": "^1.0.3",
         "nativephp/mobile-browser": "^1.1",
         "nativephp/mobile-camera": "^1.0",
@@ -26,7 +26,7 @@
         "nativephp/mobile-secure-storage": "^1.1",
         "nativephp/mobile-share": "^1.1",
         "nativephp/mobile-skia": "^1.0",
-        "nativephp/mobile-ui": "^0.8.0"
+        "nativephp/mobile-ui": "^0.10.0"
     },
     "repositories": {
         "mobile-air": {
