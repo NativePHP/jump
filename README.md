@@ -30,10 +30,10 @@ This repository *is* the Jump app itself — a Laravel application rendered enti
 
 ```
 ┌────────────────┐        ┌────────────────┐        ┌────────────────┐
-│  Your Laravel   │  mDNS  │   Jump app     │   WS   │  native-ui     │
-│  project        │◄──────►│  (this repo)   │◄──────►│  render tree   │
-│  php artisan    │  scan  │  on your phone │ stream │  SwiftUI /      │
-│  native:jump    │        │                │        │  Compose        │
+│  Your Laravel  │  mDNS  │   Jump app     │   WS   │  native-ui     │
+│  project       │◄──────►│  (this repo)   │◄──────►│  render tree   │
+│  php artisan   │   QR   │  on your phone │ stream │  SwiftUI /     │
+│  native:jump   │  scan  │                │        │  Compose       │
 └────────────────┘        └────────────────┘        └────────────────┘
 ```
 
