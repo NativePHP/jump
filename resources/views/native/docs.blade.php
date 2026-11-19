@@ -21,7 +21,7 @@
              navigation), so the scroll container needs a fresh native
              identity per page to reset the scroll offset to the top. --}}
         <refreshable @refresh="refresh" :native:key="$currentPage['id']" class="w-full flex-1">
-            <column class="w-full px-5 pb-32 gap-4">
+            <column class="w-full px-5 pb-8 gap-4">
                 <column class="w-full items-start gap-3 pt-1">
                     {{-- Section banner — full-width, centered small-caps eyebrow. --}}
                     <row class="w-full justify-center px-4 py-2 bg-theme-surface-variant rounded-full">
@@ -139,41 +139,43 @@
                         @endif
                     @endforeach
                 </column>
-
-                {{-- Prev / next — nav-order neighbors (crossing sections),
-                     like the website's footer links. --}}
-                @if ($adjacent['prev'] || $adjacent['next'])
-                    <row class="w-full gap-3 pt-4">
-                        @if ($adjacent['prev'])
-                            <pressable @press="goTo('{{ $adjacent['prev']['id'] }}')" class="flex-1">
-                                <column class="w-full gap-1 p-4 rounded-xl border border-theme-outline items-start">
-                                    <row class="items-center gap-1">
-                                        <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft" :size="10" color="#475569" dark-color="#94A3B8"/>
-                                        <text class="text-xs text-theme-on-surface-variant">Previous</text>
-                                    </row>
-                                    <text class="text-sm font-semibold text-theme-primary">{{ $adjacent['prev']['title'] }}</text>
-                                </column>
-                            </pressable>
-                        @else
-                            <column class="flex-1"></column>
-                        @endif
-                        @if ($adjacent['next'])
-                            <pressable @press="goTo('{{ $adjacent['next']['id'] }}')" class="flex-1">
-                                <column class="w-full gap-1 p-4 rounded-xl border border-theme-outline items-end">
-                                    <row class="items-center gap-1">
-                                        <text class="text-xs text-theme-on-surface-variant">Next</text>
-                                        <native:icon :ios="App\Icons\Ios::ChevronRight" :android="App\Icons\Android::ChevronRight" :size="10" color="#475569" dark-color="#94A3B8"/>
-                                    </row>
-                                    <text class="text-sm font-semibold text-theme-primary">{{ $adjacent['next']['title'] }}</text>
-                                </column>
-                            </pressable>
-                        @else
-                            <column class="flex-1"></column>
-                        @endif
-                    </row>
-                @endif
             </column>
         </refreshable>
+
+        {{-- Prev / next — nav-order neighbours (crossing sections), like the
+             website's footer links. Outside the scroll view so it stays put
+             at the bottom of the screen while the page scrolls under it;
+             safe-area-bottom lifts it clear of the tab bar. --}}
+        @if ($adjacent['prev'] || $adjacent['next'])
+            <row class="w-full gap-3 px-5 pt-3 pb-3 safe-area-bottom bg-theme-background border-t border-theme-outline">
+                @if ($adjacent['prev'])
+                    <pressable @press="goTo('{{ $adjacent['prev']['id'] }}')" class="flex-1">
+                        <column class="w-full gap-0.5 px-3 py-2 rounded-xl bg-theme-surface-variant items-start">
+                            <row class="items-center gap-1">
+                                <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft" :size="10" color="#475569" dark-color="#94A3B8"/>
+                                <text class="text-xs text-theme-on-surface-variant">Previous</text>
+                            </row>
+                            <text class="text-sm font-semibold text-theme-primary" :max-lines="1">{{ $adjacent['prev']['title'] }}</text>
+                        </column>
+                    </pressable>
+                @else
+                    <column class="flex-1"></column>
+                @endif
+                @if ($adjacent['next'])
+                    <pressable @press="goTo('{{ $adjacent['next']['id'] }}')" class="flex-1">
+                        <column class="w-full gap-0.5 px-3 py-2 rounded-xl bg-theme-surface-variant items-end">
+                            <row class="items-center gap-1">
+                                <text class="text-xs text-theme-on-surface-variant">Next</text>
+                                <native:icon :ios="App\Icons\Ios::ChevronRight" :android="App\Icons\Android::ChevronRight" :size="10" color="#475569" dark-color="#94A3B8"/>
+                            </row>
+                            <text class="text-sm font-semibold text-theme-primary" :max-lines="1">{{ $adjacent['next']['title'] }}</text>
+                        </column>
+                    </pressable>
+                @else
+                    <column class="flex-1"></column>
+                @endif
+            </row>
+        @endif
     </column>
 
 @else
