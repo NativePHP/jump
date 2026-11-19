@@ -39,12 +39,14 @@ test('a nested section index resolves to the nested section, not a page', functi
         ->and($screen->get('currentPage'))->toBeNull();
 });
 
-test('the section icon carries the same ref on the card and the index heading', function () {
+test('the section icon and title carry the same refs on the card and the index heading', function () {
     fakeDocsApi();
 
     $grid = json_encode(Native::visit('/docs')->tree());
     $index = json_encode(Native::visit('/docs/mobile/4/concepts')->tree());
 
     expect($grid)->toContain('docs-section-icon-concepts')
-        ->and($index)->toContain('docs-section-icon-concepts');
+        ->and($index)->toContain('docs-section-icon-concepts')
+        ->and($grid)->toContain('docs-section-title-concepts')
+        ->and($index)->toContain('docs-section-title-concepts');
 });
