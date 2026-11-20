@@ -203,6 +203,7 @@
         // Shared between a section's card and its index heading, so the icon
         // can fly from one to the other on a morph navigation.
         $iconRef = fn (string $slug): string => 'docs-section-icon-'.preg_replace('/[^A-Za-z0-9_-]+/', '-', $slug);
+        $titleRef = fn (string $slug): string => 'docs-section-title-'.preg_replace('/[^A-Za-z0-9_-]+/', '-', $slug);
     @endphp
 
     <refreshable @refresh="refresh" class="w-full h-full bg-theme-background">
@@ -213,8 +214,10 @@
             <column class="w-full px-5 pt-3 pb-32 gap-4">
                 <row class="w-full items-center gap-4">
                     <icon ref="{{ $iconRef($active['slug']) }}" ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="44"/>
-                    <column class="flex-1 gap-1">
-                        <text font="accent" class="text-3xl text-theme-on-background">{{ $active['name'] }}</text>
+                    {{-- items-start: the title hugs its text instead of stretching to the
+                         column, so its morph flies between the two words, not a wide box. --}}
+                    <column class="flex-1 gap-1 items-start">
+                        <text ref="{{ $titleRef($active['slug']) }}" font="accent" class="text-3xl text-theme-primary">{{ $active['name'] }}</text>
                         <text class="text-sm text-theme-on-surface-variant">{{ count($active['pages']) }} pages</text>
                     </column>
                 </row>
@@ -249,7 +252,7 @@
                                                  canvas-id="section-{{ preg_replace('/[^A-Za-z0-9_-]+/', '-', $section['slug']) }}" a11y-label="" class="w-full h-[140]"/>
                                     <column class="w-full h-[140] px-3 gap-3 justify-center items-center">
                                         <icon ref="{{ $iconRef($section['slug']) }}" ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="52"/>
-                                        <text font="accent" class="w-full text-base text-theme-primary text-center">{{ $section['name'] }}</text>
+                                        <text ref="{{ $titleRef($section['slug']) }}" font="accent" class="text-base text-theme-primary text-center">{{ $section['name'] }}</text>
                                     </column>
                                 </stack>
                             </pressable>
