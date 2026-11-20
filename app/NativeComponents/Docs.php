@@ -11,6 +11,8 @@ use Illuminate\View\View;
 use Native\Mobile\Edge\Layouts\Builders\NavAction;
 use Native\Mobile\Edge\NativeComponent;
 use Native\Mobile\Edge\NativeElementCollector;
+use Native\Mobile\Edge\NativeTagPrecompiler;
+use Native\Mobile\Edge\Transition;
 use Native\Mobile\Facades\Dialog;
 use NativePHP\Clipboard\Facades\Clipboard;
 
@@ -75,6 +77,8 @@ class Docs extends NativeComponent
         }
         $this->loading = false;
 
+        DocsIndex::refreshInBackground();
+
         // Deep link (https://nativephp.com/docs/mobile/{v}/{section}/{page}) —
         // land directly on the linked page. API page ids mirror the website
         // path after /docs/ ("mobile/4/concepts/deep-links"); a link to an
@@ -91,6 +95,11 @@ class Docs extends NativeComponent
                 if (! $this->currentPage && $this->param('version') !== '4') {
                     $this->open('mobile/4/'.$tail);
                 }
+                // A nested section's index ("/docs/mobile/4/plugins/core")
+                // matches the page route, with the subsection as the page.
+                if (! $this->currentPage && $this->hasSection($tail)) {
+                    $section = $tail;
+                }
             }
             // A section-only link, or a page slug the docs no longer publish,
             // still lands on the right part of the TOC instead of nothing.
@@ -104,14 +113,29 @@ class Docs extends NativeComponent
         // Plain TOC: every section starts collapsed.
     }
 
+    /**
+     * Push the section's page list as its own screen, the same way a page is
+     * pushed, so it gets the native back chevron and swipe-back. The route is
+     * the website's section path, which mount() resolves back to the section.
+     *
+     * A morph push: the card's icon and the index heading's icon share a
+     * ref, so the icon flies into the heading. Needs mobile-air with morph
+     * support inside native chrome; older versions treat it as a plain push.
+     */
     public function openSection(string $slug): void
     {
-        $this->activeSection = $slug;
+        $this->navigate('/docs/mobile/4/'.$slug, [], Transition::Morph);
     }
 
-    public function closeSection(): void
+    private function hasSection(string $slug): bool
     {
-        $this->activeSection = null;
+        foreach ($this->sections as $section) {
+            if ($section['slug'] === $slug) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function toggle(string $slug): void
@@ -166,15 +190,15 @@ class Docs extends NativeComponent
 
     /**
      * Pull-to-refresh (both the TOC and the page reader) — refetch the docs
-     * corpus from the source (DocsIndex is network-first) and, when a page is
+     * corpus from the source (DocsIndex::fresh()) and, when a page is
      * open, re-resolve it against the fresh content so edits show up without
      * leaving the page. Keeps the current view when the source is unreachable
-     * (sections() falls back to the cached copy, or [] with no cache).
+     * (fresh() falls back to the cached copy, or [] with no cache).
      */
     public function refresh(): void
     {
         try {
-            $fresh = DocsIndex::sections();
+            $fresh = DocsIndex::fresh();
         } catch (\Throwable) {
             return; // unreachable — keep what's on screen
         }
@@ -648,7 +672,16 @@ class Docs extends NativeComponent
         // verdict matches what will actually render.
         [$prepared, $seeds] = $this->prepareDemo($snippet);
 
+        // This runs from render(), before the screen's native Blade render
+        // turns the native tag compiler on. Without it the snippet compiles
+        // as plain HTML and that compiled file is what renderLive() finds.
+        // mobile's guard recompiles it, but on device opcache keeps serving
+        // the plain copy (rewritten within its revalidate window), so every
+        // preview card rendered empty. Tests run without opcache and never
+        // saw it. Compiling natively here also makes the preflight test the
+        // real thing.
         $state = $this->collectorState();
+        $wasActive = NativeTagPrecompiler::setActive(true);
         set_error_handler(
             fn ($severity, $message) => str_contains($message, 'Undefined variable'),
             E_WARNING
@@ -661,6 +694,7 @@ class Docs extends NativeComponent
             return self::$liveVerdicts[$key] = false;
         } finally {
             restore_error_handler();
+            NativeTagPrecompiler::setActive($wasActive);
             $this->collectorState($state);
         }
     }
@@ -673,7 +707,7 @@ class Docs extends NativeComponent
     {
         $rc = new \ReflectionClass(NativeElementCollector::class);
         $out = [];
-        foreach (['stack', 'roots', 'textFrames', 'pollIntervals'] as $name) {
+        foreach (['stack', 'roots', 'textFrames', 'pollIntervals', 'keyPathStack'] as $name) {
             $prop = $rc->getProperty($name);
             $prop->setAccessible(true);
             if ($restore !== null) {

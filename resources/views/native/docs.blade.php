@@ -21,7 +21,7 @@
              navigation), so the scroll container needs a fresh native
              identity per page to reset the scroll offset to the top. --}}
         <refreshable @refresh="refresh" :native:key="$currentPage['id']" class="w-full flex-1">
-            <column class="w-full px-5 pb-32 gap-4">
+            <column class="w-full px-5 pb-8 gap-4">
                 <column class="w-full items-start gap-3 pt-1">
                     {{-- Section banner — full-width, centered small-caps eyebrow. --}}
                     <row class="w-full justify-center px-4 py-2 bg-theme-surface-variant rounded-full">
@@ -139,41 +139,43 @@
                         @endif
                     @endforeach
                 </column>
-
-                {{-- Prev / next — nav-order neighbors (crossing sections),
-                     like the website's footer links. --}}
-                @if ($adjacent['prev'] || $adjacent['next'])
-                    <row class="w-full gap-3 pt-4">
-                        @if ($adjacent['prev'])
-                            <pressable @press="goTo('{{ $adjacent['prev']['id'] }}')" class="flex-1">
-                                <column class="w-full gap-1 p-4 rounded-xl border border-theme-outline items-start">
-                                    <row class="items-center gap-1">
-                                        <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft" :size="10" color="#475569" dark-color="#94A3B8"/>
-                                        <text class="text-xs text-theme-on-surface-variant">Previous</text>
-                                    </row>
-                                    <text class="text-sm font-semibold text-theme-primary">{{ $adjacent['prev']['title'] }}</text>
-                                </column>
-                            </pressable>
-                        @else
-                            <column class="flex-1"></column>
-                        @endif
-                        @if ($adjacent['next'])
-                            <pressable @press="goTo('{{ $adjacent['next']['id'] }}')" class="flex-1">
-                                <column class="w-full gap-1 p-4 rounded-xl border border-theme-outline items-end">
-                                    <row class="items-center gap-1">
-                                        <text class="text-xs text-theme-on-surface-variant">Next</text>
-                                        <native:icon :ios="App\Icons\Ios::ChevronRight" :android="App\Icons\Android::ChevronRight" :size="10" color="#475569" dark-color="#94A3B8"/>
-                                    </row>
-                                    <text class="text-sm font-semibold text-theme-primary">{{ $adjacent['next']['title'] }}</text>
-                                </column>
-                            </pressable>
-                        @else
-                            <column class="flex-1"></column>
-                        @endif
-                    </row>
-                @endif
             </column>
         </refreshable>
+
+        {{-- Prev / next — nav-order neighbours (crossing sections), like the
+             website's footer links. Outside the scroll view so it stays put
+             at the bottom of the screen while the page scrolls under it;
+             safe-area-bottom lifts it clear of the tab bar. --}}
+        @if ($adjacent['prev'] || $adjacent['next'])
+            <row class="w-full gap-3 px-5 pt-3 pb-3 safe-area-bottom bg-theme-background border-t border-theme-outline">
+                @if ($adjacent['prev'])
+                    <pressable @press="goTo('{{ $adjacent['prev']['id'] }}')" class="flex-1">
+                        <column class="w-full gap-0.5 px-3 py-2 rounded-xl bg-theme-surface-variant items-start">
+                            <row class="items-center gap-1">
+                                <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft" :size="10" color="#475569" dark-color="#94A3B8"/>
+                                <text class="text-xs text-theme-on-surface-variant">Previous</text>
+                            </row>
+                            <text class="text-sm font-semibold text-theme-primary" :max-lines="1">{{ $adjacent['prev']['title'] }}</text>
+                        </column>
+                    </pressable>
+                @else
+                    <column class="flex-1"></column>
+                @endif
+                @if ($adjacent['next'])
+                    <pressable @press="goTo('{{ $adjacent['next']['id'] }}')" class="flex-1">
+                        <column class="w-full gap-0.5 px-3 py-2 rounded-xl bg-theme-surface-variant items-end">
+                            <row class="items-center gap-1">
+                                <text class="text-xs text-theme-on-surface-variant">Next</text>
+                                <native:icon :ios="App\Icons\Ios::ChevronRight" :android="App\Icons\Android::ChevronRight" :size="10" color="#475569" dark-color="#94A3B8"/>
+                            </row>
+                            <text class="text-sm font-semibold text-theme-primary" :max-lines="1">{{ $adjacent['next']['title'] }}</text>
+                        </column>
+                    </pressable>
+                @else
+                    <column class="flex-1"></column>
+                @endif
+            </row>
+        @endif
     </column>
 
 @else
@@ -200,23 +202,27 @@
             return ['doc.text.fill', 'description'];
         };
         $active = collect($sections)->firstWhere('slug', $activeSection);
+        // Shared between a section's card and its index heading, so the icon
+        // can fly from one to the other on a morph navigation.
+        $iconRef = fn (string $slug): string => 'docs-section-icon-'.preg_replace('/[^A-Za-z0-9_-]+/', '-', $slug);
+        $titleRef = fn (string $slug): string => 'docs-section-title-'.preg_replace('/[^A-Za-z0-9_-]+/', '-', $slug);
     @endphp
 
     <refreshable @refresh="refresh" class="w-full h-full bg-theme-background">
         @if ($active)
+            {{-- Section index: pushed as its own screen (openSection navigates),
+                 so the native back chevron returns to the card grid. --}}
+            @php([$ios, $android] = $iconFor($active['slug']))
             <column class="w-full px-5 pt-3 pb-32 gap-4">
-                <pressable @press="closeSection">
-                    <row class="items-center gap-1 py-1">
-                        <native:icon :ios="App\Icons\Ios::ChevronLeft" :android="App\Icons\Android::ChevronLeft"
-                                     :size="12" class="text-theme-primary"/>
-                        <text class="text-sm font-semibold text-theme-primary">Docs</text>
-                    </row>
-                </pressable>
-
-                <column class="w-full gap-1">
-                    <text font="accent" class="text-3xl text-theme-on-background">{{ $active['name'] }}</text>
-                    <text class="text-sm text-theme-on-surface-variant">{{ count($active['pages']) }} pages</text>
-                </column>
+                <row class="w-full items-center gap-4">
+                    <icon ref="{{ $iconRef($active['slug']) }}" ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="44"/>
+                    {{-- items-start: the title hugs its text instead of stretching to the
+                         column, so its morph flies between the two words, not a wide box. --}}
+                    <column class="flex-1 gap-1 items-start">
+                        <text ref="{{ $titleRef($active['slug']) }}" font="accent" class="text-3xl text-theme-primary">{{ $active['name'] }}</text>
+                        <text class="text-sm text-theme-on-surface-variant">{{ count($active['pages']) }} pages</text>
+                    </column>
+                </row>
 
                 <column class="w-full bg-theme-surface rounded-2xl border border-theme-outline overflow-hidden">
                     @foreach ($active['pages'] as $i => $p)
@@ -247,8 +253,8 @@
                                     <skia-canvas :scene="App\Support\JumpSkia::sectionCard($rowIndex * 2 + $col)" fit="cover" animated
                                                  canvas-id="section-{{ preg_replace('/[^A-Za-z0-9_-]+/', '-', $section['slug']) }}" a11y-label="" class="w-full h-[140]"/>
                                     <column class="w-full h-[140] px-3 gap-3 justify-center items-center">
-                                        <icon ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="52"/>
-                                        <text font="accent" class="w-full text-base text-theme-primary text-center">{{ $section['name'] }}</text>
+                                        <icon ref="{{ $iconRef($section['slug']) }}" ios="{{ $ios }}" android="{{ $android }}" color="#EF4444" :size="52"/>
+                                        <text ref="{{ $titleRef($section['slug']) }}" font="accent" class="text-base text-theme-primary text-center">{{ $section['name'] }}</text>
                                     </column>
                                 </stack>
                             </pressable>

@@ -109,19 +109,24 @@ class PatchShellCommand extends NativePluginHookCommand
             return self::SUCCESS;
         }
 
-        $anchor = 'private static func writeEvent(type: Int, callbackId: Int, nodeId: Int, data: Data?) {';
-        if (! str_contains($src, $anchor)) {
+        // mobile 4.8 made writeEvent() return Bool (true when the event was
+        // queued), so accept the signature with or without the return type.
+        $pattern = '/private static func writeEvent\(type: Int, callbackId: Int, nodeId: Int, data: Data\?\)( -> Bool)? \{/';
+        if (! preg_match($pattern, $src, $match)) {
             $this->warn('jump-client: could not find writeEvent() anchor in iOS shell — fork NOT applied.');
 
             return self::SUCCESS;
         }
+
+        $anchor = $match[0];
+        $return = ($match[1] ?? '') !== '' ? 'return true' : 'return';
 
         $injection = $anchor."\n"
             ."        // [jump-client] dual-mode fork: route taps to the remote WebSocket\n"
             ."        // when a Jump session is live, instead of embedded shared memory.\n"
             ."        if JumpElementRuntime.shared.isActive {\n"
             ."            JumpElementRuntime.shared.enqueueRawEvent(type: type, callbackId: callbackId, nodeId: nodeId, data: data)\n"
-            ."            return\n"
+            ."            {$return}\n"
             ."        }\n";
 
         file_put_contents($file, str_replace($anchor, $injection, $src));
@@ -179,12 +184,14 @@ class PatchShellCommand extends NativePluginHookCommand
         $funnel = <<<'KT'
         // [jump-client] dual-mode fork: route taps to the remote WebSocket when a
         // Jump session is live, instead of the embedded JNI event ring.
-        private fun writeEvent(type: Int, callbackId: Int, nodeId: Int, data: ByteArray?) {
+        // Returns what nativeElementWriteEvent returns (mobile 4.8+), since
+        // postNativeEventToQueue uses the result in an expression.
+        private fun writeEvent(type: Int, callbackId: Int, nodeId: Int, data: ByteArray?): Boolean {
             if (JumpElementRuntime.isActive) {
                 JumpElementRuntime.enqueueRawEvent(type, callbackId, nodeId, data)
-                return
+                return true
             }
-            nativeElementWriteEvent(type, callbackId, nodeId, data)
+            return nativeElementWriteEvent(type, callbackId, nodeId, data)
         }
 
         KT;
