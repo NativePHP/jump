@@ -12,6 +12,7 @@
         "php": "^8.4",
         "laravel/framework": "^13.8",
         "laravel/tinker": "^3.0",
+        "nativephp/jump-client": "*",
         "nativephp/mobile": "^4.8.0",
         "nativephp/mobile-biometrics": "^1.0.3",
         "nativephp/mobile-browser": "^1.1",
@@ -36,6 +37,13 @@
         "discovery": {
             "type": "path",
             "url": "plugins/nativephp/discovery",
+            "options": {
+                "symlink": true
+            }
+        },
+        "jump-client": {
+            "type": "path",
+            "url": "plugins/nativephp/jump-client",
             "options": {
                 "symlink": true
             }

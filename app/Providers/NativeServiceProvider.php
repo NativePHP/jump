@@ -15,6 +15,7 @@ use Native\Mobile\Skia\SkiaServiceProvider;
 use Native\Mobile\UI\NativeUIServiceProvider;
 use NativePHP\Clipboard\ClipboardServiceProvider;
 use NativePHP\Discovery\DiscoveryServiceProvider;
+use NativePHP\JumpClient\JumpClientServiceProvider;
 use NativePHP\LocalNotifications\LocalNotificationsServiceProvider;
 use NativePHP\MediaPlayer\MediaPlayerServiceProvider;
 
@@ -51,6 +52,7 @@ class NativeServiceProvider extends ServiceProvider
             NativeUIServiceProvider::class,
             SkiaServiceProvider::class,
             DiscoveryServiceProvider::class,
+            JumpClientServiceProvider::class,
             ClipboardServiceProvider::class,
             BrowserServiceProvider::class,
             ShareServiceProvider::class,

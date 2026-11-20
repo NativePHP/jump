@@ -6,10 +6,11 @@ use App\NativeComponents\Layouts\JumpTabsLayout;
 use App\Support\DiscoveredServers;
 use Illuminate\Support\Facades\Cache;
 use Native\Mobile\Attributes\On;
+use Native\Mobile\UI\Theme;
 use NativePHP\Discovery\Events\ServerFound;
 use NativePHP\Discovery\Events\ServerLost;
 use NativePHP\Discovery\Facades\Discovery;
-use Native\Mobile\UI\Theme;
+use NativePHP\JumpClient\Facades\JumpClient;
 
 /**
  * Feeds the app-wide {@see DiscoveredServers} store from whatever tab is
@@ -126,7 +127,7 @@ trait InteractsWithDiscovery
             return;
         }
 
-        Discovery::connect($host, $port);
+        JumpClient::connect($host, $port);
     }
 
     /** The coaching sheet's "don't show this again" checkbox. */
@@ -147,7 +148,7 @@ trait InteractsWithDiscovery
         $this->showExitHint = false;
 
         if ($this->pendingHost !== '') {
-            Discovery::connect($this->pendingHost, $this->pendingPort);
+            JumpClient::connect($this->pendingHost, $this->pendingPort);
         }
     }
 

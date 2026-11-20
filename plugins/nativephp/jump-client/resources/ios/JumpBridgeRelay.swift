@@ -12,7 +12,7 @@ import os.log
 class JumpBridgeRelay: NSObject, ObservableObject {
     static let shared = JumpBridgeRelay()
 
-    private let logger = Logger(subsystem: "com.nativephp.discovery", category: "BridgeRelay")
+    private let logger = Logger(subsystem: "com.nativephp.jumpclient", category: "BridgeRelay")
 
     @Published private(set) var isConnected = false
 
@@ -34,24 +34,11 @@ class JumpBridgeRelay: NSObject, ObservableObject {
     /// Fired on a live-reload signal for non-native (WebView) content.
     var onReload: (() -> Void)?
 
-
-    override init() {
-        super.init()
-        // Escape hatch: a global 3-finger swipe-right (posted by the shell's
-        // EscapeHatchGesture) exits any connected demo app back to the Jump home.
-        NotificationCenter.default.addObserver(
-            forName: NSNotification.Name("JumpEscapeHatch"),
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.exitToJump()
-        }
-    }
-
     /// Escape hatch — tear down whatever remote session is live and return to the
-    /// local Jump home. Works for both a forwarded WebView app (JumpWebViewSession)
-    /// and a streamed native-ui app (JumpElementRuntime). No-op when nothing is
-    /// connected.
+    /// local Jump home. Fired by `JumpEscapeHatchGesture`'s 3-finger swipe-right;
+    /// mirrors Android `JumpBridgeRelay.exitToJump()`. Works for both a forwarded
+    /// WebView app (JumpWebViewSession) and a streamed native-ui app
+    /// (JumpElementRuntime). No-op when nothing is connected.
     func exitToJump() {
         let webviewLive = JumpWebViewSession.shared.isActive
         let elementLive = JumpElementRuntime.shared.isActive
