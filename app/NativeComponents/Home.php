@@ -6,6 +6,7 @@ use App\NativeComponents\Concerns\InteractsWithDiscovery;
 use App\NativeComponents\Concerns\SearchesDocs;
 use App\NativeComponents\Layouts\JumpTabsLayout;
 use App\Support\DiscoveredServers;
+use App\Support\DocsIndex;
 use Illuminate\View\View;
 use Native\Mobile\Attributes\On;
 use Native\Mobile\Edge\NativeComponent;
@@ -38,6 +39,10 @@ class Home extends NativeComponent
     public function mount(): void
     {
         $this->startDiscovery();
+
+        // Home is the first screen, so this is app launch: fetch the docs in
+        // the background now so the Docs tab and search never wait on them.
+        DocsIndex::refreshInBackground();
     }
 
     public function scan(): void

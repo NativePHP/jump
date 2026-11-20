@@ -9,7 +9,8 @@ use Illuminate\Support\Str;
 
 /**
  * Shared docs corpus — the NativePHP mobile docs fetched from the public MCP
- * navigation API (full page content inline), cached 24h. Feeds both the Docs
+ * navigation API (full page content inline). Read from the cache, refetched
+ * in the background once a day. Feeds both the Docs
  * tab's TOC and the tab-bar search on every tab (via
  * {@see SearchesDocs}).
  */
@@ -27,21 +28,49 @@ class DocsIndex
         'core' => 'Core Plugins',
     ];
 
-    /** @return array<int,array{slug:string,name:string,pages:array<int,array<string,mixed>>}> */
+    /** Cache key for the corpus. Kept forever, so the app works offline. */
+    private const KEY = 'jump.docs';
+
+    /** When the corpus was last fetched, for deciding when to refetch. */
+    private const FETCHED_AT = 'jump.docs.fetched_at';
+
+    /** How old the cached corpus can get before a background refetch. */
+    private const MAX_AGE_HOURS = 24;
+
+    /**
+     * Cache-first. Every Docs screen calls this in mount(), and each pushed
+     * section or page is a new screen, so a network fetch here put a full
+     * download of the corpus in front of every push. The network is only
+     * hit inline when there is no cached copy at all (first launch). Keeping
+     * it fresh is {@see refreshInBackground()}'s job, and pull-to-refresh
+     * uses {@see fresh()}.
+     *
+     * @return array<int,array{slug:string,name:string,pages:array<int,array<string,mixed>>}>
+     */
     public static function sections(): array
     {
-        // Network-FIRST: always fetch the latest published docs, and only fall
-        // back to the last cached copy when the source is unreachable (offline,
-        // or a local nativephp.test URL a device can't resolve). A pure cache
-        // (Cache::remember, 24h) left the app showing day-stale docs after a
-        // site update — and on a production build (APP_DEBUG=false, which the
-        // build forces) it never refetched at all. The cache is now just an
-        // offline fallback + a warm corpus for search(); the fresh fetch
-        // overwrites it, so this self-heals a stale cache on the next open.
+        $cached = Cache::get(self::KEY);
+        if (! empty($cached)) {
+            return $cached;
+        }
+
+        return static::fresh();
+    }
+
+    /**
+     * Fetch the latest published docs now and cache them. Falls back to the
+     * cached copy when the source is unreachable (offline, or a local
+     * nativephp.test URL a device can't resolve).
+     *
+     * @return array<int,array<string,mixed>>
+     */
+    public static function fresh(): array
+    {
         try {
             $fresh = static::fetch();
             if (! empty($fresh)) {
-                Cache::put('jump.docs', $fresh, now()->addHours(24));
+                Cache::forever(self::KEY, $fresh);
+                Cache::forever(self::FETCHED_AT, now()->getTimestamp());
 
                 return $fresh;
             }
@@ -49,7 +78,35 @@ class DocsIndex
             // fall through to the cached copy
         }
 
-        return Cache::get('jump.docs', []);
+        return Cache::get(self::KEY, []);
+    }
+
+    /** True when there's no cached copy, or it's older than a day. */
+    public static function isStale(): bool
+    {
+        $fetchedAt = Cache::get(self::FETCHED_AT);
+
+        return ! is_int($fetchedAt)
+            || empty(Cache::get(self::KEY))
+            || now()->getTimestamp() - $fetchedAt > self::MAX_AGE_HOURS * 3600;
+    }
+
+    /**
+     * Refetch the docs on the async lane if the cached copy is stale, so the
+     * UI never waits on it. Called when the app boots (Home) and when the
+     * Docs tab opens. The next Docs screen picks up the new copy.
+     */
+    public static function refreshInBackground(): void
+    {
+        if (! static::isStale()) {
+            return;
+        }
+
+        try {
+            RefreshDocs::dispatch()->timeout(60);
+        } catch (\Throwable) {
+            // No async lane (tests, an old shell). The next stale check retries.
+        }
     }
 
     /**
@@ -67,18 +124,12 @@ class DocsIndex
             return [];
         }
 
-        // Filter the CACHED corpus — onSearchQuery() fires per keystroke, so a
-        // live fetch here would hammer the source every keypress (and fail
-        // outright when it's unreachable, e.g. a nativephp.test URL from the
-        // Android emulator). Warm the cache once via sections() only if the
-        // Docs tab hasn't already populated it this session.
-        $sections = Cache::get('jump.docs');
-        if (empty($sections)) {
-            try {
-                $sections = static::sections();
-            } catch (\Throwable) {
-                $sections = [];
-            }
+        // onSearchQuery() fires per keystroke. sections() reads the cache and
+        // only fetches when there is no copy yet.
+        try {
+            $sections = static::sections();
+        } catch (\Throwable) {
+            $sections = [];
         }
         if (empty($sections)) {
             return [];
