@@ -292,7 +292,7 @@ final class JumpElementRuntime: ObservableObject, @unchecked Sendable {
         case EventType.sliderChange:
             event["value"] = decodeFloat(d, at: 0)
         case EventType.tabChange:
-            event["index"] = decodeU16(d, at: 0)
+            event["value"] = decodeU16(d, at: 0)
         case EventType.native:
             // two length-prefixed strings: event name, payload JSON
             let name = decodeLenPrefixedString(d, at: 0)
