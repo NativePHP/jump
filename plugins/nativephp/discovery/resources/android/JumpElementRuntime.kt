@@ -297,7 +297,7 @@ object JumpElementRuntime {
                 event.put("value", decodeFloat(d, 0).toDouble())
             }
             EventType.TAB_CHANGE -> {
-                event.put("index", decodeU16(d, 0))
+                event.put("value", decodeU16(d, 0))
             }
             EventType.NATIVE -> {
                 // two length-prefixed strings: event name, payload JSON
