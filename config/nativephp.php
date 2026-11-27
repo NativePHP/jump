@@ -143,6 +143,9 @@ return [
         // never requests Always authorization.
         'NSLocationWhenInUseUsageDescription' => 'Jump uses your location while the app is open to demo geolocation features.',
         'NSLocationAlwaysAndWhenInUseUsageDescription' => 'Jump only uses your location while the app is open, to demo geolocation features. It does not track your location in the background.',
+
+        // The discovery plugin ships a generic string; Jump says what it does.
+        'NSLocalNetworkUsageDescription' => 'Jump discovers development servers running on your Wi-Fi network so you can connect without scanning a QR code.',
     ],
 
     /*

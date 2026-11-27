@@ -43,21 +43,4 @@ class Discovery
             nativephp_call('Discovery.Stop', json_encode([]));
         }
     }
-
-    /**
-     * Connect to a discovered dev server.
-     *
-     * Hands the host/port to the host app's existing connect path — the same
-     * entrypoint a `jump://connect?host=&port=` deep link or QR scan uses — so
-     * all of the connection + remote-render machinery is reused unchanged.
-     */
-    public function connect(string $host, string|int $port): void
-    {
-        if (function_exists('nativephp_call')) {
-            nativephp_call('Discovery.Connect', json_encode([
-                'host' => $host,
-                'port' => (string) $port,
-            ]));
-        }
-    }
 }

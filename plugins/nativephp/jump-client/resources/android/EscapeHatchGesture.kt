@@ -1,12 +1,15 @@
-package com.nativephp.discovery
+package com.nativephp.jumpclient
 
 import android.app.Activity
+import android.app.Application
+import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.Window
 
 /**
- * Android port of the shell's iOS `EscapeHatchGesture`: a global 3-finger
+ * Android twin of iOS `JumpEscapeHatchGesture`: a global 3-finger
  * swipe-right that exits a connected remote app back to the Jump home.
  *
  * iOS attaches a `UISwipeGestureRecognizer` to the key window with
@@ -16,9 +19,11 @@ import android.view.Window
  * every touch BEFORE the view tree (WebView or Compose) consumes it. Events
  * are always delegated unmodified; the gesture never consumes anything.
  *
- * Installed idempotently from `DiscoveryFunctions.Start`/`Connect` (main
- * thread). It stays installed for the Activity's lifetime; firing is a no-op
- * unless a remote session is live ([JumpBridgeRelay.exitToJump] guards).
+ * Installed on every activity as it resumes, from app launch
+ * ([jumpClientPluginInit]), so every way into a remote session can be swiped
+ * out of: Connect, a QR scan, or a `jump://webview` deep link. Installing is
+ * idempotent; firing is a no-op unless a remote session is live
+ * ([JumpBridgeRelay.exitToJump] guards).
  */
 object EscapeHatchGesture {
 
@@ -30,17 +35,43 @@ object EscapeHatchGesture {
     /** Max vertical drift (dp) before the gesture stops counting as a swipe-right. */
     private const val MAX_VERTICAL_DRIFT_DP = 90f
 
-    private var installedOn: Window? = null
+    // Weak, so a destroyed activity's window isn't kept alive by this object.
+    private var installedOn: java.lang.ref.WeakReference<Window>? = null
+
+    private var watchingActivities = false
+
+    /**
+     * Install on every activity as it resumes, for the life of the process.
+     * Plugin init only gets a Context, before the activity has a window, so
+     * the lifecycle callback is what reaches the window.
+     */
+    fun installForAppLifetime(context: Context) {
+        if (watchingActivities) return
+        val app = context.applicationContext as? Application ?: return
+        watchingActivities = true
+
+        app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+            override fun onActivityResumed(activity: Activity) = install(activity)
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+            override fun onActivityStarted(activity: Activity) {}
+            override fun onActivityPaused(activity: Activity) {}
+            override fun onActivityStopped(activity: Activity) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+            override fun onActivityDestroyed(activity: Activity) {}
+        })
+    }
 
     /** Wrap the activity window's callback once; safe to call repeatedly. */
     fun install(activity: Activity) {
         val window = activity.window ?: return
-        if (installedOn === window) return
+        if (installedOn?.get() === window) return
+        // Already wrapped (another activity resumed in between).
+        if (window.callback is EscapeCallback) return
 
         val density = activity.resources.displayMetrics.density
         val existing = window.callback ?: return
         window.callback = EscapeCallback(existing, density)
-        installedOn = window
+        installedOn = java.lang.ref.WeakReference(window)
         Log.i(TAG, "3-finger escape hatch installed")
     }
 
@@ -106,5 +137,20 @@ object EscapeHatchGesture {
             for (i in 0 until e.pointerCount) sum += e.getY(i)
             return sum / e.pointerCount
         }
+    }
+}
+
+/**
+ * Plugin init (nativephp.json `android.init_function`), called once at launch.
+ *
+ * Core calls this from a background thread after MainActivity has already
+ * resumed, so the lifecycle callback alone would miss it until its next
+ * resume. Install on it directly as well.
+ */
+fun jumpClientPluginInit(context: Context) {
+    EscapeHatchGesture.installForAppLifetime(context)
+
+    android.os.Handler(android.os.Looper.getMainLooper()).post {
+        com.nativephp.mobile.ui.MainActivity.instance?.let { EscapeHatchGesture.install(it) }
     }
 }

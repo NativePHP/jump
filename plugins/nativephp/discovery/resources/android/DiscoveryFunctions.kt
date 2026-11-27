@@ -31,7 +31,6 @@ object DiscoveryFunctions {
         override fun execute(parameters: Map<String, Any>): Map<String, Any> {
             Log.i(TAG, "🛰️ Discovery.Start")
             Handler(Looper.getMainLooper()).post {
-                EscapeHatchGesture.install(activity)
                 ensure(activity).start()
             }
             return emptyMap()
@@ -46,34 +45,6 @@ object DiscoveryFunctions {
             Log.i(TAG, "🛰️ Discovery.Stop")
             Handler(Looper.getMainLooper()).post {
                 discovery?.stop()
-            }
-            return emptyMap()
-        }
-    }
-
-    // MARK: - Discovery.Connect
-
-    /**
-     * Connect to a discovered dev server by host + port. Drives the ported
-     * [JumpBridgeRelay], which opens the WebSocket to the dev server and
-     * streams its native UI into `NativeUIBridge` (rendered in place by the
-     * shell's existing renderers). Mirrors iOS `DiscoveryFunctions.Connect`.
-     */
-    class Connect(private val activity: FragmentActivity) : BridgeFunction {
-        override fun execute(parameters: Map<String, Any>): Map<String, Any> {
-            val host = parameters["host"] as? String
-            val port = parameters["port"] as? String
-            if (host == null || port == null) {
-                Log.e(TAG, "❌ Discovery.Connect missing host/port: $parameters")
-                return emptyMap()
-            }
-            Log.i(TAG, "🔌 Discovery.Connect → $host:$port")
-            Handler(Looper.getMainLooper()).post {
-                EscapeHatchGesture.install(activity)
-                // Activity is threaded through for the webview-forward swap
-                // (MainActivity.jumpWebViewSwap) when the remote is a
-                // WebView app.
-                JumpBridgeRelay.connect(host, port, activity)
             }
             return emptyMap()
         }
